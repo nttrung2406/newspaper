@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Politics</title>
-	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet">
+	<link href="/public/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/public/css/style.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
-    <link rel='stylesheet' id='camera-css'  href='css/camera.css' type='text/css' media='all'> 
-	<script src="js/jquery-2.1.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script type='text/javascript' src='js/camera.min.js'></script>
-	<script type='text/javascript' src='js/jquery.easing.1.3.js'></script>
-	<script src="js/ekko-lightbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="/public/css/font-awesome.min.css" />
+    <link rel='stylesheet' id='camera-css'  href='/public/css/camera.css' type='text/css' media='all'> 
+	<script src="/public/js/jquery-2.1.1.min.js"></script>
+	<script src="/public/js/bootstrap.min.js"></script>
+	<script type='text/javascript' src='/public/js/camera.min.js'></script>
+	<script type='text/javascript' src='/public/js/jquery.easing.1.3.js'></script>
+	<script src="/public/js/ekko-lightbox.js"></script>
 	
 	<script>
 		jQuery(function(){
@@ -44,7 +44,7 @@
 		  <div class="top clearfix">
 		<div class="col-sm-4">
 		 <div class="top_left">
-		  <h4><a href="index.html"><i class="fa fa-graduation-cap"></i>Politics <span>Praesent Elementum Ipsum</span></a></h4>
+		  <h4><a href="/views/home.hbs"><i class="fa fa-graduation-cap"></i>Politics <span>Praesent Elementum Ipsum</span></a></h4>
 		 </div>
 		</div>
 		<div class="col-sm-8">
@@ -80,7 +80,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-				   <a class="navbar-brand" href="index.html"><i class="fa fa-graduation-cap"></i> Politics</a>
+				   <a class="navbar-brand" href="/views/home.hbs"><i class="fa fa-graduation-cap"></i> Politics</a>
 				</div>
 	
 				<!-- Collect the nav links, forms, and other content for toggling -->
@@ -89,50 +89,25 @@
 						
 						
 						<li>
-							<a class="tag_menu active_tab" href="index.html">HOME</a></li>
+							<a class="tag_menu active_tab" href="/views/home.hbs">HOME</a></li>
 						<li>
-							<a class="tag_menu" href="priorities.html">NEWS </a></li>
+							<a class="tag_menu" href="/views/articles/priorities_detail.html">NEWS </a></li>
 						
 						<li>
-							<a class="tag_menu" href="priorities_detail.html">NEWS DETAIL </a></li>
+							<a class="tag_menu" href="/views/articles/priorities_detail.html">NEWS DETAIL </a></li>
 						
+							
+						<li>
+							<a class="tag_menu" href="/views/admin/myaccount.html">MY ACCOUNT</a></li>
 						
-						<li>
-							<a class="tag_menu" href="volunteers.html">STAFF</a></li>
-							
-						<li>
-							<a class="tag_menu" href="volunteers_detail.html">STAFF DETAIL </a></li>
-							
-						<li>
-							<a class="tag_menu" href="product.html">PRODUCT</a></li>
-						
-						<li>
-							<a class="tag_menu" href="detail.html">DETAIL</a></li>
-							
-							
-						<li>
-							<a class="tag_menu" href="gallery.html">GALLERY</a></li>
-							
-							
-						<li>
-							<a class="tag_menu" href="myaccount.html">MY ACCOUNT</a></li>
-						
-						<li>
-							<a class="tag_menu" href="contact.html">CONTACT US</a></li>
 						
 						<li class="dropdown">
 						  <a class="tag_menu" href="#" data-toggle="dropdown" role="button" aria-expanded="false">MORE<span class="caret"></span></a>
 						  <ul class="dropdown-menu drop_1" role="menu">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="product.html"> Product</a></li>
-							<li><a href="detail.html">Detail</a></li>
-							<li><a href="priorities.html">News</a></li>
-							<li><a href="priorities_detail.html">News Detail</a></li>
-							<li><a href="volunteers.html">Staff</a></li>
-							<li><a href="volunteers_detail.html"> Staff Detail</a></li>
-							<li><a href="gallery.html">Gallery</a></li>
-							<li><a href="myaccount.html">My  Account</a></li>
-							<li><a href="contact.html">Contact Us</a></li>
+							<li><a href="/views/home.hbs">Home</a></li>
+							<li><a href="/views/articles/priorities.html">News</a></li>
+							<li><a href="/views/articles/priorities_detail.html">News Detail</a></li>
+							<li><a href="/views/admin/myaccount.html">My  Account</a></li>
 						  </ul>
 						</li>
 						
@@ -174,42 +149,42 @@
    <section id="center">
 	<div class="fluid_container clearfix">
 	<div class="camera_wrap camera_azure_skin" id="camera_wrap_1">
-	<div data-thumb="img/thumb//1.jpg" data-src="img/1.jpg">
+	<div data-thumb="/public/img/thumb//1.jpg" data-src="/public/img/1.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
 			 <h4><a href="#">CHARITY NOW</a></h4>
 		</div>
 	</div>
-	<div data-thumb="img/thumb//2.jpg" data-src="img/2.jpg">
+	<div data-thumb="/public/img/thumb//2.jpg" data-src="img/2.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
 			 <h4><a href="#">CHARITY NOW</a></h4>
 		</div>
 	</div>
-	<div data-thumb="img/thumb//3.jpg" data-src="img/3.jpg">
+	<div data-thumb="/public/img/thumb//3.jpg" data-src="/public/img/3.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
 			 <h4><a href="#">CHARITY NOW</a></h4>
 		</div>
 	</div>
-	<div data-thumb="img/thumb//4.jpg" data-src="img/4.jpg">
+	<div data-thumb="/public/img/thumb//4.jpg" data-src="/public/img/4.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
 			 <h4><a href="#">CHARITY NOW</a></h4>
 		</div>
 	</div>
-	<div data-thumb="img/thumb//5.jpg" data-src="img/5.jpg">
+	<div data-thumb="/public/img/thumb//5.jpg" data-src="/public/img/5.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
 			 <h4><a href="#">CHARITY NOW</a></h4>
 		</div>
 	</div>
-	<div data-thumb="img/thumb//6.jpg" data-src="img/6.jpg">
+	<div data-thumb="/public/img/thumb//6.jpg" data-src="/public/img/6.jpg">
 		<div class="camera_caption fadeFromBottom">
 			 <h3>Our Activity</h3>
 			 <h1><span class="span_1">A Society Of </span><br> More Than <span class="span_2">Ten Billion.</span></h1>
@@ -302,7 +277,7 @@
 	   <div class="mission_right_inner clearfix">
 	     <div class="col-sm-3 space_right">
 		  <div class="mission_right_inner_left">
-		    <figure><a href="#"><img src="img/7.jpg" width="100%"></a></figure>
+		    <figure><a href="#"><img src="/public/img/7.jpg" width="100%"></a></figure>
 		  </div>
 		 </div>
 		 <div class="col-sm-9">
@@ -315,7 +290,7 @@
 	   <div class="mission_right_inner clearfix">
 	     <div class="col-sm-3 space_right">
 		  <div class="mission_right_inner_left">
-		    <figure><a href="#"><img src="img/8.jpg" width="100%"></a></figure>
+		    <figure><a href="#"><img src="/public/img/8.jpg" width="100%"></a></figure>
 		  </div>
 		 </div>
 		 <div class="col-sm-9">
@@ -356,7 +331,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/9.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/9.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 							    <div class="item_inner clearfix">
 							    <h4>In <a href="#"> Polite Command</a></h4>
@@ -369,7 +344,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/10.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/10.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 				                <div class="item_inner clearfix">
 							    <h4>In <a href="#"> Social Work</a></h4>
@@ -382,7 +357,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/11.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/11.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Market</a></h4>
@@ -395,7 +370,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/12.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/12.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Events</a></h4>
@@ -412,7 +387,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/13.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/13.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Polite Command</a></h4>
@@ -425,7 +400,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/14.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/14.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Social Work</a></h4>
@@ -438,7 +413,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/15.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/15.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Market</a></h4>
@@ -451,7 +426,7 @@
                         <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
-                                    <a href="#"><img src="img/16.jpg" class="img-responsive" alt="a"></a>
+                                    <a href="#"><img src="/public/img/16.jpg" class="img-responsive" alt="a"></a>
                                 </div>
 								<div class="item_inner clearfix">
 							    <h4>In <a href="#"> Events</a></h4>
@@ -566,7 +541,7 @@
    <div class="events_home_2 clearfix">
     <div class="col-sm-4">
 	 <div class="events_home_2_inner">
-	  <div class="card-image"><a href="#"><img src="img/18.jpg" width="100%" height="250px"></a></div>
+	  <div class="card-image"><a href="#"><img src="/public/img/18.jpg" width="100%" height="250px"></a></div>
 	  <div class="events_home_2_inner_1">
 	    <h4><a href="#">Lorem Ipsum Dolor Sit</a></h4>
 		<h5>14 June 2016</h5>
@@ -577,7 +552,7 @@
 	</div>
 	<div class="col-sm-4">
 	 <div class="events_home_2_inner">
-	  <div class="card-image"><a href="#"><img src="img/19.jpg" width="100%" height="250px"></a></div>
+	  <div class="card-image"><a href="#"><img src="/public/img/19.jpg" width="100%" height="250px"></a></div>
 	  <div class="events_home_2_inner_1">
 	    <h4><a href="#">Integer Nec Odio Praesent</a></h4>
 		<h5>16 July 2016</h5>
@@ -588,7 +563,7 @@
 	</div>
 	<div class="col-sm-4">
 	 <div class="events_home_2_inner">
-	  <div class="card-image"><a href="#"><img src="img/20.jpg" width="100%" height="250px"></a></div>
+	  <div class="card-image"><a href="#"><img src="/public/img/20.jpg" width="100%" height="250px"></a></div>
 	  <div class="events_home_2_inner_1">
 	    <h4><a href="#">Cursus Ante Dapibus</a></h4>
 		<h5>13 March 2016</h5>
@@ -619,7 +594,7 @@
 		<h4>£20.00 <span>£28.00</span></h4>
 	  </div>
 	  <div class="stock_1_inner_2 clearfix">
-	    <a href="#"><img class="img-circle" src="img/21.jpg"></a>
+	    <a href="#"><img class="img-circle" src="/public/img/21.jpg"></a>
 	  </div>
 	 </div>
 	</div>
@@ -630,7 +605,7 @@
 		<h4>£26.00 <span>£45.00</span></h4>
 	  </div>
 	  <div class="stock_1_inner_2 clearfix">
-	    <a href="#"><img class="img-circle" src="img/22.png"></a>
+	    <a href="#"><img class="img-circle" src="/public/img/22.png"></a>
 	  </div>
 	 </div>
 	</div>
@@ -641,7 +616,7 @@
 		<h4>£78.00 <span>£118.00</span></h4>
 	  </div>
 	  <div class="stock_1_inner_2 clearfix">
-	    <a href="#"><img class="img-circle" src="img/23.png"></a>
+	    <a href="#"><img class="img-circle" src="/public/img/23.png"></a>
 	  </div>
 	 </div>
 	</div>
@@ -664,21 +639,21 @@
 	  <div class="updates_1 clearfix">
 	    <h3><a href="#">Lorem Ipsum Dolor Sit Amet, Elit Integer</a></h3>
 		<ul>
-		 <li><img class="img-circle" src="img/24.jpg">  <a href="#">Augue Semper</a></li>
+		 <li><img class="img-circle" src="/public/img/24.jpg">  <a href="#">Augue Semper</a></li>
 		 <li><i class="fa fa-clock-o"></i> <a href="#">May 7, 2017</a></li>
 		</ul>
 	  </div>
 	  <div class="updates_1 clearfix">
 	    <h3><a href="#">Sed Cursus Ante Dapibus Diam Sed Nisi Nulla Quis</a></h3>
 		<ul>
-		 <li><img class="img-circle" src="img/24.jpg">  <a href="#">Augue Semper</a></li>
+		 <li><img class="img-circle" src="/public/img/24.jpg">  <a href="#">Augue Semper</a></li>
 		 <li><i class="fa fa-clock-o"></i> <a href="#">June 8, 2017</a></li>
 		</ul>
 	  </div>
 	  <div class="updates_1 border_none_1 clearfix">
 	    <h3><a href="#">Nibh Elementum Imperdiet Duis Sagittis Ipsum Praesent </a></h3>
 		<ul>
-		 <li><img class="img-circle" src="img/24.jpg">  <a href="#">Augue Semper</a></li>
+		 <li><img class="img-circle" src="/public/img/24.jpg">  <a href="#">Augue Semper</a></li>
 		 <li><i class="fa fa-clock-o"></i> <a href="#">July 9, 2017</a></li>
 		</ul>
 	  </div>
@@ -687,7 +662,7 @@
 	  <div class="updates_2 clearfix">
 	     <div class="grid clearfix">
 					<figure class="effect-duke">
-						<img src="img/25.jpg" alt="img17"/>
+						<img src="/public/img/25.jpg" alt="img17"/>
 						<figcaption>
 							<h2>Politics <span>News</span></h2>
 							<p>Nulla quis sem at nibh imperdiet Duis sagittis ipsum fusce nec.</p>
@@ -700,7 +675,7 @@
 	  <div class="updates_2 clearfix">
 	     <div class="grid clearfix">
 					<figure class="effect-duke">
-						<img src="img/26.jpg" alt="img17"/>
+						<img src="/public/img/26.jpg" alt="img17"/>
 						<figcaption>
 							<h2>Politics <span>News</span></h2>
 							<p>Nulla quis sem at nibh imperdiet Duis sagittis ipsum fusce nec.</p>
@@ -776,7 +751,7 @@
    <div class="footer clearfix">
     <div class="col-sm-3">
 	 <div class="footer_left clearfix">
-	   <h4><a href="index.html"><i class="fa fa-graduation-cap"></i>Politics <span>Praesent Elementum Ipsum</span></a></h4>
+	   <h4><a href="/views/home.hbs"><i class="fa fa-graduation-cap"></i>Politics <span>Praesent Elementum Ipsum</span></a></h4>
 	   <p>Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos Sed dignissim lacinia nunc.</p>
 	   <h3>Contact Us:</h3>
 	   <ul class="social-network social-circle">
@@ -815,8 +790,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/29.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/29.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/29.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/29.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -830,8 +805,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/30.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/30.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/30.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/30.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -845,8 +820,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/31.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/31.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/31.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/31.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -863,8 +838,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/32.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/32.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/32.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/32.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -878,8 +853,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/33.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/33.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/33.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/33.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -893,8 +868,8 @@
 		    <article>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="img/800/34.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
-                        <img src="img/85/34.jpg" alt="Nature Portfolio">
+                    <a href="/public/img/800/34.jpg" title="Repairing Team" class="zoom" data-title="Politics" data-footer="Repairing Center" data-type="image" data-toggle="lightbox">
+                        <img src="/public/img/85/34.jpg" alt="Nature Portfolio">
                         <span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
                     </a>
                 </div>
@@ -946,7 +921,7 @@
   <div class="row">
    <div class="col-sm-12">
     <div class="footer_bottom text-center">
-	  <p>© 2013 Your Website Name. All Rights Reserved | Design by <a href="http://www.templateonweb.com">TemplateOnWeb</a></p>
+	  <p>© 2013 Your Website Name>TemplateOnWeb</a></p>
 	</div>
    </div>
   </div>
