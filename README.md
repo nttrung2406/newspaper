@@ -13,6 +13,7 @@ DB: Mongodb
 Project Structure:
 
 newspaper-web-app/
+
 ├── config/
 
 │   ├── db.js                  # Database connection setup
