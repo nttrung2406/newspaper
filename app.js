@@ -20,8 +20,11 @@ app.use('/users', userRoutes);
 
 const path = require('path');
 
-//Load all css file
+//Load all css files
 app.use('/public', express.static(path.join(__dirname, 'public')));
+
+//Load all html files
+//app.use('/views', express.static(path.join(__dirname, 'views')));
 
 
 app.get('/', (req, res) => {
