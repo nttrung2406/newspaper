@@ -98,15 +98,7 @@ newspaper-web-app/
 └── README.md                  # Project documentation
 
 **Install**:
->> npm install express
-
->> npm install mongoose
-
->> npm install passport-local-mongoose
-
->> npm install passport
-
->> npm install dotenv
+>> npm install package.json
 
 *Start project*
 
