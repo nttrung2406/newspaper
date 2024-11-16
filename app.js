@@ -8,14 +8,26 @@ const adminRoutes = require('./routes/adminRoutes');
 const authMiddleware = require('./middlewares/authMiddleware');
 const errorHandler = require('./middlewares/errorHandler');
 
+
 app.use(express.json());  
 app.use('/admin', authMiddleware); 
 
 app.use('/articles', articleRoutes);  
 app.use('/users', userRoutes);        
-app.use('/admin', adminRoutes);       
+// app.use('/admin', adminRoutes);       
 
-app.use(errorHandler);
+//app.use(errorHandler);
+
+const path = require('path');
+
+//Load all css file
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'home.html')); 
+});
+
 app.listen(3300, () => {
     console.log('Server is running on port 3300');
 });
