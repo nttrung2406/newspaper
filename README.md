@@ -102,4 +102,4 @@ newspaper-web-app/
 
 *Start project*
 
->> node app.js
+>> npm run dev
