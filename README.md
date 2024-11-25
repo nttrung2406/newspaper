@@ -103,3 +103,8 @@ newspaper-web-app/
 *Start project*
 
 >> npm run dev
+
+**DB Schema:**
+
+![image](https://github.com/user-attachments/assets/a13e0acd-ddfc-4371-9094-ab370f1b4245)
+
