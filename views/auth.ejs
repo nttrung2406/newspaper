@@ -164,7 +164,16 @@
                         <label for="signup-password">Password</label>
                         <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <div class="form-group">
+                        <label for="signup-role">Role</label>
+                        <select id="signup-role" class="form-control" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="subscriber">Subscriber</option>
+                            <option value="editor">Editor</option>
+                            <option value="writer">Writer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Sign Up</button>
                 </form>
             </div>
         </div>
@@ -311,6 +320,9 @@
 
          <!-- auth form-->
          <script src="./assets/js/auth.js"></script>
+
+         <!-- sigun up protocal -->
+         <script src="./assets/js/signup.js"></script>
          
      </body>
  </html>
