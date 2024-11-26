@@ -6,6 +6,9 @@
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Ensures alignment of all elements */
 }
 
 .form-toggle {
@@ -37,6 +40,7 @@
 }
 
 .auth-form {
+    width: 100%; /* Ensures the form takes up full width */
     padding: 10px 20px;
 }
 
@@ -62,4 +66,10 @@
 
 .form-footer a:hover {
     text-decoration: underline;
+}
+
+#signup-role {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
 }
