@@ -18,3 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         loginBtn.classList.remove("active");
     });
 });
+
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+});
