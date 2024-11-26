@@ -1,182 +1,134 @@
 import express from 'express';
-import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
-import { guestRoute, protectedRoute } from '../middlewares/authMiddleware.js';
+import User from '../models/User.js'; 
 
 const router = express.Router();
 
-// nodemailer credentials
-var transport = nodemailer.createTransport({
+// Nodemailer transport setup
+const transport = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
   port: 2525,
   auth: {
     user: "your_user_name",
-    pass: "your_password"
-  }
+    pass: "your_password",
+  },
 });
 
-// route for login page
-router.get('/login', guestRoute, (req, res) => {
-  res.render('login', { title: 'Login Page', active: 'login' });
-});
+// Sign up a new user
+router.post('/signup', async (req, res) => {
+  const { username, email, password, role } = req.body;
 
-// route for register page
-router.get('/register', guestRoute, (req, res) => {
-  res.render('register', { title: 'Register Page', active: 'register' });
-});
-
-// route for forgot password page
-router.get('/forgot-password', guestRoute, (req, res) => {
-  res.render('forgot-password', { title: 'Forgot Password Page', active: 'forgot' });
-});
-
-// route for reset password page
-router.get('/reset-password/:token', guestRoute, async (req, res) => {
-  const { token } = req.params;
-  const user = await User.findOne({ token });
-
-  if (!user) {
-    req.flash('error', 'Link expired or invalid!');
-    return res.redirect('/forgot-password');
-  }
-
-  res.render('reset-password', { title: 'Reset Password Page', active: 'reset', token });
-});
-
-// route for profile page
-router.get('/profile', protectedRoute, (req, res) => {
-  res.render('profile', { title: 'Profile Page', active: 'profile' });
-});
-
-// handle user registration
-router.post('/register', guestRoute, async (req, res) => {
-  const { name, email, password } = req.body;
   try {
-    const userExists = await User.findOne({ email });
-
-    if (userExists) {
-      req.flash('error', 'User already exists with this email!');
-      return res.redirect('/register');
+    // Input validation
+    if (!username || !email || !password || !role) {
+      return res.status(400).json({ message: 'All fields are required.' });
     }
 
+    // Check for existing email
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already registered.' });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword
-    });
+    // Create and save new user
+    const newUser = new User({ username, email, password: hashedPassword, role });
+    await newUser.save();
 
-    user.save();
-    req.flash('success', 'User registered successfully, you can login now!');
-    res.redirect('/login');
-
+    res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
-    console.error(error);
-    req.flash('error', 'Something went wrong, try again!');
-    res.redirect('/register');
+    console.error('Error signing up:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
-
-// handle user login request
-router.post('/login', guestRoute, async (req, res) => {
+// Login functionality
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Find user
     const user = await User.findOne({ email });
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      req.session.user = user;
-      res.redirect('/profile');
-    } else {
-      req.flash('error', 'Invalid email or password!');
-      res.redirect('/login');
+    if (!user) {
+      return res.status(404).json({ message: 'Invalid email or password.' });
     }
 
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Success: Respond with user details (exclude sensitive data)
+    res.status(200).json({ message: 'Login successful!', user: { id: user._id, username: user.username, role: user.role } });
   } catch (error) {
-    console.error(error);
-    req.flash('error', 'Something went wrong, try again!');
-    res.redirect('/login');
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
-// handle user logout
-router.post('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login');
-});
-
-// handle forgot password post request
+// Forgot password functionality
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
+
   try {
-
+    // Find user by email
     const user = await User.findOne({ email });
-
     if (!user) {
-      req.flash('error', 'User not found with this email!');
-      return res.redirect('/forgot-password');
+      return res.status(404).json({ message: 'User not found with this email.' });
     }
 
+    // Generate reset token
     const token = Math.random().toString(36).slice(2);
     user.token = token;
     await user.save();
 
-    const info = await transport.sendMail({
-      from: '"nttrung20@clc.fitus.edu.vn" <trung>', 
-      to: email, // list of receivers
-      subject: "Password Reset", 
-      text: "Reset your password!", 
-      html: `<p>Click this link to reset your password: <a href='http://localhost:4000/reset-password/${token}'>Reset Password</a> <br> Thank you!</p>`, // html body
+    // Send reset password email
+    const resetUrl = `http://localhost:4000/reset-password/${token}`;
+    await transport.sendMail({
+      from: '"Support Team" <support@example.com>',
+      to: email,
+      subject: 'Reset Your Password',
+      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. The link expires in 1 hour.</p>`,
     });
 
-    if (info.messageId) {
-      req.flash('success', 'Password reset link has been sent to your email!');
-      res.redirect('/forgot-password');
-    } else {
-      req.flash('error', 'Error sending email');
-      res.redirect('/forgot-password');
-    }
-
+    res.status(200).json({ message: 'Password reset link sent to your email.' });
   } catch (error) {
-    console.error(error);
-    req.flash('error', 'Something went wrong, try again!');
-    res.redirect('/forgot-password');
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
+// Reset password functionality
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
 
-// handle reset password post request
-router.post('/reset-password', async (req, res) => {
-  const { token, new_password, confirm_new_password } = req.body;
   try {
+    // Validate password match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match.' });
+    }
+
+    // Find user by token
     const user = await User.findOne({ token });
-
-    if (new_password !== confirm_new_password) {
-      req.flash('error', 'Password do not match!');
-      return res.redirect(`/reset-password/${token}`);
-    }
-
     if (!user) {
-      req.flash('error', 'Invalid token!');
-      return res.redirect('/forgot-password');
+      return res.status(400).json({ message: 'Invalid or expired token.' });
     }
 
-    user.password = await bcrypt.hash(new_password, 10);
+    // Update password and clear token
+    user.password = await bcrypt.hash(newPassword, 10);
     user.token = null;
     await user.save();
 
-    req.flash('success', 'Password reset successful!');
-    res.redirect('/login');
-
+    res.status(200).json({ message: 'Password reset successfully!' });
   } catch (error) {
-    console.error(error);
-    req.flash('error', 'Something went wrong, try again!');
-    res.redirect('/reset-password');
+    console.error('Reset password error:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
-
 
 export default router;
