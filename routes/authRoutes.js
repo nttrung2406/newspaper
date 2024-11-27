@@ -47,6 +47,7 @@ router.post('/signup', async (req, res) => {
 
 // Login functionality
 router.post('/login', async (req, res) => {
+  console.log(req.body)  // For debugging purposes, print the request body to the console.
   const { email, password } = req.body;
 
   try {
