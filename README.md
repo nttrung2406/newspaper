@@ -106,5 +106,6 @@ newspaper-web-app/
 
 **DB Schema:**
 
-![image](https://github.com/user-attachments/assets/a13e0acd-ddfc-4371-9094-ab370f1b4245)
+![image](https://github.com/user-attachments/assets/bf217658-ebea-4493-8258-18d2d97ea1a2)
+
 
