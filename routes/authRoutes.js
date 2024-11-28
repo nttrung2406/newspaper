@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import User from '../models/User.js'; 
+import { sendResetEmail, generateResetToken, validateResetToken } from '../utils/authHelpers.js';
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ const transport = nodemailer.createTransport({
 
 // Sign up a new user
 router.post('/signup', async (req, res) => {
+  // console.log("Info: ", req.body);
   const { username, email, password, role } = req.body;
 
   try {
@@ -24,6 +26,11 @@ router.post('/signup', async (req, res) => {
     if (!username || !email || !password || !role) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
+
+    // Prevent Admin role signup
+    if (role === 'Admin') {
+      return res.status(403).json({ message: 'Cannot sign up as Admin.' });
+    }    
 
     // Check for existing email
     const existingUser = await User.findOne({ email });
@@ -40,14 +47,15 @@ router.post('/signup', async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
-    console.error('Error signing up:', error);
+    
+    console.error('Error signing up:', error.errorResponse.errInfo.details.schemaRulesNotSatisfied[0]);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
 // Login functionality
 router.post('/login', async (req, res) => {
-  console.log(req.body)  // For debugging purposes, print the request body to the console.
+  // console.log(req.body) 
   const { email, password } = req.body;
 
   try {
@@ -74,62 +82,28 @@ router.post('/login', async (req, res) => {
 // Forgot password functionality
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
-
-  try {
-    // Find user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found with this email.' });
-    }
-
-    // Generate reset token
-    const token = Math.random().toString(36).slice(2);
-    user.token = token;
-    await user.save();
-
-    // Send reset password email
-    const resetUrl = `http://localhost:4000/reset-password/${token}`;
-    await transport.sendMail({
-      from: '"Support Team" <support@example.com>',
-      to: email,
-      subject: 'Reset Your Password',
-      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. The link expires in 1 hour.</p>`,
-    });
-
-    res.status(200).json({ message: 'Password reset link sent to your email.' });
-  } catch (error) {
-    console.error('Forgot password error:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+  const user = await User.findOne({ email });
+  if (!user) {
+      return res.status(404).json({ message: 'No user found with that email.' });
   }
+
+  const token = generateResetToken(user._id);
+  await sendResetEmail(email, token); // Send the reset link via email
+  res.status(200).json({ message: 'Password reset link sent to your email.' });
 });
 
-// Reset password functionality
-router.post('/reset-password/:token', async (req, res) => {
-  const { token } = req.params;
-  const { newPassword, confirmPassword } = req.body;
-
-  try {
-    // Validate password match
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match.' });
-    }
-
-    // Find user by token
-    const user = await User.findOne({ token });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired token.' });
-    }
-
-    // Update password and clear token
-    user.password = await bcrypt.hash(newPassword, 10);
-    user.token = null;
-    await user.save();
-
-    res.status(200).json({ message: 'Password reset successfully!' });
-  } catch (error) {
-    console.error('Reset password error:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+// Reset Password POST route
+router.post('/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+  const userId = validateResetToken(token);
+  if (!userId) {
+      return res.status(400).json({ message: 'Invalid or expired reset token.' });
   }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await User.findByIdAndUpdate(userId, { password: hashedPassword });
+  res.status(200).json({ message: 'Password reset successful.' });
 });
+
 
 export default router;
