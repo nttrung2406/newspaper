@@ -60,13 +60,16 @@
             <label for="content" class="form-label"
               ><strong>Content</strong></label
             >
-            <textarea id="summernote" name="content" id="content"><%= editing ? post.content : '' %></textarea>
+            <textarea id="summernote" name="content" id="content">
+<%= editing ? post.content : '' %></textarea
+            >
           </div>
           <div class="mb-3">
             <label for="category" class="form-label"
               ><strong>Category</strong></label
             ><br />
-            <input type="radio" id="business" name="categoryName" value="Kinh doanh" <%= categoryName === 'Kinh doanh' ? 'checked="checked"' : ''
+            <input type="radio" id="business" name="categoryName" value="Kinh
+            doanh" <%= categoryName === 'Kinh doanh' ? 'checked="checked"' : ''
             %> />
             <label for="business">Kinh doanh</label><br />
             <input type="radio" id="seafood" name="categoryName" value="Hải sản"
@@ -76,10 +79,12 @@
             value="Nông sản" <%= categoryName === 'Nông sản' ?
             'checked="checked"' : '' %> />
             <label for="agriculturalProduct">Nông sản</label><br />
-            <input type="radio" id="agriculture" name="categoryName" value="Nông nghiệp" <%= categoryName === 'Nông nghiệp' ? 'checked="checked"' :
+            <input type="radio" id="agriculture" name="categoryName" value="Nông
+            nghiệp" <%= categoryName === 'Nông nghiệp' ? 'checked="checked"' :
             '' %> />
             <label for="agriculture">Nông nghiệp</label><br />
-            <input type="radio" id="estate" name="categoryName" value="Bất động sản" <%= categoryName === 'Bất động sản' ? 'checked="checked"' : ''
+            <input type="radio" id="estate" name="categoryName" value="Bất động
+            sản" <%= categoryName === 'Bất động sản' ? 'checked="checked"' : ''
             %> />
             <label for="estate">Bất động sản</label><br />
           </div>

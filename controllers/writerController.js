@@ -58,8 +58,8 @@ const writerController = {
     try {
       const category = await Category.findOne({ categoryName: categoryName });
       if (!category) {
-        req.flash('error', 'Category not found');
-        return res.status(404).redirect('/writer');
+        req.flash("error", "Category not found");
+        return res.status(404).redirect("/writer");
       }
       const post = new Post({
         title: title,
@@ -73,8 +73,8 @@ const writerController = {
       req.user.writerPosts.push(post._id);
       await req.user.save();
 
-      req.flash('success', 'Post created successfully')
-      res.status(201).redirect('/writer');
+      req.flash("success", "Post created successfully");
+      res.status(201).redirect("/writer");
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "An error occured", error: err.message });
