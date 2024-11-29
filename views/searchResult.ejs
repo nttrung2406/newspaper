@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/styles.css"> <!-- Optional: Add your styles -->
+</head>
+<body>
+  <header>
+    <h1><%= title %></h1>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search">Search</a></li>
+        <!-- Add more navigation items here -->
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="search-results">
+      <% if (message) { %>
+        <p class="message"><%= message %></p>
+      <% } %>
+      
+      <% if (posts.length > 0) { %>
+        <ul>
+          <% posts.forEach(post => { %>
+            <li>
+              <h2><a href="/posts/<%= post._id %>"><%= post.title %></a></h2>
+              <p>By: <%= post.user.username %></p>
+              <p><%= post.content.substring(0, 150) %>...</p> <!-- Show part of the content -->
+              <a href="/posts/<%= post._id %>">Read more</a>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p>No posts found.</p>
+      <% } %>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Your Website</p>
+  </footer>
+</body>
+</html>

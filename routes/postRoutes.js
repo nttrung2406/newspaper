@@ -20,8 +20,6 @@ const storage = multer.diskStorage({
 
 // Initilize upload variable with the storage engine
 const upload = multer({ storage: storage });
-
-// Route for searching posts
 router.get('/search', async (req, res) => {
   try {
     const { query } = req.query;
@@ -29,7 +27,7 @@ router.get('/search', async (req, res) => {
     // Validate query parameter
     if (!query || query.trim() === '') {
       req.flash('error', 'Search query cannot be empty!');
-      return res.redirect('/');
+      return res.redirect('/'); // Redirect to homepage if no query is given
     }
 
     // Search for posts by title (case-insensitive)
@@ -38,20 +36,24 @@ router.get('/search', async (req, res) => {
       .sort({ _id: -1 })
       .exec();
 
-    // Render the results page with feedback for no results
-    res.render('index', {
-      title: `Search Results for "${query}"`,
-      active: 'home',
-      posts,
-      searchQuery: query,
-      message: posts.length === 0 ? 'No posts found matching your search criteria.' : null,
-    });
+    if (posts.length === 0) {
+      req.flash('info', 'No posts found matching your search criteria.');
+    }
+
+    // Redirect to searchResult page with query and results
+    return res.redirect(`/searchResult?query=${query}`); // Redirect to searchResult page
+
   } catch (error) {
     console.error(error);
     req.flash('error', 'An error occurred while searching posts!');
-    res.redirect('/');
+    return res.redirect('/'); // If error occurs, redirect to homepage
   }
 });
+
+
+
+
+
 
 // route for home page
 router.get('/', async (req, res) => {

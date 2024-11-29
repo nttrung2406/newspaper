@@ -52,7 +52,7 @@ app.use('/admin', authMiddleware);
 // Routes
 app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
-
+app.use('/search', postRoutes);
 // Static files
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 app.use('/', express.static(path.join(__dirname, 'views')));
@@ -68,6 +68,8 @@ app.get('/blog', (req, res) => res.render('blog'));
 app.get('/single-blog', (req, res) => res.render('single-blog'));
 app.get('/details', (req, res) => res.render('details'));
 app.get('/auth', (req, res) => res.render('auth'));
+app.get('/search', (req, res) => res.render('search'));
+app.get('/searchResult', (req, res) => res.render('searchResult'));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
