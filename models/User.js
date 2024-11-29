@@ -1,11 +1,24 @@
-const mongoose = require('mongoose');
-const passportLocalMongoose = require('passport-local-mongoose');
+import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    // Add other fields as needed, e.g., email, role, etc.
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, 
+  role: {
+    type: String,
+    enum: ['Membership', 'Writer', 'Editor', 'Admin'],
+    required: true
+  },
+  membership: {
+    expiryDate: { type: Date }, // For Membership role only
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }] // Allowed categories
+  },
+  writerPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], // For Writer role
+  editorPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], // For Editor role
+}, {
+  timestamps: true 
 });
 
-UserSchema.plugin(passportLocalMongoose);
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
+
+export default User;
