@@ -1,0 +1,137 @@
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>News HTML-5 Template </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="manifest" href="site.webmanifest">
+		<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+		<!-- CSS here -->
+            <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+            <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+            <link rel="stylesheet" href="assets/css/ticker-style.css">
+            <link rel="stylesheet" href="assets/css/flaticon.css">
+            <link rel="stylesheet" href="assets/css/slicknav.css">
+            <link rel="stylesheet" href="assets/css/animate.min.css">
+            <link rel="stylesheet" href="assets/css/magnific-popup.css">
+            <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+            <link rel="stylesheet" href="assets/css/themify-icons.css">
+            <link rel="stylesheet" href="assets/css/slick.css">
+            <link rel="stylesheet" href="assets/css/nice-select.css">
+            <link rel="stylesheet" href="assets/css/style.css">
+            <link rel="stylesheet" href="assets/css/auth.css">
+   </head>
+
+   <body>
+       
+
+    <%- include('header') %>
+
+    <main>
+        <div class="auth-container">
+            <div class="form-toggle">
+                <button id="login-btn" class="toggle-btn active">Login</button>
+                <button id="signup-btn" class="toggle-btn">Sign Up</button>
+            </div>
+            <div class="form-container">
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="form-footer">
+                        <a href="#" id="forgot-password">Forgot Password?</a>
+                    </div>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form id="signup-form" class="auth-form hidden">
+                    <h2>Sign Up</h2>
+                    <div class="form-group">
+                        <label for="signup-username">Username</label>
+                        <input type="text" id="signup-username" class="form-control" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-role">Role</label>
+                        <select id="signup-role" class="form-control" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="subscriber">Subscriber</option>
+                            <option value="editor">Editor</option>
+                            <option value="writer">Writer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <%- include('footer') %>
+    
+     <!-- JS here -->
+     
+         <!-- All JS Custom Plugins Link Here here -->
+         <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+         <!-- Jquery, Popper, Bootstrap -->
+         <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+         <script src="./assets/js/popper.min.js"></script>
+         <script src="./assets/js/bootstrap.min.js"></script>
+         <!-- Jquery Mobile Menu -->
+         <script src="./assets/js/jquery.slicknav.min.js"></script>
+ 
+         <!-- Jquery Slick , Owl-Carousel Plugins -->
+         <script src="./assets/js/owl.carousel.min.js"></script>
+         <script src="./assets/js/slick.min.js"></script>
+         <!-- Date Picker -->
+         <script src="./assets/js/gijgo.min.js"></script>
+         <!-- One Page, Animated-HeadLin -->
+         <script src="./assets/js/wow.min.js"></script>
+         <script src="./assets/js/animated.headline.js"></script>
+         <script src="./assets/js/jquery.magnific-popup.js"></script>
+ 
+         <!-- Breaking New Pluging -->
+         <script src="./assets/js/jquery.ticker.js"></script>
+         <script src="./assets/js/site.js"></script>
+ 
+         <!-- Scrollup, nice-select, sticky -->
+         <script src="./assets/js/jquery.scrollUp.min.js"></script>
+         <script src="./assets/js/jquery.nice-select.min.js"></script>
+         <script src="./assets/js/jquery.sticky.js"></script>
+         
+         <!-- contact js -->
+         <script src="./assets/js/contact.js"></script>
+         <script src="./assets/js/jquery.form.js"></script>
+         <script src="./assets/js/jquery.validate.min.js"></script>
+         <script src="./assets/js/mail-script.js"></script>
+         <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+         
+         <!-- Jquery Plugins, main Jquery -->	
+         <script src="./assets/js/plugins.js"></script>
+         <script src="./assets/js/main.js"></script>
+
+         <!-- auth form-->
+         <script src="./assets/js/auth.js"></script>
+
+         <!-- sigun up protocal -->
+         <script src="./assets/js/signup.js"></script>
+         
+     </body>
+ </html>
