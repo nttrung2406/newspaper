@@ -140,13 +140,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <div class="row d-flex justify-content-between">
+                    <div class="col d-flex justify-content-between align-items-center">
                         <div class="col-lg-3 col-md-3">
                             <div class="section-tittle mb-30">
                                 <h3>Whats New</h3>
                             </div>
                         </div>
-                        <div class="col-lg-9 col-md-9">
+                        <div class="col-lg-10 col-md-10" style="padding-bottom: 30px;">
                             <div class="properties__button">
                                 <!--Nav Button  -->                                            
                                 <nav>                                                                     
@@ -162,6 +162,26 @@
                                 <!--End Nav Button  -->
                             </div>
                         </div>
+                        <% if (isPremium) { %>
+                            <section class="col-lg-3 col-md-3">
+                              <h2>Premium Categories</h2>
+                              <div class="col-lg-9 col-md-9" >
+                                <div class="properties__button">
+                                    <!--Nav Button  -->                                            
+                                    <nav>
+                                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <% premiumCategories.forEach(function(category) { %>
+                                            <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false">
+                                                <%= category.name %>
+                                            </a>
+                                            <% }); %>
+                                        </div>
+                                    </nav>
+                                </div>
+                              </div>
+                            </section>
+                        <% } %>
+                        
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -479,13 +499,22 @@
                     </div>
                 </div>
                 <% if (isPremium) { %>
-                    <section class="premium-categories-area pt-50 pb-20">
+                    <section class="premium-categories-area">
                       <h2>Premium Categories</h2>
-                      <ul>
-                        <% premiumCategories.forEach(function(category) { %>
-                          <li><%= category %></li>
-                        <% }); %>
-                      </ul>
+                      <div class="col-lg-9 col-md-9" >
+                        <div class="properties__button">
+                            <!--Nav Button  -->                                            
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <% premiumCategories.forEach(function(category) { %>
+                                    <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false">
+                                        <%= category.name %>
+                                    </a>
+                                    <% }); %>
+                                </div>
+                            </nav>
+                        </div>
+                      </div>
                     </section>
                 <% } %>
                 <div class="col-lg-4">

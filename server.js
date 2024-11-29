@@ -63,14 +63,16 @@ app.get("/categori", (req, res) => {
   //test
   const user = {
     name: "John Doe",
-    isPremium: false,
+    isPremium: true, // tắt chạy lại
   };
 
-  const normalCategories = ["Technology", "Health", "Lifestyle"];
-  const premiumCategories = ["Finance", "Advanced Tech", "Exclusive Interviews"];
+  const premiumCategories = [
+    { "id": "finance", "name": "Finance" },
+    { "id": "advanced tech", "name": "Advanced Tech" },
+    { "id": "exclusive interviews", "name": "Exclusive Interviews" }
+  ];
 
   res.render("categori", {
-    normalCategories: normalCategories,
     premiumCategories: premiumCategories,
     isPremium: user.isPremium,
   });
