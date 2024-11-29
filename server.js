@@ -59,7 +59,22 @@ app.use('/', express.static(path.join(__dirname, 'views')));
 
 // Pages
 app.get('/', (req, res) => res.render('index'));
-app.get('/categori', (req, res) => res.render('categori'));
+app.get("/categori", (req, res) => {
+  //test
+  const user = {
+    name: "John Doe",
+    isPremium: false,
+  };
+
+  const normalCategories = ["Technology", "Health", "Lifestyle"];
+  const premiumCategories = ["Finance", "Advanced Tech", "Exclusive Interviews"];
+
+  res.render("categori", {
+    normalCategories: normalCategories,
+    premiumCategories: premiumCategories,
+    isPremium: user.isPremium,
+  });
+});
 app.get('/about', (req, res) => res.render('about'));
 app.get('/latest_news', (req, res) => res.render('latest_news'));
 app.get('/contact', (req, res) => res.render('contact'));
