@@ -2,26 +2,39 @@ import Post from '../models/postModel.js';
 
 export const createPost = async (req, res) => {
   try {
-    const post = new Post({
-      title: req.body.title,
-      content: req.body.content,
-      writer: req.session.user._id
-    });
-
-    await post.save();
-    res.status(201).json({ message: 'Post created successfully!' });
+      const newPost = new Post(req.body);
+      await newPost.save();
+      res.status(201).json(newPost);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error creating post' });
+      res.status(400).json({ error: error.message });
   }
 };
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('writer');
-    res.render('posts/index', { posts });
+      const posts = await Post.find().populate('category');
+      res.status(200).json(posts);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching posts' });
+      res.status(500).json({ error: error.message });
+  }
+};
+
+export const updatePost = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const updatedPost = await Post.findByIdAndUpdate(id, req.body, { new: true });
+      res.status(200).json(updatedPost);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+      const { id } = req.params;
+      await Post.findByIdAndDelete(id);
+      res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
   }
 };
