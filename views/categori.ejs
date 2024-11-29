@@ -146,7 +146,7 @@
                                 <h3>Whats New</h3>
                             </div>
                         </div>
-                        <div class="col-lg-10 col-md-10" style="padding-bottom: 30px;">
+                        <div class="col-lg-10 col-md-10 pt-10 pb-30">
                             <div class="properties__button">
                                 <!--Nav Button  -->                                            
                                 <nav>                                                                     
@@ -162,25 +162,7 @@
                                 <!--End Nav Button  -->
                             </div>
                         </div>
-                        <% if (isPremium) { %>
-                            <section class="col-lg-3 col-md-3">
-                              <h2>Premium Categories</h2>
-                              <div class="col-lg-9 col-md-9" >
-                                <div class="properties__button">
-                                    <!--Nav Button  -->                                            
-                                    <nav>
-                                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                            <% premiumCategories.forEach(function(category) { %>
-                                            <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false">
-                                                <%= category.name %>
-                                            </a>
-                                            <% }); %>
-                                        </div>
-                                    </nav>
-                                </div>
-                              </div>
-                            </section>
-                        <% } %>
+                        
                         
                     </div>
                     <div class="row">
@@ -498,76 +480,83 @@
                         </div>
                     </div>
                 </div>
-                <% if (isPremium) { %>
-                    <section class="premium-categories-area">
-                      <h2>Premium Categories</h2>
-                      <div class="col-lg-9 col-md-9" >
+                <section class="col-lg-4 col-md-4">
+                    <div class="section-tittle mb-30 pl-3 pt-15">
+                        <h3>💎Premium Only💎</h3>
+                    </div>
+                    <div class="row-lg-9 row-md-9" >
                         <div class="properties__button">
                             <!--Nav Button  -->                                            
                             <nav>
-                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
                                     <% premiumCategories.forEach(function(category) { %>
-                                    <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false">
-                                        <%= category.name %>
-                                    </a>
+                                        <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false"
+                                            <% if (!isPremium) { %>
+                                                onclick="alert('Vui lòng đăng ký để truy cập tính năng này!'); return false;"
+                                            <% } %>
+                                        >
+                                            <%= category.name %>
+                                        </a>
                                     <% }); %>
                                 </div>
                             </nav>
                         </div>
-                      </div>
-                    </section>
-                <% } %>
-                <div class="col-lg-4">
-                    <!-- Section Tittle -->
-                    <div class="section-tittle mb-40">
-                        <h3>Follow Us</h3>
+                        <!-- follow us -->
                     </div>
-                    <!-- Flow Socail -->
-                    <div class="single-follow mb-45">
-                        <div class="single-box">
-                            <div class="follow-us d-flex align-items-center">
-                                <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-fb.png" alt=""></a>
-                                </div>
-                                <div class="follow-count">  
-                                    <span>8,045</span>
-                                    <p>Fans</p>
-                                </div>
-                            </div> 
-                            <div class="follow-us d-flex align-items-center">
-                                <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-tw.png" alt=""></a>
-                                </div>
-                                <div class="follow-count">
-                                    <span>8,045</span>
-                                    <p>Fans</p>
-                                </div>
-                            </div>
+                    <div class="row-lg-3 row-md-3">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle mb-40">
+                            <h3>Follow Us</h3>
+                        </div>
+                        <!-- Flow Socail -->
+                        <div class="single-follow mb-45">
+                            <div class="single-box">
                                 <div class="follow-us d-flex align-items-center">
-                                <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-ins.png" alt=""></a>
+                                    <div class="follow-social">
+                                        <a href="#"><img src="assets/img/news/icon-fb.png" alt=""></a>
+                                    </div>
+                                    <div class="follow-count">  
+                                        <span>8,045</span>
+                                        <p>Fans</p>
+                                    </div>
+                                </div> 
+                                <div class="follow-us d-flex align-items-center">
+                                    <div class="follow-social">
+                                        <a href="#"><img src="assets/img/news/icon-tw.png" alt=""></a>
+                                    </div>
+                                    <div class="follow-count">
+                                        <span>8,045</span>
+                                        <p>Fans</p>
+                                    </div>
                                 </div>
-                                <div class="follow-count">
-                                    <span>8,045</span>
-                                    <p>Fans</p>
+                                    <div class="follow-us d-flex align-items-center">
+                                    <div class="follow-social">
+                                        <a href="#"><img src="assets/img/news/icon-ins.png" alt=""></a>
+                                    </div>
+                                    <div class="follow-count">
+                                        <span>8,045</span>
+                                        <p>Fans</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="follow-us d-flex align-items-center">
-                                <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-yo.png" alt=""></a>
-                                </div>
-                                <div class="follow-count">
-                                    <span>8,045</span>
-                                    <p>Fans</p>
+                                <div class="follow-us d-flex align-items-center">
+                                    <div class="follow-social">
+                                        <a href="#"><img src="assets/img/news/icon-yo.png" alt=""></a>
+                                    </div>
+                                    <div class="follow-count">
+                                        <span>8,045</span>
+                                        <p>Fans</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- New Poster -->
+                        <div class="news-poster d-none d-lg-block">
+                            <img src="assets/img/news/news_card.jpg" alt="">
+                        </div>
                     </div>
-                    <!-- New Poster -->
-                    <div class="news-poster d-none d-lg-block">
-                        <img src="assets/img/news/news_card.jpg" alt="">
-                    </div>
-                </div>
+                    
+                    
+                </section>
             </div>
         </div>
     </section>
