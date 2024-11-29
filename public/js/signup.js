@@ -63,10 +63,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Forgot password form submission
-    const formForget = document.getElementById('forgot-password-form');
-    if (formForget) {
-        formForget.addEventListener('submit', async (event) => {
+    // forgot password
+    const formForgot = document.getElementById('forgot-password-form');
+    if (formForgot) {
+        formForgot.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('forgot-password-email').value;
+            console.log(email);
+            try {
+                const response = await fetch('/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Password reset link sent to your email.');
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (err) {
+                console.error('Error sending forgot password request:', err);
+            }
+        });
+    }
+
+
+
+    // Reset password form submission
+    const formReset = document.getElementById('reset-password-form');
+    if (formReset) {
+        formReset.addEventListener('submit', async (event) => {
             event.preventDefault(); 
             const newPassword = document.getElementById('new-password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
