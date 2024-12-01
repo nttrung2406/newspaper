@@ -12,6 +12,7 @@ import postRoutes from './routes/postRoutes.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 import userRoutes from './routes/userRoutes.js';
 import setUserData from './middlewares/setUserData.js';
+import writerRoutes from "./routes/writerRoutes.js";
 
 dotenv.config({ path: './config/env/development.env' });
 
@@ -84,6 +85,8 @@ app.get('/reset_password', (req, res) => {
   const { token } = req.query;
   res.render('reset_password', { token });
 });
+
+app.use("/writer", writerRoutes);
 
 app.get('/profile', (req, res) => {
   if (!req.session.user) {

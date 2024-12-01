@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
+import { emailConfig } from '../config/email.js';
 
 const SECRET = 'secret';
 
@@ -16,22 +17,35 @@ export const validateResetToken = (token) => {
     }
 };
 
-export const sendResetEmail = async (email, token) => {
-    const resetLink = `http://localhost:4000/reset-password?token=${token}`;
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'your-email@gmail.com',
-            pass: 'your-password',
-        },
-    });
+export const transporter = nodemailer.createTransport({
+    host: emailConfig.host,
+    port: emailConfig.port,
+    auth: {
+        user: emailConfig.auth.user,
+        pass: emailConfig.auth.pass,
+    },
+    secure: false,
+});
 
-    const mailOptions = {
-        from: 'your-email@gmail.com',
-        to: email,
-        subject: 'Password Reset',
-        text: `Click the link to reset your password: ${resetLink}`,
-    };
+export const sendResetEmail = async (to, token) => {
+    const resetLink = `http://sgnews.com/reset-password?token=${token}`;
+    const subject = 'Password Reset Request';
+    const text = `You requested a password reset. Use the following link to reset your password: ${resetLink}`;
+    const html = `<p>You requested a password reset. Click the link below to reset your password:</p>
+                  <a href="${resetLink}">${resetLink}</a>`;
 
-    await transporter.sendMail(mailOptions);
+    try {
+        const info = await transporter.sendMail({
+            from: emailConfig.auth.user,
+            to, 
+            subject,
+            text,
+            html,
+        });
+        console.log(`Email sent: ${info.messageId}`);
+        return info;
+    } catch (err) {
+        console.error('Error sending email:', err);
+        throw err;
+    }
 };

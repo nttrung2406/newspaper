@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('User created successfully!');
+                    console.log('User created successfully!');
                 } else {
-                    alert(`Error: ${data.message}`);
+                    console.log(`Error: ${data.message}`);
                 }
             } catch (err) {
                 console.error('Signup error:', err);
-                alert('An error occurred while signing up.');
+                console.log('An error occurred while signing up.');
             }
         });
     }
@@ -54,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     window.location.href = '/index'; // Navigate to home page
                 } else {
-                    alert(`Error: ${data.message || 'An unknown error occurred'}`);
+                    console.log(`Error: ${data.message || 'An unknown error occurred'}`);
                 }
             } catch (err) {
                 console.error('Login error:', err);
-                alert('An error occurred while logging in.');
+                console.log('An error occurred while logging in.');
             }
         });
     }
@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('Password reset link sent to your email.');
+                    console.log('Password reset link sent to your email.');
                 } else {
-                    alert(`Error: ${data.message}`);
+                    console.log(`Error: ${data.message}`);
                 }
             } catch (err) {
                 console.error('Error sending forgot password request:', err);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmPassword = document.getElementById('confirm-password').value;
 
             if (newPassword !== confirmPassword) {
-                alert('Passwords do not match!');
+                console.log('Passwords do not match!');
                 return;
             }
         });
