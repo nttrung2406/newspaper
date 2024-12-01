@@ -55,41 +55,59 @@ router.post('/signup', async (req, res) => {
 
 // Login functionality
 router.post('/login', async (req, res) => {
-  // console.log(req.body) 
-  const { email, password } = req.body;
-
   try {
-    // Find user
+    const { email, password } = req.body;
+
+    // Find user and verify password (hash check omitted for brevity)
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'Invalid email or password.' });
+
+
+    if (!user && !(await bcrypt.compare(password, user.password))) {
+      return res.status(400).send('Invalid credentials');
     }
 
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
-    }
+    // Save user data to session (or JWT token)
+    req.session.user = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
 
-    // Success: Respond with user details (exclude sensitive data)
-    res.status(200).json({ message: 'Login successful!', user: { id: user._id, username: user.username, role: user.role } });
+    // Redirect to index after login
+    res.redirect('/index');
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+    console.error('Error logging in:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
 // Forgot password functionality
 router.post('/forgot-password', async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-      return res.status(404).json({ message: 'No user found with that email.' });
-  }
+  console.log('req', req);
+    try {
+      const { email } = req.body;
 
-  const token = generateResetToken(user._id);
-  await sendResetEmail(email, token); // Send the reset link via email
-  res.status(200).json({ message: 'Password reset link sent to your email.' });
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: 'No user found with that email.' });
+      }
+
+      const token = generateResetToken(user._id);
+      const resetLink = `http://sgnews.com/reset-password?token=${token}`;
+
+      await sendResetEmail(
+          email,
+          'Password Reset Request',
+          `Click the link to reset your password: ${resetLink}`,
+          `<p>Click the link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`
+      );
+
+      res.status(200).json({ message: 'Password reset link sent to your email.' });
+  } catch (error) {
+      console.error('Error in forgot-password route:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+  }
 });
 
 // Reset Password POST route

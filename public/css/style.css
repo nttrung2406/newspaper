@@ -2641,7 +2641,7 @@ hr {
 	visibility: visible;
 	opacity: 1;
 	transition: .3s;
-    right: -30px;
+    right: 60%;
 }
 
 .header-area .header-right-btn:hover .search-box input {
