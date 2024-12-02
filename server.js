@@ -20,18 +20,18 @@ const app = express();
 const PORT =  3000;
 
 // Database connection
-// const testDatabaseConnection = async () => {
-//   try {
-//     const db = mongoose.connection;
-//     const collections = await db.db.listCollections().toArray();
-//     console.log('Collections in database:', collections.map(c => c.name));
-//   } catch (err) {
-//     console.error('Error fetching collections:', err.message);
-//   }
-// };
+const testDatabaseConnection = async () => {
+  try {
+    const db = mongoose.connection;
+    const collections = await db.db.listCollections().toArray();
+    console.log('Collections in database:', collections.map(c => c.name));
+  } catch (err) {
+    console.error('Error fetching collections:', err.message);
+  }
+};
 
-// // Connect to MongoDB and test connection
-// connectMongoDB().then(testDatabaseConnection);
+// Connect to MongoDB and test connection
+connectMongoDB().then(testDatabaseConnection);
 
 // Resolve __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -41,15 +41,15 @@ app.set('view engine', 'ejs');
 
 // Middleware
 app.use(express.json());
-// app.use(cookieParser());
-// app.use(session({
-//   secret: process.env.SESSION_SECRET || '123456789',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: { secure: false }
-// }));
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET || '123456789',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 
-// app.use(flash());
+app.use(flash());
 
 import adminRoutes from "./routes/adminRoutes.js"
 

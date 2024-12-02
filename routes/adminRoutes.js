@@ -14,7 +14,7 @@ router.get("/", (req, res)=>{
 });
 
 import categoryList from './admin/category/categoryList.js'
-router.use("/category", categoryList)
+router.use("/categories", categoryList)
 
 
 export default router;

@@ -1,9 +1,8 @@
 import express from 'express'
+import categoryController from '../../../controllers/admin/categoryController.js'
 const router = express.Router()
 
-router.get('/category_list', (req,res) =>{
-    res.render('admin/category/category_list')
-})
+router.get('/', categoryController.getCategories)
 
 
 export default router
