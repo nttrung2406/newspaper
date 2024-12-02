@@ -17,4 +17,7 @@ import categoryList from './admin/category/categoryList.js'
 router.use("/categories", categoryList)
 
 
+import categoryAction from './admin/category/categoryAction.route.js'
+router.use("/category", categoryAction)
+
 export default router;

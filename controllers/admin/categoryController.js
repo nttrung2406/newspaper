@@ -17,9 +17,11 @@ const getCategories = async(req, res, next) =>{
         ]);
 
 
-        console.log(categories)
+        //console.log(categories)
+
+        const message = req.flash('category_create_success')
         res.render('admin/category/category_list',{
-          categories, currentPage: parseInt(page, 10), totalPages: Math.ceil(total/limit), search
+          categories, currentPage: parseInt(page, 10), totalPages: Math.ceil(total/limit), search, message
         });
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -29,7 +31,7 @@ const getCategories = async(req, res, next) =>{
 
 async function getParentID() {
   try {
-    const parentCategories = await Category.find({ parent: null });
+    const parentCategories = await Category.find({ parentID: null }).select("categoryName");
 
     if (!parentCategories || parentCategories.length === 0) {
       throw new Error("No parent categories found");
@@ -44,27 +46,36 @@ async function getParentID() {
 
 const addCategory = async (req, res, next) => {
     try {
-    const { categoryName, description, parent } = req.body;
+    const { categoryName, description, parentName} = req.body;
 
     const existingCategory = await Category.findOne({ categoryName });
     if (existingCategory) {
-      return res.status(400).json({ message: "Category name already exists" });
+      req.flash('category_create_err', "Tên chuyên mục đã tồn tại")
+      return res.redirect('/admin/category/create')
     }
-
-    if (parent) {
-      const parentCategory = await Category.findById(parent);
-      if (!parentCategory) {
-        return res.status(400).json({ message: "Parent category does not exist" });
+    
+    let parentID = null;
+    if (parentName && parentName !== ''){
+      const parentCategory = await Category.findOne({categoryName: parentName});
+      if (parentCategory)
+      {
+        parentID = parentCategory._id
+      }
+      else{
+        throw new Error('Parent category not found')
       }
     }
+    
 
-    const newCategory = await Category.create({
-    categoryName,
-      description,
-      parent: parent || null,
-    });
+    await Category.create({
+      categoryName: categoryName,
+      description: description,
+      parentID: parentID,
+    })
 
-    res.status(201).json({ message: "Category added successfully", category: newCategory });
+    req.flash('category_create_success',"Chuyên mục đã được thêm thành công!!!")
+    res.redirect('/admin/categories');
+    
     } catch (error) {
       console.error("Error adding category:", error.message);
       res.status(500).json({ message: "Server error: " + error.message });
@@ -112,4 +123,4 @@ const updateCategory = async (req, res, next) => {
   
 
 
-export default {getCategories};
+export default {getCategories, getParentID, addCategory};

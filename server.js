@@ -40,7 +40,9 @@ const __dirname = path.dirname(__filename);
 app.set('view engine', 'ejs');
 
 // Middleware
-app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET || '123456789',
