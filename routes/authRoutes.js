@@ -3,17 +3,19 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import User from '../models/User.js'; 
 import { sendResetEmail, generateResetToken, validateResetToken } from '../utils/authHelpers.js';
-
+import dotenv from 'dotenv';
 const router = express.Router();
+dotenv.config({ path: './config/env/development.env' });
 
 // Nodemailer transport setup
-const transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
   auth: {
-    user: "your_user_name",
-    pass: "your_password",
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
   },
+  secure: false, // STARTTLS for port 587
 });
 
 // Sign up a new user
@@ -94,7 +96,7 @@ router.post('/forgot-password', async (req, res) => {
       }
 
       const token = generateResetToken(user._id);
-      const resetLink = `http://sgnews.com/reset-password?token=${token}`;
+      const resetLink = `http://localhost:4000/reset-password?token=${token}`;
 
       await sendResetEmail(
           email,
@@ -110,18 +112,31 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
-// Reset Password POST route
+
 router.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
-  const userId = validateResetToken(token);
-  if (!userId) {
-      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+
+  try {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: Date.now() }, 
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword; 
+    user.resetToken = undefined; 
+    user.resetTokenExpiry = undefined; 
+    await user.save();
+
+    res.status(200).json({ message: 'Password has been reset successfully.' });
+  } catch (err) {
+    console.error('Error in reset-password route:', err);
+    res.status(500).json({ message: 'Internal server error.' });
   }
-
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-  await User.findByIdAndUpdate(userId, { password: hashedPassword });
-  res.status(200).json({ message: 'Password reset successful.' });
 });
-
 
 export default router;

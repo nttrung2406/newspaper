@@ -2,31 +2,36 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import { emailConfig } from '../config/email.js';
 
-const SECRET = 'secret';
+const SECRET = process.env.JWT_SECRET || 'fallbackSecret'; 
 
+// Generate reset token
 export const generateResetToken = (userId) => {
-    return jwt.sign({ userId }, SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 1 hour
 };
 
+// Validate reset token
 export const validateResetToken = (token) => {
     try {
         const decoded = jwt.verify(token, SECRET);
-        return decoded.userId;
+        return decoded.userId; // Return userId if valid
     } catch (err) {
+        console.error('Invalid or expired token:', err);
         return null;
     }
 };
 
+// Nodemailer transporter
 export const transporter = nodemailer.createTransport({
-    host: emailConfig.host,
-    port: emailConfig.port,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
-        user: emailConfig.auth.user,
-        pass: emailConfig.auth.pass,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
-    secure: false,
+    secure: false, // STARTTLS for port 587
 });
 
+// Send password reset email
 export const sendResetEmail = async (to, token) => {
     const resetLink = `http://sgnews.com/reset-password?token=${token}`;
     const subject = 'Password Reset Request';
@@ -37,15 +42,15 @@ export const sendResetEmail = async (to, token) => {
     try {
         const info = await transporter.sendMail({
             from: emailConfig.auth.user,
-            to, 
+            to,
             subject,
             text,
             html,
         });
         console.log(`Email sent: ${info.messageId}`);
-        return info;
+        return { success: true, message: 'Email sent', info };
     } catch (err) {
         console.error('Error sending email:', err);
-        throw err;
+        return { success: false, message: 'Failed to send email', error: err };
     }
 };
