@@ -38,3 +38,20 @@ export const deletePost = async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 };
+
+// In postController.js
+
+export const searchPostsByTitle = async (req, res) => {
+  const { query } = req.query; // Changed from 'title' to 'query'
+
+  if (!query || typeof query !== 'string') {
+    return res.status(400).json({ error: "Query parameter must be a valid string." });
+  }
+
+  try {
+    const posts = await Post.find({ title: { $regex: query, $options: 'i' } });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -73,10 +73,13 @@
                             <div class="header-right-btn f-right d-none d-lg-block">
                                 <i class="fas fa-search special-tag"></i>
                                 <div class="search-box">
-                                    <form action="#">
-                                        <input type="text" placeholder="Search">
+                                    <form id="searchForm" action="/posts/search" method="GET">
+                                        <input type="text" id="searchInput" name="query" placeholder="Search">
+                                        <button type="submit">Search</button>
                                     </form>
                                 </div>
+                            </div>
+                        </div>
                                 <% if (user) { %>
                                     <!-- If user is logged in, show Profile link -->
                                     <a href="profile" class="person-icon" title="Profile">
