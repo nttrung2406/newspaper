@@ -8,6 +8,7 @@
      <!-- plugins:css -->
      <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+     
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
      <!-- endinject -->
      <!-- Plugin css for this page -->
@@ -16,7 +17,6 @@
      <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.carousel.min.css">
      <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.theme.default.min.css">
      <!-- End plugin css for this page -->
- 
      <!-- Layout styles -->
      <link rel="stylesheet" href="/admin/css/style.css">
      <!-- End layout styles -->
@@ -360,7 +360,7 @@
 
             <!--Page Title-->
             <div class="page-header">
-              <h3 class="page-title">Tạo chuyên mục</h3>
+              <h3 class="page-title">Cập nhật chuyên mục</h3>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item">
@@ -369,67 +369,13 @@
                   <li class="breadcrumb-item">
                     <a href="/admin/categories">Quản lý chuyên mục</a>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">Tạo chuyên mục</li>
+                  <li class="breadcrumb-item active" aria-current="page">Cập nhật</li>
                 </ol>
               </nav>
             </div>
             
-            <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Tạo chuyên mục</h4>
-                    <hr>
-                    <form method="POST" action="/admin/category/create">
-                      <div class="form-group">
-                        <label for="categoryName">Tên chuyên mục</label>
-                        <input 
-                          type="text" 
-                          class="form-control" 
-                          id="categoryName" 
-                          name="categoryName" 
-                          placeholder="Nhập tên chuyên mục" 
-                          required 
-                        />
-                      </div>
-                      <% if (message && message.length > 0) { %>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            <span class="sr-only">Close</span>
-                          </button>
-                          <%= message %>
-                        </div>
-                      <% } %>
 
-                      <div class="form-group">
-                        <label for="description">Mô tả</label>
-                        <textarea 
-                          class="form-control" 
-                          id="description" 
-                          name="description" 
-                          rows="4" 
-                          placeholder="Nhập mô tả của chuyên mục"
-                        ></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="parentName">Chuyên mục cha</label>
-                        <select class="form-control" id="parentName" name="parentName">
-                          <option value="">-- None --</option>
-                          <% parentNames.forEach(parent => { %>
-                            <option value="<%= parent.categoryName %>"><%= parent.categoryName %></option>
-                          <% }) %>
-                        </select>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Create Category</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            
-            
+
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->

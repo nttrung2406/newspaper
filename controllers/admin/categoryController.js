@@ -1,7 +1,10 @@
 
 import Category from "../../models/Category.js";
+import mongoose from "mongoose";
 
-  
+
+
+// Get Category List and Render
 const getCategories = async(req, res, next) =>{
     try {
         const {page = 1, search =''} = req.query;
@@ -18,6 +21,8 @@ const getCategories = async(req, res, next) =>{
 
 
         //console.log(categories)
+        
+        req.flash("categorySearchURL",req.originalUrl)
 
         const message = req.flash('category_create_success')
         res.render('admin/category/category_list',{
@@ -29,6 +34,7 @@ const getCategories = async(req, res, next) =>{
     }
 };
 
+// Return a list of parent category.
 async function getParentID() {
   try {
     const parentCategories = await Category.find({ parentID: null }).select("categoryName");
@@ -44,7 +50,8 @@ async function getParentID() {
   }
 }
 
-const addCategory = async (req, res, next) => {
+// Add a category to database and Go to next page
+const addCategory = async (req, res) => {
     try {
     const { categoryName, description, parentName} = req.body;
 
@@ -82,6 +89,38 @@ const addCategory = async (req, res, next) => {
     }
 };
 
+
+// Get Information of specific category and render
+const viewCategory = async(req, res) =>{
+  const {id} = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.error('Invalid ObjectId:', id);
+    return res.status(400).send('Invalid ID format');
+  }
+
+  const previousURL = req.flash('categorySearchURL');
+
+  const categoryInformation = await Category.findById(id)
+    .populate({path: "parentID", select: "categoryName", model: "Category"});
+  
+  res.render('admin/category/category_info', {categoryInformation, previousURL});
+}
+
+// Get information of specific category for updating and render
+const getCategoryForUpdate = async(req, res) =>{
+  const {id} = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+  {
+    console.log('Invalid ObjectId:', id);
+    res.status(400).send('Invalid ID format');
+  }
+
+
+
+}
+
+// Update the data of category in the database.
 const updateCategory = async (req, res, next) => {
     try {
       const { id } = req.params; 
@@ -123,4 +162,4 @@ const updateCategory = async (req, res, next) => {
   
 
 
-export default {getCategories, getParentID, addCategory};
+export default {getCategories, getParentID, addCategory, viewCategory};

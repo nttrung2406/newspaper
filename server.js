@@ -58,7 +58,6 @@ import adminRoutes from "./routes/adminRoutes.js"
 app.use('/admin', adminRoutes);
 
 
-
 // Routes
 app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
