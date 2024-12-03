@@ -15,10 +15,16 @@ import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { dirname } from "path";
+import MongoDBStore from "connect-mongodb-session";
+import User from "./models/User.js";
 
 dotenv.config({ path: "./config/env/development.env" });
 
 const app = express();
+const store = new MongoDBStore(session)({
+  uri: process.env.MONGO_DB_URI,
+  collection: "sesions",
+});
 const PORT = process.env.PORT || 4000;
 
 // Database connection
@@ -46,6 +52,7 @@ app.set("views", "views");
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(
@@ -53,6 +60,7 @@ app.use(
     secret: "secret", // Replace with a strong secret key for session encryption
     resave: false, // Don't resave session if it hasn't changed
     saveUninitialized: true, // Save a session even if it is new and hasn't been modified
+    store: store,
     cookie: {
       httpOnly: true, // Security measure: prevent access to cookie via JavaScript
       secure: false, // If using https, set to true; for development, set to false
@@ -62,17 +70,36 @@ app.use(
 );
 app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/admin", authMiddleware);
 
-// Routes
+// Use user
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  next();
+});
+
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      next(new Error(err));
+    });
+});
+
+// routes
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
 app.use("/users", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/writer", writerRoutes);
-
-// Use user
-app.use(setUserData);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));

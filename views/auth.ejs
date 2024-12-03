@@ -48,6 +48,7 @@
                 id="login-email"
                 class="form-control"
                 placeholder="Enter your email"
+                name="email"
                 required
               />
             </div>
@@ -58,6 +59,7 @@
                 id="login-password"
                 class="form-control"
                 placeholder="Enter your password"
+                name="password"
                 required
               />
             </div>
@@ -112,12 +114,17 @@
             </div>
             <div class="form-group">
               <label for="signup-role">Role</label>
-              <select id="signup-role" class="form-control" required>
+              <select
+                id="signup-role"
+                class="form-control"
+                name="role"
+                required
+              >
                 <option value="" disabled selected>Select your role</option>
-                <option value="Membership">Membership</option>
-                <option value="Editor">Editor</option>
-                <option value="Writer">Writer</option>
-                <option value="Admin">Admin</option>
+                <option value="membership">Membership</option>
+                <option value="editor">Editor</option>
+                <option value="writer">Writer</option>
+                <option value="admin">Admin</option>
               </select>
             </div>
             <button

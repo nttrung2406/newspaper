@@ -22,15 +22,10 @@ const transporter = nodemailer.createTransport({
 
 const authController = {
   getAuth: (req, res) => {
-    res.render("auth", {
-      user: req.user,
-    });
+    res.render("auth");
   },
   postSignup: async (req, res) => {
-    // console.log("Info: ", req.body);
     const { username, email, password, role } = req.body;
-
-    console.log(username, email, password, role);
 
     try {
       // Input validation
@@ -39,7 +34,7 @@ const authController = {
       }
 
       // Prevent Admin role signup
-      if (role === "Admin") {
+      if (role === "admin") {
         return res.status(403).json({ message: "Cannot sign up as Admin." });
       }
 
@@ -74,6 +69,8 @@ const authController = {
     try {
       const { email, password } = req.body;
 
+      console.log(email, password);
+
       // Find user and verify password (hash check omitted for brevity)
       const user = await User.findOne({ email });
 
@@ -82,15 +79,12 @@ const authController = {
       }
 
       // Save user data to session (or JWT token)
-      req.session.user = {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      };
-
-      // Redirect to index after login
-      res.redirect("/index");
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+      return req.session.save((err) => {
+        console.log(err);
+        res.redirect("/index");
+      });
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).send("Internal Server Error");

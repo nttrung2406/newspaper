@@ -88,10 +88,11 @@
                     <input type="text" placeholder="Search" />
                   </form>
                 </div>
-                <% if (user) { %>
+                <% if (isAuthenticated) { %>
                 <!-- If user is logged in, show Profile link -->
                 <a href="/auth/profile" class="person-icon" title="Profile">
-                  <i class="fas fa-user"></i> <span><%= user.username %></span>
+                  <i class="fas fa-user"></i>
+                  <span><%= isAuthenticated ? 'Profile' : '' %></span>
                 </a>
                 <% } else { %>
                 <!-- If user is not logged in, show Sign Up/Login button -->
