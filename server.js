@@ -13,6 +13,7 @@ import authMiddleware from './middlewares/authMiddleware.js';
 import userRoutes from './routes/userRoutes.js';
 import setUserData from './middlewares/setUserData.js';
 import writerRoutes from "./routes/writerRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"
 
 dotenv.config({ path: './config/env/development.env' });
 
@@ -60,6 +61,8 @@ app.use('/admin', authMiddleware);
 app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
+
 
 // Static files
 app.use('/assets', express.static(path.join(__dirname, 'public')));
