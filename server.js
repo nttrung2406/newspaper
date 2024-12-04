@@ -76,7 +76,32 @@ app.use(
 );
 
 app.use(flash());
-app.use("/admin", authMiddleware);
+app.use(express.static(path.join(__dirname, "public")));
+
+// Use user
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.role = "";
+  next();
+});
+
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      res.locals.role = user.role;
+      next();
+    })
+    .catch((err) => {
+      next(new Error(err));
+    });
+});
 
 // Routes
 app.use("/auth", authRoutes);

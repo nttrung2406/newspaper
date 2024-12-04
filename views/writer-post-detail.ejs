@@ -49,7 +49,97 @@
     <!-- Header start -->
     <%- include('./partials/header.ejs') %>
 
+<<<<<<<< HEAD:views/writer-post-detail.ejs
     <main></main>
+========
+    <main>
+      <div class="container my-5">
+        <!-- Card for creating a new post -->
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title" style="font-size: 1.5rem">
+              Unleash Your Creativity
+            </div>
+            <p class="card-text">
+              Write captivating stories, break trending news, or share your
+              unique insights with the world. Your voice matters!
+            </p>
+            <a href="/writer/add-post" class="btn btn-primary">Start Writing</a>
+          </div>
+        </div>
+
+        <!-- Card for listing posts -->
+        <div class="card mt-5">
+          <div class="card-header" style="font-size: 1.5rem">
+            List of Posts &centerdot;
+            <a href="/writer/posts" class="text-secondary">See full lists</a>
+          </div>
+          <ul class="list-group list-group-flush">
+            <!-- Example posts -->
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-success">Approved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+              </div>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-success">Approved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+              </div>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-danger">Unapproved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+                <a
+                  href="/writer/edit-post/1"
+                  class="btn btn-outline-warning btn-sm"
+                  >Edit</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+>>>>>>>> 5db9014 (add writer posts skeleton + edit post + add post routes + use middleware to check writer permission):views/writer.ejs
 
     <!-- Footer start -->
     <%- include('./partials/footer.ejs') %>
