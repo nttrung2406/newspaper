@@ -374,6 +374,37 @@
               </nav>
             </div>
             
+            <div class="row">
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card text-left">
+                  <div class="card-body">
+                    <h4 class="card-title">Cập nhật</h4>
+                    <hr>
+                    <form action="/admin/category/updated/:id" method="post">
+                      <div class="form-group mt-3 mb-3">
+                        <label for="categoryName">Tên chuyên mục</label>
+                        <input type="text" name="categoryName" id="categoryName" class="form-control">
+                      </div>
+  
+                      <div class="form-group mt-3 mb-3">
+                        <label for="description">Mô tả</label>
+                        <textarea name="description" id="description" class="form-control" rows="4"></textarea>
+                      </div>
+  
+                      <div class="form-group mt-3 mb-3">
+                        <label for="parentID">Chuyên mục cha</label>
+                        <select name="parentID" id="parentID" class="form-control">
+                          <option value="">-- None --</option>
+                        </select>
+                      </div>
+
+                      <button class="btn btn-primary" type="submit">Cập nhật</button>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
 
 
           </div>

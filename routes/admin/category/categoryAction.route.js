@@ -15,7 +15,9 @@ router.route("/create")
 
 router.get("/info/:id",catergoryController.viewCategory)
 router.route("/update/:id")
-.get()
+.get(async(req, res)=>{
+    res.render("admin/category/category_update")
+})
 .post()
 // router.get("/delete/:id")
 
