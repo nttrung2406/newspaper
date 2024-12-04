@@ -1,6 +1,6 @@
 const writerController = {
   getEditPost: (req, res, next) => {
-    res.render("edit-post", {
+    res.render("edit_post", {
       pageTitle: "Edit Post",
       path: "writer/edit-post",
     });
