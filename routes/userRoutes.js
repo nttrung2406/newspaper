@@ -1,9 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 router.get('/profile', (req, res) => {
     res.send('User Profile');
 });
 
-
-module.exports = router;  
+export default router;

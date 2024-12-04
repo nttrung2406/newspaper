@@ -22,7 +22,7 @@ const getCategories = async(req, res, next) =>{
 
         //console.log(categories)
         
-        req.flash("categorySearchURL",req.originalUrl)
+
 
         const message = req.flash('category_create_success')
         res.render('admin/category/category_list',{
@@ -99,12 +99,11 @@ const viewCategory = async(req, res) =>{
     return res.status(400).send('Invalid ID format');
   }
 
-  const previousURL = req.flash('categorySearchURL');
 
   const categoryInformation = await Category.findById(id)
     .populate({path: "parentID", select: "categoryName", model: "Category"});
   
-  res.render('admin/category/category_info', {categoryInformation, previousURL});
+  res.render('admin/category/category_info', {categoryInformation});
 }
 
 // Get information of specific category for updating and render
