@@ -57,6 +57,7 @@ const authController = {
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
+      res.redirect('/login');
     } catch (error) {
       console.error(
         "Error signing up:",

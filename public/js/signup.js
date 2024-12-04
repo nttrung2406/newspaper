@@ -30,38 +30,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Login form submission
-  // const formLogin = document.getElementById('login-form');
-  // if (formLogin) {
-  //     formLogin.addEventListener('submit', async (event) => {
-  //         event.preventDefault();
-  //         const email = document.getElementById('login-email').value;
-  //         const password = document.getElementById('login-password').value;
+  const formLogin = document.getElementById('login-form');
+  if (formLogin) {
+      formLogin.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
 
-  //         try {
-  //             const response = await fetch('/auth/login', {
-  //                 method: 'POST',
-  //                 headers: { 'Content-Type': 'application/json' },
-  //                 body: JSON.stringify({ email, password }),
-  //             });
+          try {
+              const response = await fetch('/auth/login', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email, password }),
+              });
 
-  //             let data;
-  //             if (response.headers.get('Content-Type')?.includes('application/json')) {
-  //                 data = await response.json();
-  //             } else {
-  //                 data = { message: await response.text() };
-  //             }
+              let data;
+              if (response.headers.get('Content-Type')?.includes('application/json')) {
+                  data = await response.json();
+              } else {
+                  data = { message: await response.text() };
+              }
 
-  //             if (response.ok) {
-  //                 window.location.href = '/index'; // Navigate to home page
-  //             } else {
-  //                 console.log(`Error: ${data.message || 'An unknown error occurred'}`);
-  //             }
-  //         } catch (err) {
-  //             console.error('Login error:', err);
-  //             console.log('An error occurred while logging in.');
-  //         }
-  //     });
-  // }
+              if (response.ok) {
+                  window.location.href = '/index'; // Navigate to home page
+              } else {
+                  console.log(`Error: ${data.message || 'An unknown error occurred'}`);
+              }
+          } catch (err) {
+              console.error('Login error:', err);
+              console.log('An error occurred while logging in.');
+          }
+      });
+  }
 
   // forgot password
   const formForgot = document.getElementById("forgot-password-form");
