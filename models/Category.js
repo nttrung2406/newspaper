@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 const categoriesSchema = new mongoose.Schema(
   {
     categoryName: String,
@@ -11,5 +12,8 @@ const categoriesSchema = new mongoose.Schema(
   }
 );
 
+
+
 const Category = mongoose.model('Category', categoriesSchema);
+
 export default Category;

@@ -95,11 +95,13 @@ app.use((req, res, next) => {
 });
 
 // routes
+import {authorizeRole} from './middlewares/authMiddleware.js'
+
 app.use("/auth", authRoutes);
-app.use("/posts", postRoutes);
-app.use("/users", userRoutes);
-app.use("/admin", adminRoutes);
-app.use("/writer", writerRoutes);
+app.use("/posts",authorizeRole([ /* tự điền */]), postRoutes);
+app.use("/users",authorizeRole([ /* tự điền */]), userRoutes);
+app.use("/admin", authorizeRole(['admin']), adminRoutes);
+app.use("/writer", authorizeRole(['writer']),writerRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));

@@ -57,7 +57,6 @@ const authController = {
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
-      res.redirect('/login');
     } catch (error) {
       console.error(
         "Error signing up:",
@@ -82,9 +81,13 @@ const authController = {
       // Save user data to session (or JWT token)
       req.session.isLoggedIn = true;
       req.session.user = user;
+
       return req.session.save((err) => {
         console.log(err);
-        res.redirect("/index");
+        if ( req.session.user.role === 'admin'){
+          res.redirect('/admin');
+        }
+        else {res.redirect("/index");}
       });
     } catch (error) {
       console.error("Error logging in:", error);

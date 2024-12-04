@@ -13,8 +13,10 @@ router.route("/create")
 .post(catergoryController.addCategory);
 
 
-// router.get("/info/:id")
-// router.get("/update/:id")
+router.get("/info/:id",catergoryController.viewCategory)
+router.route("/update/:id")
+.get(catergoryController.getCategoryForUpdate)
+.post()
 // router.get("/delete/:id")
 
 export default router;
