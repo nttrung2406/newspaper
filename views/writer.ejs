@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title><%= pageTitle %></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+
+    <link rel="stylesheet" href="/css/ticker-style.css" />
+
+    <link rel="stylesheet" href="/css/flaticon.css" />
+
+    <link rel="stylesheet" href="/css/slicknav.css" />
+    <link rel="stylesheet" href="/css/animate.min.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/css/themify-icons.css" />
+    <link rel="stylesheet" href="/css/slick.css" />
+    <link rel="stylesheet" href="/css/nice-select.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+    <style>
+      .post-card {
+        margin-bottom: 1rem;
+      }
+      .status {
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+      .status.unapproved {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header start -->
+    <%- include('./partials/header.ejs') %>
+
+    <main>
+      <div class="container my-5">
+        <!-- Card for creating a new post -->
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title" style="font-size: 1.5rem">
+              Unleash Your Creativity
+            </div>
+            <p class="card-text">
+              Write captivating stories, break trending news, or share your
+              unique insights with the world. Your voice matters!
+            </p>
+            <a href="/writer/add-post" class="btn btn-primary">Start Writing</a>
+          </div>
+        </div>
+
+        <!-- Card for listing posts -->
+        <div class="card mt-5">
+          <div class="card-header" style="font-size: 1.5rem">
+            List of Posts &centerdot;
+            <a href="/writer/posts" class="text-secondary">See full lists</a>
+          </div>
+          <ul class="list-group list-group-flush">
+            <!-- Example posts -->
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-success">Approved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+              </div>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-success">Approved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+              </div>
+            </li>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5 class="mb-1">Breaking News: Tech Innovations 2024</h5>
+                <div class="text-muted">Published: Dec 4, 2024</div>
+                <div class="text-muted">
+                  Status: <span class="text-danger">Unapproved</span>
+                </div>
+              </div>
+              <div>
+                <a
+                  href="/writer/view-post/1"
+                  class="btn btn-outline-info btn-sm mr-2"
+                  >View</a
+                >
+                <a
+                  href="/writer/edit-post/1"
+                  class="btn btn-outline-warning btn-sm"
+                  >Edit</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer start -->
+    <%- include('./partials/footer.ejs') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      const quill = new Quill("#editor", {
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline"],
+            ["link", "blockquote", "code-block", "image"],
+            [{ list: "ordered" }, { list: "bullet" }],
+          ],
+        },
+        theme: "snow",
+      });
+
+      quill.on("text-change", function (delta, oldDelta, source) {
+        console.log(quill.container.firstChild.innerHTML);
+        $("#detail").val(quill.container.firstChild.innerHTML);
+      });
+    </script>
+
+    <!-- All JS Custom Plugins Link Here here -->
+    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <!-- Date Picker -->
+    <script src="/js/gijgo.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="/js/wow.min.js"></script>
+    <script src="/js/animated.headline.js"></script>
+    <script src="/js/jquery.magnific-popup.js"></script>
+
+    <!-- Breaking New Pluging -->
+    <script src="/js/jquery.ticker.js"></script>
+    <script src="/js/site.js"></script>
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <script src="/js/jquery.nice-select.min.js"></script>
+    <script src="/js/jquery.sticky.js"></script>
+
+    <!-- contact js -->
+    <script src="/js/contact.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/mail-script.js"></script>
+    <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

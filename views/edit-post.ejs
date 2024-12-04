@@ -34,15 +34,12 @@
   </head>
 
   <body>
-    <!-- Preloader Start -->
-    <%- include('./includes/preloader.ejs') %>
-
     <!-- Header start -->
-    <%- include('./includes/header.ejs') %>
+    <%- include('./partials/header.ejs') %>
 
     <main>
       <div class="container my-5">
-        <p class="h3">Create New Post</p>
+        <p class="h3"><%= pageTitle %></p>
         <form action="edit-post" method="POST">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -99,13 +96,15 @@
               name="tags"
             />
           </div>
-          <button type="submit" class="btn btn-primary">Create Post</button>
+          <button type="submit" class="btn btn-primary">
+            <%= editing ? 'Save Post' : 'Create Post' %>
+          </button>
         </form>
       </div>
     </main>
 
     <!-- Footer start -->
-    <%- include('./includes/footer.ejs') %>
+    <%- include('./partials/footer.ejs') %>
 
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 

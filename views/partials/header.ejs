@@ -76,6 +76,9 @@
                         <li><a href="/details">Category Details</a></li>
                       </ul>
                     </li>
+                    <% if (role && role === 'writer') { %>
+                    <li><a href="/writer">Compose</a></li>
+                    <% } %>
                   </ul>
                 </nav>
               </div>
@@ -85,7 +88,12 @@
                 <i class="fas fa-search special-tag"></i>
                 <div class="search-box">
                   <form id="searchForm" action="/posts/search" method="GET">
-                    <input type="text" id="searchInput" name="query" placeholder="Search"/>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      name="query"
+                      placeholder="Search"
+                    />
                   </form>
                 </div>
                 <% if (isAuthenticated) { %>

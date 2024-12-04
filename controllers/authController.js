@@ -57,12 +57,13 @@ const authController = {
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
-      res.redirect('/login');
+      res.redirect("/login");
     } catch (error) {
-      console.error(
-        "Error signing up:",
-        error.errorResponse.errInfo.details.schemaRulesNotSatisfied[0]
-      );
+      console.log(error);
+      // console.error(
+      //   "Error signing up:",
+      //   error.errorResponse.errInfo.details.schemaRulesNotSatisfied[0]
+      // );
       res.status(500).json({ message: "Internal server error." });
     }
   },

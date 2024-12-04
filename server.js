@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 4000;
   } catch (err) {
     console.error("Error fetching collections:", err.message);
   }
-};
+};*/
 
 // connectMongoDB().then(testDatabaseConnection);
 
@@ -77,6 +77,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Use user
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.role = "";
   next();
 });
 
@@ -90,6 +91,7 @@ app.use((req, res, next) => {
         return next();
       }
       req.user = user;
+      res.locals.role = user.role;
       next();
     })
     .catch((err) => {
