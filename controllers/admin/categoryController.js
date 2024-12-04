@@ -115,8 +115,15 @@ const getCategoryForUpdate = async(req, res) =>{
     res.status(400).send('Invalid ID format');
   }
 
+  const categoryInfo = await Category.findById(id).populate({path: "parentID", select: "categoryName", model: "Category"});
 
+  console.log(categoryInfo)
+  if (!categoryInfo)
+  {
+    res.status(400).send('ID của chuyên mục không tồn tại.')
+  }
 
+  res.render("admin/category/category_update", {categoryInfo})
 }
 
 // Update the data of category in the database.
@@ -161,4 +168,4 @@ const updateCategory = async (req, res, next) => {
   
 
 
-export default {getCategories, getParentID, addCategory, viewCategory};
+export default {getCategories, getParentID, addCategory, viewCategory, getCategoryForUpdate};
