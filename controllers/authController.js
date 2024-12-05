@@ -15,6 +15,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  secure: process.env.SMTP_PORT == 465,
+  debug: true, // Enable debugging
+  logger: true, // Log debug information
 });
 
 // Generate a reset token
