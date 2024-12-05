@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
-    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 1 hour
+    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 12 hour
 };
 
 // Validate reset token

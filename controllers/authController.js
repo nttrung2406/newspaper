@@ -57,6 +57,7 @@ const authController = {
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
+      res.redirect('/login');
     } catch (error) {
       console.error(
         "Error signing up:",
@@ -111,7 +112,7 @@ const authController = {
         // Email content
         const subject = "Password Reset Request";
         const text = `Click the link to reset your password: ${resetLink}`;
-        const html = `<p>Click the link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`;
+        const html = `<p>Click the link to reset your password: <a href="${resetLink}">RESET</a></p>`;
 
         // Send the email
         const emailResponse = await sendResetEmail(email, subject, text, html);

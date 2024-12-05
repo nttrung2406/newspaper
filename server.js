@@ -9,9 +9,9 @@ import flash from "connect-flash";
 import connectMongoDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
-import authMiddleware from "./middlewares/authMiddleware.js";
+import {authorizeRole} from './middlewares/authMiddleware.js'
 import userRoutes from "./routes/userRoutes.js";
-import setUserData from "./middlewares/setUserData.js";
+// import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { dirname } from "path";
@@ -41,7 +41,7 @@ const testDatabaseConnection = async () => {
   }
 };
 
-// connectMongoDB().then(testDatabaseConnection);
+connectMongoDB().then(testDatabaseConnection);
 
 // Resolve __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -95,8 +95,6 @@ app.use((req, res, next) => {
 });
 
 // routes
-import {authorizeRole} from './middlewares/authMiddleware.js'
-
 app.use("/auth", authRoutes);
 app.use("/posts",authorizeRole([ /* tự điền */]), postRoutes);
 app.use("/users",authorizeRole([ /* tự điền */]), userRoutes);
@@ -114,6 +112,7 @@ app.get("/elements", (req, res) => res.render("elements"));
 app.get("/blog", (req, res) => res.render("blog"));
 app.get("/single-blog", (req, res) => res.render("single-blog"));
 app.get("/details", (req, res) => res.render("details"));
+app.get("/searchResults", (req, res) => res.render("searchResults"));
 
 mongoose
   .connect(process.env.MONGO_DB_URI)
