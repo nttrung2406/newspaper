@@ -1,29 +1,47 @@
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
+import crypto from "crypto";
 import User from "../models/User.js";
-import {
-  sendResetEmail,
-  generateResetToken,
-  validateResetToken,
-} from "../utils/authHelpers.js";
 import dotenv from "dotenv";
+
 dotenv.config({ path: "./config/env/development.env" });
 
-// Nodemailer transport setup
+// Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
+  secure: false, // Use STARTTLS for port 587
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-  secure: false, // STARTTLS for port 587
 });
+
+// Generate a reset token
+const generateResetToken = () => crypto.randomBytes(32).toString("hex");
+
+// Utility to send reset email
+const sendResetEmail = async (to, subject, textContent, htmlContent) => {
+  try {
+    await transporter.sendMail({
+      from: `"Newspaper App" <${process.env.SMTP_USER}>`, // Sender address
+      to,
+      subject,
+      text: textContent,
+      html: htmlContent,
+    });
+    console.log(`Reset email sent to ${to}`);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
+};
 
 const authController = {
   getAuth: (req, res) => {
     res.render("auth");
   },
+
   postSignup: async (req, res) => {
     const { username, email, password, role } = req.body;
 
@@ -49,53 +67,50 @@ const authController = {
 
       // Create and save new user
       const newUser = new User({
-        username: username,
-        email: email,
+        username,
+        email,
         password: hashedPassword,
-        role: role,
+        role,
       });
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
     } catch (error) {
-      console.error(
-        "Error signing up:",
-        error.errorResponse.errInfo.details.schemaRulesNotSatisfied[0]
-      );
+      console.error("Error signing up:", error);
       res.status(500).json({ message: "Internal server error." });
     }
   },
+
   postLogin: async (req, res) => {
     try {
       const { email, password } = req.body;
 
-      console.log(email, password);
-
-      // Find user and verify password (hash check omitted for brevity)
       const user = await User.findOne({ email });
-
-      if (!user && !(await bcrypt.compare(password, user.password))) {
+      if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(400).send("Invalid credentials");
       }
 
-      // Save user data to session (or JWT token)
+      // Save user data to session
       req.session.isLoggedIn = true;
       req.session.user = user;
 
-      return req.session.save((err) => {
-        console.log(err);
-        if ( req.session.user.role === 'admin'){
-          res.redirect('/admin');
+      req.session.save((err) => {
+        if (err) {
+          console.error("Error saving session:", err);
         }
-        else {res.redirect("/index");}
+        if (req.session.user.role === "admin") {
+          res.redirect("/admin");
+        } else {
+          res.redirect("/index");
+        }
       });
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).send("Internal Server Error");
     }
   },
+
   postForgotPassword: async (req, res) => {
-    console.log("req", req);
     try {
       const { email } = req.body;
 
@@ -106,9 +121,16 @@ const authController = {
           .json({ message: "No user found with that email." });
       }
 
-      const token = generateResetToken(user._id);
-      const resetLink = `http://localhost:4000/reset-password?token=${token}`;
+      // Generate a reset token
+      const token = generateResetToken();
+      user.resetToken = token;
+      user.resetTokenExpiry = Date.now() + 3600000; // 1-hour expiry
+      await user.save();
 
+      // Generate reset link
+      const resetLink = `${process.env.APP_URL}/reset-password?token=${token}`;
+
+      // Send reset email
       await sendResetEmail(
         email,
         "Password Reset Request",
@@ -124,6 +146,7 @@ const authController = {
       res.status(500).json({ message: "Internal server error." });
     }
   },
+
   postResetPassword: async (req, res) => {
     const { token, newPassword } = req.body;
 
@@ -137,26 +160,27 @@ const authController = {
         return res.status(400).json({ message: "Invalid or expired token." });
       }
 
+      // Hash new password
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
       user.resetToken = undefined;
       user.resetTokenExpiry = undefined;
       await user.save();
 
-      res
-        .status(200)
-        .json({ message: "Password has been reset successfully." });
+      res.status(200).json({ message: "Password has been reset successfully." });
     } catch (err) {
       console.error("Error in reset-password route:", err);
       res.status(500).json({ message: "Internal server error." });
     }
   },
+
   getProfile: (req, res) => {
     if (!req.session.user) {
       return res.redirect("/auth");
     }
     res.render("profile", { user: req.session.user });
   },
+
   postLogout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
@@ -167,10 +191,11 @@ const authController = {
       res.redirect("/index");
     });
   },
-  getForgotPassword: (req, res) =>
-    res.render("forgot_password", {
-      user: req.user,
-    }),
+
+  getForgotPassword: (req, res) => {
+    res.render("forgot_password");
+  },
+
   getResetPassword: (req, res) => {
     const { token } = req.query;
     res.render("reset_password", { token });
