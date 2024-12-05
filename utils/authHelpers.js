@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: './config/env/development.env' });
+import { emailConfig } from '../config/email.js';
 
 const SECRET = process.env.JWT_SECRET || 'fallbackSecret'; 
 
@@ -34,16 +32,10 @@ export const transporter = nodemailer.createTransport({
 });
 
 // Send password reset email
-export const sendResetEmail = async (to, token) => {
-    const resetLink = `https://newspaper-2uw4.onrender.com//reset-password?token=${token}`;
-    const subject = 'Password Reset Request';
-    const text = `You requested a password reset. Use the following link to reset your password: ${resetLink}`;
-    const html = `<p>You requested a password reset. Click the link below to reset your password:</p>
-                  <a href="${resetLink}">${resetLink}</a>`;
-
+export const sendResetEmail = async (to, subject, text, html) => {
     try {
         const info = await transporter.sendMail({
-            from: process.env.SMTP_USER,
+            from: emailConfig.auth.user,
             to,
             subject,
             text,
@@ -57,11 +49,3 @@ export const sendResetEmail = async (to, token) => {
     }
 };
 
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('SMTP connection failed:', error);
-    } else {
-        console.log('SMTP connection successful');
-        sendResetEmail();
-    }
-});
