@@ -59,12 +59,12 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "secret", // Replace with a strong secret key for session encryption
-    resave: true, // Don't resave session if it hasn't changed
+    resave: false, // Don't resave session if it hasn't changed
     saveUninitialized: false, 
     store: store,
     cookie: {
       httpOnly: true, // Security measure: prevent access to cookie via JavaScript
-      secure: false, // If using https, set to true; for development, set to false
+      secure: true, // If using https, set to true; for development, set to false
       maxAge: 1000 * 60 * 60 * 24, // Set the session expiration time (optional, here it's 1 day)
     },
   })
