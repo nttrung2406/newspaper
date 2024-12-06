@@ -111,7 +111,7 @@ const authController = {
         // Generate reset token and link
         const token = generateResetToken(user._id);
         const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
-        // const resetLink = "http://localhost:4000/auth/reset_password?token=${token}";
+        // const resetLink = "http://localhost:4000/auth/forgot_password?token=${token}";
 
         // Email content
         const subject = "Password Reset Request";
@@ -120,6 +120,7 @@ const authController = {
 
         // Send the email
         const emailResponse = await sendResetEmail(email, subject, text, html);
+        console.log("emailResponse: ", emailResponse);
         if (!emailResponse.success) {
             return res.status(500).json({ message: "Failed to send reset email." });
         }
