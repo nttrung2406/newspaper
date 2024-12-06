@@ -9,7 +9,7 @@ import flash from "connect-flash";
 import connectMongoDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
-import {authorizeRole} from './middlewares/authMiddleware.js'
+import { authorizeRole } from "./middlewares/authMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 // import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
@@ -42,7 +42,7 @@ const PORT = process.env.PORT || 4000;
   }
 };*/
 
-connectMongoDB().then(testDatabaseConnection);
+// connectMongoDB().then(testDatabaseConnection);
 
 // Resolve __dirname equivalent in ESM
 app.use(express.json());
@@ -63,7 +63,7 @@ app.use(
   session({
     secret: "secret", // Replace with a strong secret key for session encryption
     resave: false, // Don't resave session if it hasn't changed
-    saveUninitialized: false, 
+    saveUninitialized: false,
     store: store,
     cookie: {
       httpOnly: true, // Security measure: prevent access to cookie via JavaScript
@@ -102,11 +102,11 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/auth", authRoutes);
-app.use("/posts", authorizeRole(['admin', 'editor', 'writer']), postRoutes); 
-app.use("/users", authorizeRole(['admin']), userRoutes);
-app.use("/admin", authorizeRole(['admin']), adminRoutes);
-app.use("/editor", authorizeRole(['editor']), editorRoutes);
-app.use("/writer", authorizeRole(['writer']),writerRoutes);
+app.use("/posts", authorizeRole(["admin", "editor", "writer"]), postRoutes);
+app.use("/users", authorizeRole(["admin"]), userRoutes);
+app.use("/admin", authorizeRole(["admin"]), adminRoutes);
+app.use("/editor", authorizeRole(["editor"]), editorRoutes);
+app.use("/writer", writerRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));

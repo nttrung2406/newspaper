@@ -8,6 +8,14 @@ router.get("/", checkRole("writer"), writerController.getWriterPage);
 
 router.get("/add-post", checkRole("writer"), writerController.getAddPost);
 
+router.post("/add-post", checkRole("writer"), writerController.postAddPost);
+
+router.get(
+  "/edit-post/:postId",
+  checkRole("writer"),
+  writerController.getEditPost
+);
+
 router.post("/edit-post", checkRole("writer"), writerController.postEditPost);
 
 router.get("/posts", checkRole("writer"), writerController.getPosts);
