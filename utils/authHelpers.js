@@ -34,6 +34,7 @@ export const transporter = nodemailer.createTransport({
 
 // Send password reset email
 export const sendResetEmail = async (to, subject, text, html) => {
+    console.log("4444444444444444444: ", to, subject, text, html);
     try {
         const info = await transporter.sendMail({
             from: emailConfig.auth.user,
