@@ -9,5 +9,5 @@ export const emailConfig = {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
-    secure: (process.env.ENV === 'production') ? true : false,
+    secure:  true,
 };
