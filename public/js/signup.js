@@ -76,9 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         });
-        console.log("response: " + JSON.stringify(response));
         const data = await response.json();
-        console.log("data: " , data);
         if (response.ok) {
           console.log("Password reset link sent to your email.");
         } else {
