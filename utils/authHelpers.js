@@ -6,6 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
+    console.log(userId, SECRET, "11111111111111111111")
     return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 12 hour
 };
 
@@ -41,6 +42,7 @@ export const sendResetEmail = async (to, subject, text, html) => {
             text,
             html,
         });
+
         console.log(`Email sent: ${info.messageId}`);
         return { success: true, message: 'Email sent', info };
     } catch (err) {
