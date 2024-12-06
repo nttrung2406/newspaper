@@ -31,7 +31,7 @@ export const transporter = nodemailer.createTransport({
     // requireTLS: false,
     auth: {
         user: process.env.SMTP_USER,
-        pass: "grhf vcsa qppj mjaw",
+        pass: process.env.SMTP_PASS,
     },
     // tls: {
     //     ciphers:'SSLv3'
