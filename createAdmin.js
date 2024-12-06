@@ -5,7 +5,7 @@ import User from './models/User.js';
 const createAdminUser = async () => {
     try {
         // Connect to MongoDB
-        await mongoose.connect('mongodb+srv://hquoc12:1234567890@management.zlfzc.mongodb.net/management', {
+        await mongoose.connect('mongodb://26.174.246.225:27017/management', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -14,9 +14,9 @@ const createAdminUser = async () => {
 
         const adminUser = new User({
             username: 'admin',
-            email: '20127654@student.hcmus.edu.vn',
+            email: 'florianpicasso111@gmail.com',
             password: hashedPassword,
-            role: 'admin',
+            role: 'Admin',
         });
 
         // Save the admin user to the database

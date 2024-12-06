@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
-    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 1 hour
+    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 12 hour
 };
 
 // Validate reset token
@@ -22,23 +22,17 @@ export const validateResetToken = (token) => {
 
 // Nodemailer transporter
 export const transporter = nodemailer.createTransport({
+    // service: "gmail",
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
-    secure: false, // STARTTLS for port 587
 });
 
 // Send password reset email
-export const sendResetEmail = async (to, token) => {
-    const resetLink = `http://sgnews.com/reset-password?token=${token}`;
-    const subject = 'Password Reset Request';
-    const text = `You requested a password reset. Use the following link to reset your password: ${resetLink}`;
-    const html = `<p>You requested a password reset. Click the link below to reset your password:</p>
-                  <a href="${resetLink}">${resetLink}</a>`;
-
+export const sendResetEmail = async (to, subject, text, html) => {
     try {
         const info = await transporter.sendMail({
             from: emailConfig.auth.user,
@@ -54,3 +48,4 @@ export const sendResetEmail = async (to, token) => {
         return { success: false, message: 'Failed to send email', error: err };
     }
 };
+

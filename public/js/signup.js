@@ -101,6 +101,35 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Passwords do not match!");
         return;
       }
+
+      // Extract the token from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+
+      if (!token) {
+        console.log("Invalid or missing token!");
+        return;
+      }
+
+      try {
+        const response = await fetch("/auth/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, newPassword }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log("Password reset successfully!");
+          // Optionally redirect to the login page
+          window.location.href = "/login";
+        } else {
+          console.log(`Error: ${data.message}`);
+        }
+      } catch (err) {
+        console.error("Error resetting password:", err);
+        console.log("An error occurred while resetting the password.");
+      }
     });
   }
 });
