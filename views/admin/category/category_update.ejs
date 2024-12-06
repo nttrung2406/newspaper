@@ -380,7 +380,7 @@
                   <div class="card-body">
                     <h4 class="card-title">Cập nhật</h4>
                     <hr>
-                    <form action="/admin/category/updated/:id" method="post">
+                    <form action="/admin/category/update/<%= id %>" method="post">
                       <div class="form-group mt-3 mb-3">
                         <label for="categoryName">Tên chuyên mục</label>
                         <input type="text" name="categoryName" id="categoryName" class="form-control" value="<%= categoryInfo.categoryName %>">
@@ -394,7 +394,17 @@
                       <div class="form-group mt-3 mb-3">
                         <label for="parentID">Chuyên mục cha</label>
                         <select name="parentID" id="parentID" class="form-control">
-                          <option value="">-- None --</option>
+                          <% if (categoryInfo.parentID) {%>
+                            <option value="<%= categoryInfo.parentID._id %>"><%= categoryInfo.parentID.categoryName %></option>
+                            <option value="">-- None --</option>
+                          <%} else {%>
+                            <option value="">-- None --</option>
+                          <%} %>
+                          
+                          <% parentCategories.forEach(item => {%>
+                            <option value="<%= item._id %>"><%= item.categoryName %></option>
+                          <%}); %>
+
                         </select>
                       </div>
 

@@ -108,7 +108,8 @@ const viewCategory = async(req, res) =>{
 
 // Get information of specific category for updating and render
 const getCategoryForUpdate = async(req, res) =>{
-  const {id} = req.params;
+  try{
+    const {id} = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
   {
     console.log('Invalid ObjectId:', id);
@@ -117,49 +118,43 @@ const getCategoryForUpdate = async(req, res) =>{
 
   const categoryInfo = await Category.findById(id).populate({path: "parentID", select: "categoryName", model: "Category"});
 
-  console.log(categoryInfo)
+  //console.log(categoryInfo)
   if (!categoryInfo)
   {
     res.status(400).send('ID của chuyên mục không tồn tại.')
   }
 
-  res.render("admin/category/category_update", {categoryInfo})
+  let idList = categoryInfo.parentID ? [categoryInfo.parentID._id, id] : [id]
+  //console.log(idList)
+  const parentCategories = await Category.find({
+    _id: {$nin: idList},
+    parentID: null
+  })
+
+  req.flash("category_create_success", "Cập nhật chuyên mục thành công.")
+
+  res.render("admin/category/category_update", {categoryInfo, parentCategories, id})
+  }
+  catch(error){
+    console.log("Error fetching category for update: ", error.message);
+    res.status(500).send("Server error: " + error.message)
+  }
 }
 
 // Update the data of category in the database.
 const updateCategory = async (req, res, next) => {
     try {
       const { id } = req.params; 
-      const { categoryName, description, parent } = req.body;  
+      const { categoryName, description, parentID } = req.body;  
   
-      const category = await Category.findById(id);
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
+      if (!mongoose.Types.ObjectId.isValid(id))
+      {
+        console.log("Invalid objectID", id)
+        res.status(400).send("Invalid ID format");
       }
-  
-    
-      const existingCategory = await Category.findOne({ categoryName, _id: { $ne: id } });
-      if (existingCategory) {
-        return res.status(400).json({ message: "Category name already exists" });
-      }
-  
 
-      if (parent) {
-        const parentCategory = await Category.findById(parent);
-        if (!parentCategory) {
-          return res.status(400).json({ message: "Parent category does not exist" });
-        }
-      }
-  
+      res.redirect("/admin/categories")
 
-      const updatedCategory = await Category.findByIdAndUpdate(
-        id, 
-        { categoryName, description, parent: parent || null, updatedAt: Date.now() },
-        { new: true }  
-      );
-  
-      res.status(200).json({ message: "Category updated successfully", category: updatedCategory });
-      next();
     } catch (error) {
       console.error("Error updating category:", error.message);
       res.status(500).json({ message: "Server error: " + error.message });
@@ -168,4 +163,4 @@ const updateCategory = async (req, res, next) => {
   
 
 
-export default {getCategories, getParentID, addCategory, viewCategory, getCategoryForUpdate};
+export default {getCategories, getParentID, addCategory, viewCategory, getCategoryForUpdate, updateCategory};
