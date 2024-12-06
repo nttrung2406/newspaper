@@ -8,7 +8,9 @@ import mongoose from "mongoose";
 import connectMongoDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
-import authMiddleware from "./middlewares/authMiddleware.js";
+import { authorizeRole } from "./middlewares/authMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
+// import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -42,8 +44,7 @@ const PORT = process.env.PORT || 4000;
   }
 };*/
 
-// Connect to MongoDB and test connection
-connectMongoDB().then(testDatabaseConnection); */
+// connectMongoDB().then(testDatabaseConnection);
 
 // Resolve __dirname equivalent in ESM
 app.use(express.json());
@@ -68,10 +69,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "123456789",
-    resave: false,
+    secret: "secret", // Replace with a strong secret key for session encryption
+    resave: false, // Don't resave session if it hasn't changed
     saveUninitialized: false,
-    cookie: { secure: false },
+    store: store,
+    cookie: {
+      httpOnly: true, // Security measure: prevent access to cookie via JavaScript
+      secure: false, // If using https, set to true; for development, set to false
+      maxAge: 1000 * 60 * 60 * 24, // Set the session expiration time (optional, here it's 1 day)
+    },
   })
 );
 
@@ -105,12 +111,11 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/posts", postRoutes);
-
-// Static files
-// app.use("/assets", express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/", express.static(path.join(__dirname, "views")));
+app.use("/posts", authorizeRole(["admin", "editor", "writer"]), postRoutes);
+app.use("/users", authorizeRole(["admin"]), userRoutes);
+app.use("/admin", authorizeRole(["admin"]), adminRoutes);
+app.use("/editor", authorizeRole(["editor"]), editorRoutes);
+app.use("/writer", writerRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));
