@@ -95,7 +95,6 @@ const authController = {
         if (!user) {
             return res.status(404).json({ message: "No user found with that email." });
         }
-        console.log(user, "2222222222222222222");
         // Generate reset token and link
         const token = generateResetToken(user._id);
         const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
@@ -108,7 +107,6 @@ const authController = {
 
         // Send the email
         const emailResponse = await sendResetEmail(email, subject, text, html);
-        console.log("emailResponse: ", emailResponse, "333333333333333333333333333");
         if (!emailResponse.success) {
             return res.status(500).json({ message: "Failed to send reset email." });
         }
