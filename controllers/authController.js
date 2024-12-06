@@ -9,17 +9,6 @@ import {
 import dotenv from "dotenv";
 dotenv.config({ path: "./config/env/development.env" });
 
-// Nodemailer transport setup
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  secure: false, // STARTTLS for port 587
-});
-
 const authController = {
   getAuth: (req, res) => {
     res.render("auth");
