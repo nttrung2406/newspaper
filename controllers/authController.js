@@ -15,7 +15,6 @@ const authController = {
   },
   postSignup: async (req, res) => {
     const { username, email, password, role } = req.body;
-
     try {
       // Input validation
       if (!username || !email || !password || !role) {
@@ -88,6 +87,7 @@ const authController = {
     }
   },
   postForgotPassword: async (req, res) => {
+    console.log("email:", email);
     try {
         const { email } = req.body;
 
