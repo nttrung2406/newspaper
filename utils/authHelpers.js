@@ -24,8 +24,8 @@ export const validateResetToken = (token) => {
 // Nodemailer transporter
 export const transporter = nodemailer.createTransport({
     // service: "gmail",
-    host: process.env.SMTP_HOST,
-    port: 465,
+    host: "smtp.gmail.com", 
+    port: 587,
     secure: true,
     // secureConnection: false,
     // requireTLS: false,
@@ -34,7 +34,7 @@ export const transporter = nodemailer.createTransport({
         pass: process.env.SMTP_PASS,
     },
     tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: true
     },
 });
 
