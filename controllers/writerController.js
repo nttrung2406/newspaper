@@ -30,6 +30,8 @@ const writerController = {
       pageTitle: "Add New Post",
       path: "/writer/add-post",
       editing: false,
+      categoryName: '',
+      post: '',
     });
   },
   postAddPost: async (req, res, next) => {
