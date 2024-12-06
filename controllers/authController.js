@@ -88,6 +88,9 @@ const authController = {
         if ( req.session.user.role === 'admin'){
           res.redirect('/admin');
         }
+        if (req.session.user.role === 'editor'){
+          res.redirect('/editor');
+        }
         else {res.redirect("/index");}
       });
     } catch (error) {

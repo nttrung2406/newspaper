@@ -2,8 +2,6 @@
 import Category from "../../models/Category.js";
 import mongoose from "mongoose";
 
-
-
 // Get Category List and Render
 const getCategories = async(req, res, next) =>{
     try {

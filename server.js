@@ -14,6 +14,7 @@ import userRoutes from "./routes/userRoutes.js";
 // import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import editorRoutes from "./routes/editorRoutes.js";
 import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import User from "./models/User.js";
@@ -59,7 +60,7 @@ app.use(
   session({
     secret: "secret", // Replace with a strong secret key for session encryption
     resave: false, // Don't resave session if it hasn't changed
-    saveUninitialized: true, // Save a session even if it is new and hasn't been modified
+    saveUninitialized: false, 
     store: store,
     cookie: {
       httpOnly: true, // Security measure: prevent access to cookie via JavaScript
@@ -96,9 +97,10 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/auth", authRoutes);
-app.use("/posts",authorizeRole([ /* tự điền */]), postRoutes);
-app.use("/users",authorizeRole([ /* tự điền */]), userRoutes);
+app.use("/posts", authorizeRole(['admin', 'editor', 'writer']), postRoutes); 
+app.use("/users", authorizeRole(['admin']), userRoutes);
 app.use("/admin", authorizeRole(['admin']), adminRoutes);
+app.use("/editor", authorizeRole(['editor']), editorRoutes);
 app.use("/writer", authorizeRole(['writer']),writerRoutes);
 
 // Pages
