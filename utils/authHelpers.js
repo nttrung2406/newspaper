@@ -6,6 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
+    console.log(userId, SECRET, "11111111111111111111")
     return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 12 hour
 };
 
@@ -23,16 +24,26 @@ export const validateResetToken = (token) => {
 // Nodemailer transporter
 export const transporter = nodemailer.createTransport({
     // service: "gmail",
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: "smtp.gmail.com", 
+    port: 587,
+    // secure: true,
+    secureConnection: false,
+    // requireTLS: false,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
+    tls: {
+        ciphers:'SSLv3'
+    }
+    // tls: {
+    //     rejectUnauthorized: true
+    // },
 });
 
 // Send password reset email
 export const sendResetEmail = async (to, subject, text, html) => {
+    console.log("4444444444444444444: ", to, subject, text, html);
     try {
         const info = await transporter.sendMail({
             from: emailConfig.auth.user,
@@ -41,6 +52,7 @@ export const sendResetEmail = async (to, subject, text, html) => {
             text,
             html,
         });
+
         console.log(`Email sent: ${info.messageId}`);
         return { success: true, message: 'Email sent', info };
     } catch (err) {

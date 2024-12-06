@@ -67,7 +67,7 @@ app.use(
     store: store,
     cookie: {
       httpOnly: true, // Security measure: prevent access to cookie via JavaScript
-      secure: true, // If using https, set to true; for development, set to false
+      secure: false, // If using https, set to true; for development, set to false
       maxAge: 1000 * 60 * 60 * 24, // Set the session expiration time (optional, here it's 1 day)
     },
   })
