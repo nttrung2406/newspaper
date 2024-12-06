@@ -110,7 +110,8 @@ const authController = {
 
         // Generate reset token and link
         const token = generateResetToken(user._id);
-        const resetLink = `http://localhost:4000/reset_password?token=${token}`;
+        const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
+        // const resetLink = "http://localhost:4000/auth/reset_password?token=${token}";
 
         // Email content
         const subject = "Password Reset Request";
