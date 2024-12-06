@@ -6,14 +6,32 @@ const PREVIEW_POST = 3;
 
 const writerController = {
   getWriterPage: async (req, res, next) => {
+    let errorMessage = req.flash("error");
+
+    if (errorMessage.length > 0) {
+      errorMessage = errorMessage[0];
+    } else {
+      errorMessage = null;
+    }
+
+    let successMessage = req.flash("success");
+
+    if (successMessage.length > 0) {
+      successMessage = successMessage[0];
+    } else {
+      successMessage = null;
+    }
+    
     try {
-      const posts = await Post.find({ writer: req.user._id }).limit(
+      const posts = await Post.find({ writer: req.user._id }).sort({createdAt: -1}).limit(
         PREVIEW_POST
       );
       res.render("writer", {
         pageTitle: "Writer",
         path: "/writer",
         posts: posts,
+        successMessage: successMessage,
+        errorMessage: errorMessage,
       });
     } catch (err) {
       res.status(500).json({ message: "Internal server error", error: err });
@@ -39,7 +57,8 @@ const writerController = {
     try {
       const category = await Category.findOne({ categoryName: categoryName });
       if (!category) {
-        return res.status(404).json({ message: "Category not found" });
+        req.flash('error', 'Category not found');
+        return res.status(404).redirect('/writer');
       }
       const post = new Post({
         title: title,
@@ -53,16 +72,8 @@ const writerController = {
       req.user.writerPosts.push(post._id);
       await req.user.save();
 
-      res.status(201).json({
-        message: "Post created successfully",
-        post: {
-          id: post._id,
-          title: post.title,
-          content: post.content,
-          status: post.status,
-          category: post.category,
-        },
-      });
+      req.flash('success', 'Post created successfully')
+      res.status(201).redirect('/writer');
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "An error occured", error: err.message });
@@ -82,14 +93,14 @@ const writerController = {
 
       if (!post) {
         console.log("Post not found");
-        return res.redirect("/");
+        return res.status(404).redirect("/writer");
       }
 
       const category = await Category.findById(post.category);
 
       if (!category) {
         console.log("Category not found for this post");
-        return res.redirect("/");
+        return res.status(404).redirect("/writer");
       }
 
       res.render("edit-post", {
@@ -116,7 +127,8 @@ const writerController = {
       const post = await Post.findById(postId);
 
       if (!post) {
-        return res.status(404).json({ message: "Post not found!" });
+        req.flash('error', 'Post not found');
+        return res.status(404).redirect('/writer');
       }
 
       // const category = await Category.findOne({ categoryName: categoryName });
@@ -125,7 +137,8 @@ const writerController = {
       });
 
       if (!newCategory) {
-        return res.status(404).json({ message: "Category not found" });
+        req.flash('error', 'Category not found');
+        return res.status(404).redirect('/writer');
       }
 
       post.title = newTitle;
@@ -134,7 +147,8 @@ const writerController = {
 
       await post.save();
 
-      return res.status(200).json({message: 'Updated post successfully!'});
+      req.flash('success', 'Updated post successfully!');
+      return res.status(200).redirect('/writer');
     } catch (err) {
       const error = new Error(err);
       error.statusCode = 500;
