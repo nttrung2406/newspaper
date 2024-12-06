@@ -59,7 +59,7 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "secret", // Replace with a strong secret key for session encryption
-    resave: false, // Don't resave session if it hasn't changed
+    resave: true, // Don't resave session if it hasn't changed
     saveUninitialized: false, 
     store: store,
     cookie: {

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  Login form submission
+  // Login form submission
   const formLogin = document.getElementById('login-form');
   if (formLogin) {
       formLogin.addEventListener('submit', async (event) => {
