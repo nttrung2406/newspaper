@@ -131,9 +131,9 @@ const getCategoryForUpdate = async(req, res) =>{
     parentID: null
   })
 
-  req.flash("category_create_success", "Cập nhật chuyên mục thành công.")
+  const NameErr = req.flash("cateUpNameErrr")
 
-  res.render("admin/category/category_update", {categoryInfo, parentCategories, id})
+  res.render("admin/category/category_update", {categoryInfo, parentCategories, id, NameErr})
   }
   catch(error){
     console.log("Error fetching category for update: ", error.message);
@@ -153,6 +153,16 @@ const updateCategory = async (req, res, next) => {
         res.status(400).send("Invalid ID format");
       }
 
+      //validate the new name
+      const existingCategory = await Category.find({categoryName: categoryName, _id: {$ne: id}});
+      if (existingCategory)
+      {
+        req.flash("cateUpNameErrr", "Tên chuyên mục đã tồn tại.")
+        return res.redirect(`/admin/category/update/${id}`);
+      }
+
+      //check parentID
+      req.flash("category_create_success", "Cập nhật chuyên mục thành công.")
       res.redirect("/admin/categories")
 
     } catch (error) {
