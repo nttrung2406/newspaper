@@ -384,7 +384,7 @@
                       <div class="form-group mt-3 mb-3">
                         <label for="categoryName">Tên chuyên mục</label>
                         <input type="text" name="categoryName" id="categoryName" class="form-control" value="<%= categoryInfo.categoryName %>">
-                        <% if (NameErr) { %>
+                        <% if (NameErr && NameErr.length > 0) { %>
                           <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
@@ -415,6 +415,15 @@
                           <%}); %>
 
                         </select>
+                        <% if (ParentErr && ParentErr.length > 0) { %>
+                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              <span class="sr-only">Close</span>
+                            </button>
+                            <%= ParentErr %>
+                          </div>
+                        <%} %>
                       </div>
 
                       <button class="btn btn-primary" type="submit">Cập nhật</button>

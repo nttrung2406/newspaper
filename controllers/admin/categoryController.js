@@ -131,9 +131,10 @@ const getCategoryForUpdate = async(req, res) =>{
     parentID: null
   })
 
-  const NameErr = req.flash("cateUpNameErrr")
+  const NameErr = req.flash("cateUpNameErr")
+  const ParentErr = req.flash("cateUpParentErr")
 
-  res.render("admin/category/category_update", {categoryInfo, parentCategories, id, NameErr})
+  res.render("admin/category/category_update", {categoryInfo, parentCategories, id, NameErr, ParentErr})
   }
   catch(error){
     console.log("Error fetching category for update: ", error.message);
@@ -145,7 +146,7 @@ const getCategoryForUpdate = async(req, res) =>{
 const updateCategory = async (req, res, next) => {
     try {
       const { id } = req.params; 
-      const { categoryName, description, parentID } = req.body;  
+      let { categoryName, description, parentID } = req.body;  
   
       if (!mongoose.Types.ObjectId.isValid(id))
       {
@@ -153,13 +154,47 @@ const updateCategory = async (req, res, next) => {
         res.status(400).send("Invalid ID format");
       }
 
-      //validate the new name
-      const existingCategory = await Category.find({categoryName: categoryName, _id: {$ne: id}});
+      const categoryInfo = await Category.findById(id);
+      if (!categoryInfo) {
+        return res.status(400).send("ID chuyên mục không tồn tại.");
+      }
+
+      const existingCategory = await Category.findOne({categoryName: categoryName,_id: {$ne: id}});
+      console.log(existingCategory)
       if (existingCategory)
       {
-        req.flash("cateUpNameErrr", "Tên chuyên mục đã tồn tại.")
+        req.flash("cateUpNameErr", "Tên chuyên mục đã tồn tại.")
         return res.redirect(`/admin/category/update/${id}`);
       }
+
+      if (parentID === "") {
+        parentID = null;
+      }
+
+      
+
+      if (categoryInfo.parentID === null && parentID !== null) {
+        // Check if it is the parent catergory and has child.
+        const hasChildren = await Category.exists({ parentID: id });
+        if (hasChildren) {
+          req.flash("cateUpParentErr", "Không thể đổi thành chuyên mục con.");
+          return res.redirect(`/admin/category/update/${id}`);
+        }
+      }  
+      if (parentID !== null){
+        // Validate the new parentID
+        const newParentCategory = await Category.findById(parentID);
+        if (!newParentCategory) {
+          req.flash("cateUpParentErr", "ID không tồn tại");
+          return res.redirect(`/admin/category/update/${id}`);
+        }
+      }
+
+      await Category.findByIdAndUpdate(id, {categoryName: categoryName,
+        description: description,
+        parentID: parentID
+      })
+
 
       //check parentID
       req.flash("category_create_success", "Cập nhật chuyên mục thành công.")
