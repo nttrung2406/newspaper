@@ -160,7 +160,7 @@ const updateCategory = async (req, res, next) => {
       }
 
       const existingCategory = await Category.findOne({categoryName: categoryName,_id: {$ne: id}});
-      console.log(existingCategory)
+      //console.log(existingCategory)
       if (existingCategory)
       {
         req.flash("cateUpNameErr", "Tên chuyên mục đã tồn tại.")
