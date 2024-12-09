@@ -60,7 +60,7 @@
             <label for="content" class="form-label"
               ><strong>Content</strong></label
             >
-            <textarea id="summernote" name="content" id="content"></textarea>
+            <textarea id="summernote" name="content" id="content"><%= editing ? post.content : '' %></textarea>
           </div>
           <div class="mb-3">
             <label for="category" class="form-label"
