@@ -101,6 +101,7 @@
                   class="btn btn-outline-info btn-sm mr-2"
                   >Edit</a
                 >
+                <a href="#" class="btn btn-outline-info btn-sm mr-2">Delete</a>
                 <% } %>
               </div>
             </li>
@@ -136,25 +137,23 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <% if (successMessage) { %>
-      <script>
-        Swal.fire({
-          title: "Success!",
-          text: "<%= successMessage %>",
-          icon: "success"
-        });
-      </script>
-    <% } %>
-    
-    <% if (errorMessage) { %>
-      <script>
-        Swal.fire({
-          title: "Error!",
-          text: "<%= errorMessage %>",
-          icon: "error"
-        });
-      </script>
+    <script>
+      Swal.fire({
+        title: "Success!",
+        text: "<%= successMessage %>",
+        icon: "success",
+      });
+    </script>
+    <% } %> <% if (errorMessage) { %>
+    <script>
+      Swal.fire({
+        title: "Error!",
+        text: "<%= errorMessage %>",
+        icon: "error",
+      });
+    </script>
     <% } %>
 
     <!-- All JS Custom Plugins Link Here here -->

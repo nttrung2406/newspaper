@@ -21,11 +21,11 @@ const writerController = {
     } else {
       successMessage = null;
     }
-    
+
     try {
-      const posts = await Post.find({ writer: req.user._id }).sort({createdAt: -1}).limit(
-        PREVIEW_POST
-      );
+      const posts = await Post.find({ writer: req.user._id })
+        .sort({ createdAt: -1 })
+        .limit(PREVIEW_POST);
       res.render("writer", {
         pageTitle: "Writer",
         path: "/writer",
@@ -48,12 +48,13 @@ const writerController = {
       pageTitle: "Add New Post",
       path: "/writer/add-post",
       editing: false,
-      categoryName: '',
-      post: '',
+      categoryName: "",
+      post: "",
     });
   },
   postAddPost: async (req, res, next) => {
-    const { title, detail, categoryName, status } = req.body;
+    const { title, content, categoryName, status } = req.body;
+
     try {
       const category = await Category.findOne({ categoryName: categoryName });
       if (!category) {
@@ -62,7 +63,7 @@ const writerController = {
       }
       const post = new Post({
         title: title,
-        content: detail,
+        content: content,
         status: status,
         writer: req.user._id,
         category: category._id,
@@ -118,7 +119,7 @@ const writerController = {
   },
   postEditPost: async (req, res, next) => {
     const newTitle = req.body.title;
-    const newDetail = req.body.detail;
+    const newContent = req.body.content;
     const newCategoryName = req.body.categoryName;
 
     const postId = req.body.postId;
@@ -127,8 +128,8 @@ const writerController = {
       const post = await Post.findById(postId);
 
       if (!post) {
-        req.flash('error', 'Post not found');
-        return res.status(404).redirect('/writer');
+        req.flash("error", "Post not found");
+        return res.status(404).redirect("/writer");
       }
 
       // const category = await Category.findOne({ categoryName: categoryName });
@@ -137,18 +138,18 @@ const writerController = {
       });
 
       if (!newCategory) {
-        req.flash('error', 'Category not found');
-        return res.status(404).redirect('/writer');
+        req.flash("error", "Category not found");
+        return res.status(404).redirect("/writer");
       }
 
       post.title = newTitle;
-      post.content = newDetail;
+      post.content = newContent;
       post.category = newCategory;
 
       await post.save();
 
-      req.flash('success', 'Updated post successfully!');
-      return res.status(200).redirect('/writer');
+      req.flash("success", "Updated post successfully!");
+      return res.status(200).redirect("/writer");
     } catch (err) {
       const error = new Error(err);
       error.statusCode = 500;
