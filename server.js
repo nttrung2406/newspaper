@@ -14,6 +14,10 @@ import userRoutes from "./routes/userRoutes.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import MongoDBStore from "connect-mongodb-session";
+import User from "./models/User.js";
+import multer from "multer";
+import fs from "fs";
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -81,8 +85,44 @@ app.use(
   })
 );
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.post("/upload-image", upload.single("file"), (req, res) => {
+  const imageUrl = `/images/${req.file.filename}`;
+  res.status(200).json({ imageUrl }); // Send back the image URL
+});
+
+app.post("/delete-image", (req, res) => {
+  const { imageUrl } = req.body;
+
+  if (!imageUrl) {
+    return res.status(400).json({ error: "No image URL provided" });
+  }
+
+  const filePath = path.join(__dirname, imageUrl);
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error("Failed to delete file:", err);
+      return res.status(500).json({ error: "Failed to delete file" });
+    }
+
+    res.status(200).json({ message: "Image deleted successfully" });
+  });
+});
+
 app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Use user
 app.use((req, res, next) => {
