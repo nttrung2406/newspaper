@@ -69,12 +69,13 @@ const authController = {
     try {
       const { email, password } = req.body;
 
-      console.log(email, password);
+      //console.log(email, password);
 
       // Find user and verify password (hash check omitted for brevity)
       const user = await User.findOne({ email });
-
-      if (!user && !(await bcrypt.compare(password, user.password))) {
+      //console.log(user)
+      if (!user) {return res.redirect("/");}
+      if ((await bcrypt.compare(password, user.password))) {
         return res.status(400).send("Invalid credentials");
       }
 
