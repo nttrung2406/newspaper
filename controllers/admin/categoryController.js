@@ -14,7 +14,7 @@ const getCategories = async(req, res, next) =>{
         const query = search ? {categoryName: new RegExp(search, 'i')} :{};
 
         const [categories, total] = await Promise.all([
-          Category.find(query).skip(skip).limit(limit).sort({createAt:-1})
+          Category.find(query).skip(skip).limit(limit).sort({createdAt:-1})
           .populate({path: "parentID", select: "categoryName", model: "Category"}),
           Category.countDocuments(query),
         ]);

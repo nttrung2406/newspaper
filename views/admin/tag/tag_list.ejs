@@ -36,13 +36,13 @@
 
             <!--Page Title-->
             <div class="page-header">
-              <h3 class="page-title">Quản lý chuyên mục</h3>
+              <h3 class="page-title">Quản lý nhãn</h3>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item">
                     <a href="/admin">Trang chủ</a>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">Quản lý chuyên mục</li>
+                  <li class="breadcrumb-item active" aria-current="page">Quản lý nhãn</li>
                 </ol>
               </nav>
             </div>
@@ -59,7 +59,7 @@
                           <input 
                             type="text" 
                             name="search" 
-                            placeholder="Nhập tên chuyên mục" 
+                            placeholder="Nhập tên nhãn" 
                             class="form-control"
                             value="<%= search || '' %>"
                           />
@@ -73,73 +73,66 @@
                     </div>
 
                     <!-- Create category button-->
-                    <a href="category/create" class="btn btn-success mb-3"><i class="mdi mdi-plus btn-icon-prepend"></i>Tạo chuyên mục</a>
+                    <a href="tag/create" class="btn btn-success mb-3"><i class="mdi mdi-plus btn-icon-prepend"></i>Tạo nhãn</a>
 
                     <!-- Alert -->
-                    <% if (message && message.length > 0) { %>
-                      <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                          <span class="sr-only">Close</span>
-                        </button>
-                        <%= message %>
-                      </div>
-                    <% } %>
+                    
                     <!-- Table to Display Categories -->
                     <div class="table-responsive">
-                      <table class="table table-dark">
+                      <table class="table table-dark custom-table">
                         <thead>
                           <tr>
-                            <th>Tên Chuyên Mục</th>
-                            <th>Chuyên mục cha</th>
+                            <th>Tên nhãn</th>
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
                             <th>Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <% if (categories && categories.length > 0) { %>
-                            <% categories.forEach((category, index) => { %>
-                              <tr>
-                                <td><%= category.categoryName %></td>
-                                <td><%= category.parentID ? category.parentID.categoryName : 'Không có' %></td>
-                                <td><%= category.createdAt ? new Date(category.createdAt).toLocaleDateString() : 'N/A' %></td>
-                                <td><%= category.updatedAt ? new Date(category.updatedAt).toLocaleDateString() : 'N/A' %></td>
-                                <td>
-                                  <div class="btn-group">
-                                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                      <a href="category/info/<%= category._id %>" class="btn btn-info btn-icon-text d-block"><i class="mdi mdi-information-outline btn-icon-prepend"></i></span>Info</a>
-                                      <a href="category/update/<%= category._id %>" class="btn btn-primary btn-icon-text d-block"><i class="mdi mdi-update btn-icon-prepend"></i>Update</a>
-                                      <a href="category/delete/<%= category._id %>" class="btn btn-danger btn-icon-text d-block"><i class="mdi mdi-delete btn-icon-prepend"></i>Delete</a>
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            <% }); %>
-                          <% } else { %>
+                          <% tags.forEach(element => { %>
                             <tr>
-                              <td colspan="5" class="text-center">Không có chuyên mục nào.</td>
+                              <td><%= element.tagName %></td>
+                              <td><%= element.createdAt ? new Date(element.createdAt).toLocaleDateString() : "N/A" %></td>
+                              <td><%= element.updatedAt ? new Date(element.updatedAt).toLocaleDateString() : "N/A" %></td>
+                              <td>
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
+                                  <div class="dropdown-menu">
+                                    <a href="tag/info/<%= element._id %>" class="btn btn-info btn-icon-text d-block"><i class="mdi mdi-information-outline btn-icon-prepend"></i></span>Info</a>
+                                    <a href="tag/update/<%= element._id %>" class="btn btn-primary btn-icon-text d-block"><i class="mdi mdi-update btn-icon-prepend"></i>Update</a>
+                                    <a href="tag/delete/<%= element._id %>" class="btn btn-danger btn-icon-text d-block"><i class="mdi mdi-delete btn-icon-prepend"></i>Delete</a>
+                                  </div>
+                                </div>
+                              </td>
                             </tr>
-                          <% } %>
+                          <% }); %>
                           
                         </tbody>
                       </table>
+                      <style>
+                        .custom-table th:last-child,
+                        .custom-table td:last-child{
+                          width: 10%;
+                        }
+                        @media (min-width: 576px) {
+                          .table-responsive {
+                            overflow: visible !important;
+                            position: relative; 
+                          }
+                        
+                          .dropdown-menu {
+                            position: absolute !important; 
+                            z-index: 1050;
+                          }
+                        }
+
+                      </style>
                     </div>
             
                     <!-- Pagination -->
                     <nav aria-label="Pagination">
                       <ul class="pagination justify-content-center">
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                            <a 
-                              class="page-link" 
-                              href="/admin/categories?page=<%= i %>&search=<%= search || '' %>"
-                            >
-                              <%= i %>
-                            </a>
-                          </li>
-                        <% } %>
+                        
                       </ul>
                     </nav>
                   </div>
