@@ -13,9 +13,11 @@ const viewTagList = async(req, res) =>{
         Tag.countDocuments(query),
     ]);
 
-    
+    const totalPages = Math.ceil(total/limit);
 
-    res.render('admin/tag/tag_list', {search, tags})
+
+
+    res.render('admin/tag/tag_list', {search, tags, currentPage: parseInt(page), totalPages})
 }
 
 
