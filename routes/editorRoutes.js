@@ -13,11 +13,4 @@ router.get("/", (req, res)=>{
     res.render("editor/dashboard")
 });
 
-import categoryList from './editor/category/categoryList.js'
-router.use("/categories", categoryList)
-
-
-import categoryAction from './editor/category/categoryAction.route.js'
-router.use("/category", categoryAction)
-
 export default router;

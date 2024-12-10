@@ -9,12 +9,24 @@ import {
 import dotenv from "dotenv";
 dotenv.config({ path: "./config/env/development.env" });
 
+// Nodemailer transport setup
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  secure: false, // STARTTLS for port 587
+});
+
 const authController = {
   getAuth: (req, res) => {
     res.render("auth");
   },
   postSignup: async (req, res) => {
     const { username, email, password, role } = req.body;
+
     try {
       // Input validation
       if (!username || !email || !password || !role) {
@@ -45,7 +57,6 @@ const authController = {
       await newUser.save();
 
       res.status(201).json({ message: "User registered successfully!" });
-      res.redirect("/login");
     } catch (error) {
       console.log(error);
       // console.error(
@@ -59,12 +70,15 @@ const authController = {
     try {
       const { email, password } = req.body;
 
-      console.log(email, password);
+      //console.log(email, password);
 
       // Find user and verify password (hash check omitted for brevity)
       const user = await User.findOne({ email });
-
-      if (!user && !(await bcrypt.compare(password, user.password))) {
+      //console.log(user)
+      if (!user) {
+        return res.redirect("/");
+      }
+      if (await !bcrypt.compare(password, user.password)) {
         return res.status(400).send("Invalid credentials");
       }
 
@@ -74,13 +88,13 @@ const authController = {
 
       return req.session.save((err) => {
         console.log(err);
-        if ( req.session.user.role === 'admin'){
-          res.redirect('/admin');
+        if (req.session.user.role === "admin") {
+          res.redirect("/admin");
+        } else if (req.session.user.role === "editor") {
+          res.redirect("/editor");
+        } else {
+          res.redirect("/index");
         }
-        if (req.session.user.role === 'editor'){
-          res.redirect('/editor');
-        }
-        else {res.redirect("/index");}
       });
     } catch (error) {
       console.error("Error logging in:", error);
@@ -88,55 +102,57 @@ const authController = {
     }
   },
   postForgotPassword: async (req, res) => {
+    console.log("req", req);
     try {
-        const { email } = req.body;
+      const { email } = req.body;
 
-        // Find the user
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: "No user found with that email." });
-        }
-        // Generate reset token and link
-        const token = generateResetToken(user._id);
-        const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
-        // const resetLink = "http://localhost:4000/auth/forgot_password?token=${token}";
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "No user found with that email." });
+      }
 
-        // Email content
-        const subject = "Password Reset Request";
-        const text = `Click the link to reset your password: ${resetLink}`;
-        const html = `<p>Click the link to reset your password: <a href="${resetLink}">RESET</a></p>`;
+      const token = generateResetToken(user._id);
+      const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
 
-        // Send the email
-        const emailResponse = await sendResetEmail(email, subject, text, html);
-        if (!emailResponse.success) {
-            return res.status(500).json({ message: "Failed to send reset email." });
-        }
+      await sendResetEmail(
+        email,
+        "Password Reset Request",
+        `Click the link to reset your password: ${resetLink}`,
+        `<p>Click the link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`
+      );
 
-        res.status(200).json({ message: "Password reset link sent to your email." });
+      res
+        .status(200)
+        .json({ message: "Password reset link sent to your email." });
     } catch (error) {
-        console.error("Error in forgot-password route:", error);
-        res.status(500).json({ message: "Internal server error." });
+      console.error("Error in forgot-password route:", error);
+      res.status(500).json({ message: "Internal server error." });
     }
   },
   postResetPassword: async (req, res) => {
     const { token, newPassword } = req.body;
 
     try {
-      const userId = validateResetToken(token);
-      if (!userId) {
+      const user = await User.findOne({
+        resetToken: token,
+        resetTokenExpiry: { $gt: Date.now() },
+      });
+
+      if (!user) {
         return res.status(400).json({ message: "Invalid or expired token." });
       }
 
-      // Find the user by ID
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
+      user.resetToken = undefined;
+      user.resetTokenExpiry = undefined;
       await user.save();
 
-      res.status(200).json({ message: "Password has been reset successfully." });
+      res
+        .status(200)
+        .json({ message: "Password has been reset successfully." });
     } catch (err) {
       console.error("Error in reset-password route:", err);
       res.status(500).json({ message: "Internal server error." });
