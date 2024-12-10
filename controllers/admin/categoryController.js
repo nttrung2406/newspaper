@@ -2,6 +2,8 @@
 import Category from "../../models/Category.js";
 import mongoose from "mongoose";
 
+
+
 // Get Category List and Render
 const getCategories = async(req, res, next) =>{
     try {
@@ -106,7 +108,8 @@ const viewCategory = async(req, res) =>{
 
 // Get information of specific category for updating and render
 const getCategoryForUpdate = async(req, res) =>{
-  const {id} = req.params;
+  try{
+    const {id} = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
   {
     console.log('Invalid ObjectId:', id);
@@ -115,49 +118,88 @@ const getCategoryForUpdate = async(req, res) =>{
 
   const categoryInfo = await Category.findById(id).populate({path: "parentID", select: "categoryName", model: "Category"});
 
-  console.log(categoryInfo)
+  //console.log(categoryInfo)
   if (!categoryInfo)
   {
     res.status(400).send('ID của chuyên mục không tồn tại.')
   }
 
-  res.render("admin/category/category_update", {categoryInfo})
+  let idList = categoryInfo.parentID ? [categoryInfo.parentID._id, id] : [id]
+  //console.log(idList)
+  const parentCategories = await Category.find({
+    _id: {$nin: idList},
+    parentID: null
+  })
+
+  const NameErr = req.flash("cateUpNameErr")
+  const ParentErr = req.flash("cateUpParentErr")
+
+  res.render("admin/category/category_update", {categoryInfo, parentCategories, id, NameErr, ParentErr})
+  }
+  catch(error){
+    console.log("Error fetching category for update: ", error.message);
+    res.status(500).send("Server error: " + error.message)
+  }
 }
 
 // Update the data of category in the database.
 const updateCategory = async (req, res, next) => {
     try {
       const { id } = req.params; 
-      const { categoryName, description, parent } = req.body;  
+      let { categoryName, description, parentID } = req.body;  
   
-      const category = await Category.findById(id);
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
+      if (!mongoose.Types.ObjectId.isValid(id))
+      {
+        console.log("Invalid objectID", id)
+        res.status(400).send("Invalid ID format");
       }
-  
-    
-      const existingCategory = await Category.findOne({ categoryName, _id: { $ne: id } });
-      if (existingCategory) {
-        return res.status(400).json({ message: "Category name already exists" });
-      }
-  
 
-      if (parent) {
-        const parentCategory = await Category.findById(parent);
-        if (!parentCategory) {
-          return res.status(400).json({ message: "Parent category does not exist" });
+      const categoryInfo = await Category.findById(id);
+      if (!categoryInfo) {
+        return res.status(400).send("ID chuyên mục không tồn tại.");
+      }
+
+      const existingCategory = await Category.findOne({categoryName: categoryName,_id: {$ne: id}});
+      //console.log(existingCategory)
+      if (existingCategory)
+      {
+        req.flash("cateUpNameErr", "Tên chuyên mục đã tồn tại.")
+        return res.redirect(`/admin/category/update/${id}`);
+      }
+
+      if (parentID === "") {
+        parentID = null;
+      }
+
+      
+
+      if (categoryInfo.parentID === null && parentID !== null) {
+        // Check if it is the parent catergory and has child.
+        const hasChildren = await Category.exists({ parentID: id });
+        if (hasChildren) {
+          req.flash("cateUpParentErr", "Không thể đổi thành chuyên mục con.");
+          return res.redirect(`/admin/category/update/${id}`);
+        }
+      }  
+      if (parentID !== null){
+        // Validate the new parentID
+        const newParentCategory = await Category.findById(parentID);
+        if (!newParentCategory) {
+          req.flash("cateUpParentErr", "ID không tồn tại");
+          return res.redirect(`/admin/category/update/${id}`);
         }
       }
-  
 
-      const updatedCategory = await Category.findByIdAndUpdate(
-        id, 
-        { categoryName, description, parent: parent || null, updatedAt: Date.now() },
-        { new: true }  
-      );
-  
-      res.status(200).json({ message: "Category updated successfully", category: updatedCategory });
-      next();
+      await Category.findByIdAndUpdate(id, {categoryName: categoryName,
+        description: description,
+        parentID: parentID
+      })
+
+
+      //check parentID
+      req.flash("category_create_success", "Cập nhật chuyên mục thành công.")
+      res.redirect("/admin/categories")
+
     } catch (error) {
       console.error("Error updating category:", error.message);
       res.status(500).json({ message: "Server error: " + error.message });
@@ -166,4 +208,4 @@ const updateCategory = async (req, res, next) => {
   
 
 
-export default {getCategories, getParentID, addCategory, viewCategory, getCategoryForUpdate};
+export default {getCategories, getParentID, addCategory, viewCategory, getCategoryForUpdate, updateCategory};

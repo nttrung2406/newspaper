@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
-    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 12 hour
+    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 1 hour
 };
 
 // Validate reset token
@@ -22,18 +22,23 @@ export const validateResetToken = (token) => {
 
 // Nodemailer transporter
 export const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", 
-    port: 465,
-    secure: true,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
         user: process.env.SMTP_USER,
         pass: "grhf vcsa qppj mjaw",
     },
-
+    secure: true
 });
 
 // Send password reset email
-export const sendResetEmail = async (to, subject, text, html) => {
+export const sendResetEmail = async (to, token) => {
+    const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
+    const subject = 'Password Reset Request';
+    const text = `You requested a password reset. Use the following link to reset your password: ${resetLink}`;
+    const html = `<p>You requested a password reset. Click the link below to reset your password:</p>
+                  <a href="${resetLink}">Reset</a>`;
+
     try {
         const info = await transporter.sendMail({
             from: emailConfig.auth.user,
@@ -42,7 +47,6 @@ export const sendResetEmail = async (to, subject, text, html) => {
             text,
             html,
         });
-
         console.log(`Email sent: ${info.messageId}`);
         return { success: true, message: 'Email sent', info };
     } catch (err) {
@@ -50,4 +54,3 @@ export const sendResetEmail = async (to, subject, text, html) => {
         return { success: false, message: 'Failed to send email', error: err };
     }
 };
-

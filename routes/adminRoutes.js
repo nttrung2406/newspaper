@@ -13,7 +13,7 @@ router.get("/", (req, res)=>{
     res.render("admin/dashboard")
 });
 
-import categoryList from './admin/category/categoryList.js'
+import categoryList from './admin/category/categoryList.route.js'
 router.use("/categories", categoryList)
 
 

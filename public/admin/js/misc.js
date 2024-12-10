@@ -13,7 +13,7 @@
     function addActiveClass(element) {
       if (current === "") {
         //for root url
-        if (element.attr('href').indexOf("index.html") !== -1) {
+        if (element.attr('href') === "/admin") {
           element.parents('.nav-item').last().addClass('active');
           if (element.parents('.sub-menu').length) {
             element.closest('.collapse').addClass('show');
@@ -106,18 +106,18 @@
         }
       }
     })
-    if ($.cookie('corona-free-banner')!="true") {
-      document.querySelector('#proBanner').classList.add('d-flex');
-    }
-    else {
-      document.querySelector('#proBanner').classList.add('d-none');
-    }
-    document.querySelector('#bannerClose').addEventListener('click',function() {
-      document.querySelector('#proBanner').classList.add('d-none');
-      document.querySelector('#proBanner').classList.remove('d-flex');
-      var date = new Date();
-      date.setTime(date.getTime() + 24 * 60 * 60 * 1000); 
-      $.cookie('corona-free-banner', "true", { expires: date });
-    });
+    // if ($.cookie('corona-free-banner')!="true") {
+    //   document.querySelector('#proBanner').classList.add('d-flex');
+    // }
+    // else {
+    //   document.querySelector('#proBanner').classList.add('d-none');
+    // }
+    // document.querySelector('#bannerClose').addEventListener('click',function() {
+    //   document.querySelector('#proBanner').classList.add('d-none');
+    //   document.querySelector('#proBanner').classList.remove('d-flex');
+    //   var date = new Date();
+    //   date.setTime(date.getTime() + 24 * 60 * 60 * 1000); 
+    //   $.cookie('corona-free-banner', "true", { expires: date });
+    // });
   });
 })(jQuery);

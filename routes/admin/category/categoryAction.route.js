@@ -16,7 +16,7 @@ router.route("/create")
 router.get("/info/:id",catergoryController.viewCategory)
 router.route("/update/:id")
 .get(catergoryController.getCategoryForUpdate)
-.post()
+.post(catergoryController.updateCategory)
 // router.get("/delete/:id")
 
 export default router;
