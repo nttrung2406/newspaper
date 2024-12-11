@@ -15,3 +15,16 @@ body {
   .container {
     padding-left: 0rem; 
   }
+
+  table.table tbody tr td:first-child {
+    color: #6c757d; /* Blue color for title */
+    font-weight: bold;
+  }
+  
+  /* Author styling */
+  table.table tbody tr td:nth-child(2) {
+    color: #6c757d; /* Gray color for author */
+    font-style: italic;
+  }
+  
+  
