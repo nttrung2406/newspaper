@@ -6,6 +6,8 @@ import session from "express-session";
 import flash from "connect-flash";
 import mongoose from "mongoose";
 import connectMongoDB from "./db.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import editorRoutes from "./routes/editorRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { authorizeRole } from "./middlewares/authMiddleware.js";
@@ -170,6 +172,13 @@ app.get("/details", (req, res) => res.render("details"));
 app.get("/auth", (req, res) => res.render("auth"));
 app.use("/writer", writerRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_DB_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
