@@ -10,7 +10,7 @@ import connectMongoDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import authMiddleware from "./middlewares/authMiddleware.js";
-import {authorizeRole} from './middlewares/authMiddleware.js'
+import { authorizeRole } from "./middlewares/authMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
@@ -76,6 +76,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Use user
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.role = "";
   next();
 });
 
@@ -88,6 +89,7 @@ app.use((req, res, next) => {
       if (!user) {
         return next();
       }
+      res.locals.role = user.role;
       req.user = user;
       next();
     })
@@ -98,11 +100,15 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/auth", authRoutes);
-app.use("/posts", authorizeRole(['admin', 'editor', 'writer']), postRoutes); 
-app.use("/users", authorizeRole(['membership', 'editor', 'writer']), userRoutes);
-app.use("/admin", authorizeRole(['admin']), adminRoutes);
-app.use("/editor", authorizeRole(['editor']), editorRoutes);
-app.use("/writer", authorizeRole(['writer']),writerRoutes);
+app.use("/posts", authorizeRole(["admin", "editor", "writer"]), postRoutes);
+app.use(
+  "/users",
+  authorizeRole(["membership", "editor", "writer"]),
+  userRoutes
+);
+app.use("/admin", authorizeRole(["admin"]), adminRoutes);
+app.use("/editor", authorizeRole(["editor"]), editorRoutes);
+app.use("/writer", authorizeRole(["writer"]), writerRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));
