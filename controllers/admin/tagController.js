@@ -47,10 +47,25 @@ const addTag = async(req, res)=>{
 
 }
 
+const viewTag = async(req, res) =>{
+    const {id} = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+    {
+        console.log("Invalid ObjectID: ",id)
+        return res.status(400).send('Invalid ID format.')
+    }
+
+    const tagInformation = await Tag.findById(id)
+
+    res.render('admin/tag/tag_info',{tagInformation})
+}
+
 
 
 
 export default {
     viewTagList,
     addTag,
+    viewTag,
 }

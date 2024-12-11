@@ -10,4 +10,7 @@ router.route('/create')
 })
 .post(tagController.addTag)
 
+router.route('/info/:id')
+.get(tagController.viewTag)
+
 export default router;
