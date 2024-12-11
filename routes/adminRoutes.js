@@ -23,4 +23,7 @@ router.use("/category", categoryAction)
 import tagList from './admin/tag/tagList.route.js'
 router.use("/tags", tagList)
 
+import tagAction from './admin/tag/tagAction.route.js'
+router.use("/tag", tagAction)
+
 export default router;
