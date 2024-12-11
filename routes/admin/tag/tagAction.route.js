@@ -13,4 +13,8 @@ router.route('/create')
 router.route('/info/:id')
 .get(tagController.viewTag)
 
+router.route('/update/:id')
+.get(tagController.getTagForUpdate)
+.post(tagController.updateTag)
+
 export default router;

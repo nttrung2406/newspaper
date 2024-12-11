@@ -102,7 +102,11 @@ const viewCategory = async(req, res) =>{
 
   const categoryInformation = await Category.findById(id)
     .populate({path: "parentID", select: "categoryName", model: "Category"});
-  
+  if (!categoryInformation){
+    return res.redirect('/admin/categories');
+  }
+
+
   res.render('admin/category/category_info', {categoryInformation});
 }
 
