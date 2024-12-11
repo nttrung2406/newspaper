@@ -1,0 +1,17 @@
+body {
+    margin-top: 2.5rem; 
+  }
+  
+  .content {
+    padding-top: 2.5rem; 
+  }
+  
+  .container-fluid {
+    padding-left: 0rem; 
+    padding-right: 0rem; 
+  }
+  
+  /* Optional: If you need to adjust the container that wraps the main content */
+  .container {
+    padding-left: 0rem; 
+  }
