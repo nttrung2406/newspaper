@@ -48,10 +48,30 @@ const writerController = {
     const page = +req.query.page || 1;
     let totalPosts;
 
+    let errorMessage = req.flash("error");
+
+    if (errorMessage.length > 0) {
+      errorMessage = errorMessage[0];
+    } else {
+      errorMessage = null;
+    }
+
+    let successMessage = req.flash("success");
+
+    if (successMessage.length > 0) {
+      successMessage = successMessage[0];
+    } else {
+      successMessage = null;
+    }
+
     Post.find({ writer: req.user._id })
       .countDocuments()
       .then((numPosts) => {
         totalPosts = numPosts;
+        if (page > Math.ceil(totalPosts / POSTS_PER_PAGE)) {
+          res.redirect(`/writer/posts?page=${page - 1}`);
+          return Promise.reject("Redirecting due to invalid page");
+        }
         return Post.find({ writer: req.user._id })
           .sort({ createdAt: -1 })
           .skip((page - 1) * POSTS_PER_PAGE)
@@ -62,6 +82,8 @@ const writerController = {
           pageTitle: "Posts",
           path: "/writer/posts",
           posts: posts,
+          errorMessage: errorMessage,
+          successMessage: successMessage,
           currentPage: page,
           hasNextPage: POSTS_PER_PAGE * page < totalPosts,
           hasPreviousPage: page > 1,
@@ -108,7 +130,7 @@ const writerController = {
         if (existingTag) {
           tag = existingTag;
         } else {
-          tag = new Tag({ tagName: tagName, description: "" });
+          tag = new Tag({ tagName: tagName });
           await tag.save();
         }
 
@@ -141,6 +163,7 @@ const writerController = {
   getEditPost: async (req, res, next) => {
     try {
       const editMode = req.query.edit;
+      const pageNumber = req.query.page;
 
       if (!editMode) {
         return res.redirect("/");
@@ -166,7 +189,10 @@ const writerController = {
 
       for (const tagId of post.tags) {
         const tagObj = await Tag.findById(tagId);
-        tagsString += tagObj.tagName + ", ";
+
+        if (tagObj) {
+          tagsString += decomposeTag(tagObj.tagName) + ", ";
+        }
       }
 
       res.render("writer/edit-post", {
@@ -176,6 +202,7 @@ const writerController = {
         post: post,
         categoryName: category.categoryName,
         tagsString: tagsString,
+        pageNumber: pageNumber,
       });
     } catch (err) {
       const error = new Error(err.message || "Failed to fetch post");
@@ -187,15 +214,19 @@ const writerController = {
     const newTitle = req.body.title;
     const newContent = req.body.content;
     const newCategoryName = req.body.categoryName;
-
+    const newTagsString = req.body.tagsString;
     const postId = req.body.postId;
+
+    const pageNumber = req.body.pageNumber;
+
+    const newTagsArray = getTagsArray(newTagsString);
 
     try {
       const post = await Post.findById(postId);
 
       if (!post) {
         req.flash("error", "Post not found");
-        return res.status(404).redirect("/writer");
+        return res.status(404).redirect(`/writer/posts?page=${pageNumber}`);
       }
 
       // const category = await Category.findOne({ categoryName: categoryName });
@@ -205,17 +236,37 @@ const writerController = {
 
       if (!newCategory) {
         req.flash("error", "Category not found");
-        return res.status(404).redirect("/writer");
+        return res.status(404).redirect(`/writer/posts?page=${pageNumber}`);
+      }
+
+      const newTags = [];
+
+      for (const tagName of newTagsArray) {
+        let tag;
+
+        const existingTag = await Tag.findOne({ tagName: tagName });
+
+        if (existingTag) {
+          tag = existingTag;
+        } else {
+          tag = new Tag({ tagName: tagName });
+          await tag.save();
+        }
+
+        if (!newTags.includes(tag._id)) {
+          newTags.push(tag._id);
+        }
       }
 
       post.title = newTitle;
       post.content = newContent;
       post.category = newCategory;
+      post.tags = newTags;
 
       await post.save();
 
       req.flash("success", "Updated post successfully!");
-      return res.status(200).redirect("/writer");
+      return res.status(200).redirect(`/writer/posts?page=${pageNumber}`);
     } catch (err) {
       const error = new Error(err);
       error.statusCode = 500;

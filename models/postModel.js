@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     status: {
       type: String,
-      enum: ["Draft", "Submitted", "Approved", "Rejected"],
+      enum: ["Draft", "Submitted", "Approved", "Rejected", "Published"],
       default: "Draft",
     },
     writer: {
