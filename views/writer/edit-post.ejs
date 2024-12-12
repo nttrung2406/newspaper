@@ -60,9 +60,7 @@
             <label for="content" class="form-label"
               ><strong>Content</strong></label
             >
-            <textarea id="summernote" name="content" id="content">
-<%= editing ? post.content : '' %></textarea
-            >
+            <textarea id="summernote" name="content" id="content"><%= editing ? post.content : '' %></textarea>
           </div>
           <div class="mb-3">
             <label for="category" class="form-label"
@@ -84,6 +82,17 @@
             <input type="radio" id="estate" name="categoryName" value="Bất động sản" <%= categoryName === 'Bất động sản' ? 'checked="checked"' : ''
             %> />
             <label for="estate">Bất động sản</label><br />
+          </div>
+          <div class="mb-3">
+            <label for="tags"><strong>Tags</strong></label>
+            <input
+              type="text"
+              class="form-control"
+              id="tags"
+              placeholder="Enter tags separated by commas"
+              name="tagsString"
+              value="<%= editing ? tagsString : '' %>"
+            />
           </div>
           <% if (!editing) { %>
           <button

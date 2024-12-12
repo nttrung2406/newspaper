@@ -52,111 +52,49 @@
     <main>
         <!-- Card for listing posts -->
         <div class="container my-5">
-          <div class="card">
+          <div class="card mb-5">
             <div class="card-header" style="font-size: 1.5rem">
               List of Posts
             </div>
+            <% if (posts.length > 0) { %>
             <ul class="list-group list-group-flush">
-              <!-- Example posts -->
+              <% for (const post of posts) { %>
               <li
                 class="list-group-item d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/1">Breaking News: Tech Innovations 2024</a></h5>
-                  <div class="text-muted">Published: Dec 4, 2024</div>
+                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
+                  <div class="text-muted"><%= post.createdAt %></div>
                   <div class="text-muted">
-                    Status: <span class="text-success">Approved</span>
+                    Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
                   </div>
                 </div>
                 <div>
                   <a
-                    href="/writer/posts/1"
-                    class="btn btn-outline-info btn-sm mr-2"
-                    >View</a
-                  >
-                </div>
-              </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-              >
-                <div>
-                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/1">Breaking News: Tech Innovations 2024</a></h5>
-                  <div class="text-muted">Published: Dec 4, 2024</div>
-                  <div class="text-muted">
-                    Status: <span class="text-success">Approved</span>
-                  </div>
-                </div>
-                <div>
-                  <a
-                    href="/writer/posts/1"
-                    class="btn btn-outline-info btn-sm mr-2"
-                    >View</a
-                  >
-                </div>
-              </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-              >
-                <div>
-                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/1">Breaking News: Tech Innovations 2024</a></h5>
-                  <div class="text-muted">Published: Dec 4, 2024</div>
-                  <div class="text-muted">
-                    Status: <span class="text-danger">Unapproved</span>
-                  </div>
-                </div>
-                <div>
-                  <a
-                    href="/writer/posts/1"
+                    href="/writer/posts/<%= post._id %>"
                     class="btn btn-outline-info btn-sm mr-2"
                     >View</a
                   >
                   <a
-                    href="/writer/edit-post/1?edit=true"
+                    href="/writer/edit-post/<%= post._id %>?edit=true"
                     class="btn btn-outline-warning btn-sm"
                     >Edit</a
                   >
                 </div>
               </li>
+              <% } %>
             </ul>
+            <% } else { %>
+              <h1>No post found!</h1>
+            <% } %>
           </div>
-          <div class="mt-4 d-flex align-items-center justify-content-center">
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-              </ul>
-            </nav>
-          </div>
+          <%- include('../partials/pagination.ejs', {currentPage: currentPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage}) %>
         </div>
       </div>
     </main>
 
     <!-- Footer start -->
     <%- include('../partials/footer.ejs') %>
-
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-    <script>
-      const quill = new Quill("#editor", {
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline"],
-            ["link", "blockquote", "code-block", "image"],
-            [{ list: "ordered" }, { list: "bullet" }],
-          ],
-        },
-        theme: "snow",
-      });
-
-      quill.on("text-change", function (delta, oldDelta, source) {
-        console.log(quill.container.firstChild.innerHTML);
-        $("#detail").val(quill.container.firstChild.innerHTML);
-      });
-    </script>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>

@@ -22,4 +22,6 @@ router.get("/posts", checkRole("writer"), writerController.getPosts);
 
 router.get("/posts/:postId", checkRole("writer"), writerController.getPost);
 
+router.post('/delete-post/:postId', checkRole("writer"), writerController.postDelete);
+
 export default router;

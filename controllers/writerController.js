@@ -1,8 +1,15 @@
 import Post from "../models/postModel.js";
 import Category from "../models/Category.js";
+import {
+  generateSlug,
+  getTagsArray,
+  decomposeTag,
+} from "../utils/postHelpers.js";
+import Tag from "../models/Tag.js";
 import User from "../models/User.js";
 
 const PREVIEW_POST = 3;
+const POSTS_PER_PAGE = 3;
 
 const writerController = {
   getWriterPage: async (req, res, next) => {
@@ -38,10 +45,36 @@ const writerController = {
     }
   },
   getPosts: (req, res, next) => {
-    res.render("writer/writer-posts", {
-      pageTitle: "Posts",
-      path: "/writer/posts",
-    });
+    const page = +req.query.page || 1;
+    let totalPosts;
+
+    Post.find({ writer: req.user._id })
+      .countDocuments()
+      .then((numPosts) => {
+        totalPosts = numPosts;
+        return Post.find({ writer: req.user._id })
+          .sort({ createdAt: -1 })
+          .skip((page - 1) * POSTS_PER_PAGE)
+          .limit(POSTS_PER_PAGE);
+      })
+      .then((posts) => {
+        res.render("writer/writer-posts", {
+          pageTitle: "Posts",
+          path: "/writer/posts",
+          posts: posts,
+          currentPage: page,
+          hasNextPage: POSTS_PER_PAGE * page < totalPosts,
+          hasPreviousPage: page > 1,
+          nextPage: page + 1,
+          previousPage: page - 1,
+          lastPage: Math.ceil(totalPosts / POSTS_PER_PAGE),
+        });
+      })
+      .catch((err) => {
+        const error = new Error(err.message || "Failed to fetch post");
+        error.statusCode = 500;
+        next(error);
+      });
   },
   getAddPost: (req, res, next) => {
     res.render("writer/edit-post", {
@@ -49,24 +82,49 @@ const writerController = {
       path: "/writer/add-post",
       editing: false,
       categoryName: "",
+      tagsString: "",
       post: "",
     });
   },
   postAddPost: async (req, res, next) => {
-    const { title, content, categoryName, status } = req.body;
+    const { title, content, categoryName, status, tagsString } = req.body;
+
+    const tagsArray = getTagsArray(tagsString);
 
     try {
       const category = await Category.findOne({ categoryName: categoryName });
+
       if (!category) {
         req.flash("error", "Category not found");
         return res.status(404).redirect("/writer");
       }
+
+      const tags = [];
+      for (const tagName of tagsArray) {
+        let tag;
+
+        const existingTag = await Tag.findOne({ tagName: tagName });
+
+        if (existingTag) {
+          tag = existingTag;
+        } else {
+          tag = new Tag({ tagName: tagName, description: "" });
+          await tag.save();
+        }
+
+        if (!tags.includes(tag._id)) {
+          tags.push(tag._id);
+        }
+      }
+
       const post = new Post({
         title: title,
+        slug: generateSlug(title) + new Date().toISOString(),
         content: content,
         status: status,
         writer: req.user._id,
         category: category._id,
+        tags: tags,
       });
       await post.save();
 
@@ -104,12 +162,20 @@ const writerController = {
         return res.status(404).redirect("/writer");
       }
 
+      let tagsString = "";
+
+      for (const tagId of post.tags) {
+        const tagObj = await Tag.findById(tagId);
+        tagsString += tagObj.tagName + ", ";
+      }
+
       res.render("writer/edit-post", {
         pageTitle: "Edit Post",
         path: "/writer/edit-post",
         editing: true,
         post: post,
         categoryName: category.categoryName,
+        tagsString: tagsString,
       });
     } catch (err) {
       const error = new Error(err.message || "Failed to fetch post");
@@ -161,6 +227,24 @@ const writerController = {
       pageTitle: "Post",
       path: "/writer/posts",
     });
+  },
+  postDelete: async (req, res, next) => {
+    const postId = req.params.postId;
+
+    try {
+      const result = await Post.findByIdAndDelete(postId);
+
+      if (!result) {
+        return res.status(500).json({ message: "Could not delete post" });
+      }
+
+      req.user.writerPosts.pull(postId);
+      await req.user.save();
+
+      return res.status(200).json({ message: "Deleted post successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   },
 };
 
