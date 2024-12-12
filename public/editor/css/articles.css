@@ -11,20 +11,57 @@ body {
     padding-right: 0rem; 
   }
   
-  /* Optional: If you need to adjust the container that wraps the main content */
   .container {
     padding-left: 0rem; 
   }
 
   table.table tbody tr td:first-child {
-    color: #6c757d; /* Blue color for title */
+    color: #6c757d; 
     font-weight: bold;
   }
   
   /* Author styling */
   table.table tbody tr td:nth-child(2) {
-    color: #6c757d; /* Gray color for author */
+    color: #6c757d; 
     font-style: italic;
   }
   
+.modal-content {
+  max-width: 6000px; /* Adjust the width of the modal */
+  max-height: 800px; /* Limit the height of the modal to 80% of the viewport */
+  overflow-y: auto; /* Add scroll if content overflows */
+  padding: 20px; /* Add padding inside the modal */
+  border-radius: 8px; /* Rounded corners for better UI */
+}
+.modal-header {
+  color: rgb(255, 255, 255);
+}
+.modal-content p {
+  color: rgb(240, 226, 226); /* Change text color to grey */
+  font-size: 14px; /* Adjust font size for readability */
+  line-height: 1.5; /* Improve line spacing */
+}
+
+.modal-dialog {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-body {
+  max-height: 80vh;
+  overflow-y: auto; /* Scrollable if content exceeds height */
+  padding: 15px;
+}
+
+.modal-body img {
+  display: block;
+  margin: 10px auto; /* Center the image */
+  border-radius: 8px;
+}
+.rejection-input {
+  background-color: white;
+  color: black;
+}
+
   

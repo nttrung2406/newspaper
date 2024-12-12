@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/editor/css/style.css">
     <link rel="stylesheet" href="/editor/css/articles.css">
     <link rel="shortcut icon" href="/editor/images/favicon.png" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
   </head>
 
   <body>
@@ -38,28 +39,86 @@
                 <td><%= draft.title %></td>
                 <td><%= draft.writer ? draft.writer.username : "Unknown Writer" %></td>
                 <td>
-                  <!-- Approve Form -->
-                  <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="d-inline">
-                    <input type="text" name="category" placeholder="Category" required>
-                    <input type="text" name="tags" placeholder="Tags (comma-separated)" required>
-                    <input type="datetime-local" name="scheduledPublishTime" required>
-                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                  </form>
-
-                  <!-- Reject Form -->
-                  <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="d-inline">
-                    <input type="text" name="rejectionReason" placeholder="Reason for rejection" required>
-                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-                  </form>
+                  <!-- Check Button -->
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-<%= draft._id %>">
+                    Check
+                  </button>
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal-<%= draft._id %>" tabindex="-1" aria-labelledby="modalLabel-<%= draft._id %>" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="modalLabel-<%= draft._id %>">Post Details</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Display post content -->
+                          <p style="white-space: normal; word-wrap: break-word; color: grey; font-size: 14px; line-height: 1.6;">
+                            <%= draft.content.replace(/\[IMAGE: (.*?)\]/g, '') %>
+                          </p>
+                          
+                          <!-- Display post image -->
+                          <% const imageUrlMatch = draft.content.match(/\[IMAGE: (.*?)\]/); %>
+                          <% if (imageUrlMatch) { %>
+                            <img src="<%= imageUrlMatch[1] %>" alt="Post Image" style="width: 60%; height: auto; margin-top: 10px; border-radius: 8px;" />
+                          <% } %>
+                  
+                          <!-- Approval and Rejection Forms -->
+                          <div class="mt-4">
+                            <!-- Approval Form -->
+                            <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="row g-2 align-items-center mb-3">
+                              <div class="col-md-3">
+                                <label for="category-<%= draft._id %>" class="form-label" style="color: white;">Category:</label>
+                                <select name="category" id="category-<%= draft._id %>" class="form-select" required>
+                                  <% categories.forEach(category => { %>
+                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                  <% }) %>
+                                </select>
+                              </div>
+                              
+                              <div class="col-md-4">
+                                <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
+                                <select name="tags" id="tags-<%= draft._id %>" class="form-select" required>
+                                  <% tags.forEach(tag => { %>
+                                    <option value="<%= tag._id %>"><%= tag.tagName %></option>
+                                  <% }) %>
+                                </select>
+                              </div>
+                              
+                              <div class="col-md-3">
+                                <label for="scheduledPublishTime-<%= draft._id %>" class="form-label" style="color: white;">Publish Time:</label>
+                                <input type="datetime-local" name="scheduledPublishTime" id="scheduledPublishTime-<%= draft._id %>" class="form-control" required style="background-color: white;">
+                              </div>
+                              
+                              <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-success w-100">Approve</button>
+                              </div>
+                            </form>
+                  
+                            <!-- Rejection Form -->
+                            <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
+                              <div class="col-md-10">
+                                <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required">
+                              </div>
+                              <div class="col-md-2">
+                                <button type="submit" class="btn btn-danger w-100">Reject</button>
+                              </div>
+                            </form>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               <% }) %>
-            </tbody>
+            </tbody>                       
           </table>
         </main>
       </div>
     </div>
 
+    
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <script src="/editor/vendors/js/vendor.bundle.base.js"></script>
@@ -75,5 +134,6 @@
     <script src="/editor/js/settings.js"></script>
     <script src="/editor/js/todolist.js"></script>
     <script src="/editor/js/dashboard.js"></script>
+    <script src="/editor/js/articles.js"></script>
   </body>
 </html>

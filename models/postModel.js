@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema({
   editor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
   rejectionReason: { type: String }, 
   category: { type: String, ref: 'Category' }, 
-  tags: [String], 
+  tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}], 
   createdAt: { type: Date }, 
   updatedAt: { type: Date }, 
 }, 
@@ -22,5 +22,4 @@ const postSchema = new mongoose.Schema({
 });
 
 const Post = mongoose.model('Post', postSchema);
-
 export default Post;

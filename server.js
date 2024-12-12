@@ -119,7 +119,6 @@ app.get("/details", (req, res) => res.render("details"));
 mongoose
   .connect(process.env.MONGO_DB_URI)
   .then(() => {
-    console.log("Connected");
     app.listen(PORT);
   })
   .catch((err) => {
