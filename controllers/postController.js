@@ -58,11 +58,13 @@ export const getPostById = async (req, res) => {
     try {
         const { id } = req.params;
         const post = await Post.findById(id).populate('category');
+
         if (!post) {
-            return res.status(404).json({ message: `Post with id ${id} not found` });
+            return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
         }
-        res.status(200).json(post);
+
+        res.render('details', { post });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).render('errorPage', { error: error.message });
     }
 };
