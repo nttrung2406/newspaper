@@ -12,6 +12,7 @@ import postRoutes from "./routes/postRoutes.js";
 import {authorizeRole} from './middlewares/authMiddleware.js'
 import userRoutes from "./routes/userRoutes.js";
 import categories from "./routes/categoryRoutes.js"
+import { getCategory } from './controllers/categoryController.js';
 // import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -103,26 +104,23 @@ app.use("/users", authorizeRole(['admin']), userRoutes);
 app.use("/admin", authorizeRole(['admin']), adminRoutes);
 app.use("/editor", authorizeRole(['editor']), editorRoutes);
 app.use("/writer", authorizeRole(['writer']),writerRoutes);
+app.use("/categori", categories);
 
 // Pages
+
+
 app.get('/', (req, res) => res.render('index'));
-app.get("/index", (req, res) => res.render("index"));
+app.get("/index", async (req, res) => {res.render("index")});
 app.get("/categori", async (req, res) => {
   try {
-    const response = await fetch(`http://localhost:${PORT}/categori`);
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const premiumCategories = await response.json(); // Parse JSON response
-    console.log("Premium Categories:", premiumCategories); // Log kết quả
-
-    res.render("categori", {
-        premiumCategories,
-        isPremium: false, // Hoặc logic của bạn
-    });
+      const categories = await getCategory(req, res);
+      res.render("categori", {
+          freeCategories: categories,
+          isPremium: false, // xử lí premium
+      });
   } catch (error) {
-    console.error("Error fetching categories:", error.message);
-    res.status(500).send("Internal Server Error");
+      console.error("Error fetching categories:", error.message);
+      res.status(500).send("Internal Server Error");
   }
 });
 

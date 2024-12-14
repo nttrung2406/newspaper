@@ -44,11 +44,18 @@
                                 <nav>                                                                     
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All</a>
-                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Lifestyle</a>
+                                        <% freeCategories.forEach(function(category) { %>
+                                          <a class="nav-item nav-link active" id="nav-<%= category._id %>" data-toggle="tab" href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>" aria-selected="false"
+                                          >
+                                              <%= category.categoryName %>
+                                          </a>
+                                        <% }); %>
+                                        <!-- <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Lifestyle</a>
                                         <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Travel</a>
                                         <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-contact" aria-selected="false">Fashion</a>
                                         <a class="nav-item nav-link" id="nav-Sports" data-toggle="tab" href="#nav-nav-Sport" role="tab" aria-controls="nav-contact" aria-selected="false">Sports</a>
                                         <a class="nav-item nav-link" id="nav-technology" data-toggle="tab" href="#nav-techno" role="tab" aria-controls="nav-contact" aria-selected="false">Technology</a>
+                                        <a class="nav-item nav-link" id="nav-technology" data-toggle="tab" href="#nav-techno" role="tab" aria-controls="nav-contact" aria-selected="false">Technology</a> -->
                                     </div>
                                 </nav>
                                 <!--End Nav Button  -->
@@ -507,13 +514,13 @@
                             <!--Nav Button  -->                                            
                             <nav>
                                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                                    <% premiumCategories.forEach(function(category) { %>
-                                        <a class="nav-item nav-link" id="nav-<%= category.id %>" data-toggle="tab" href="#nav-<%= category.id %>" role="tab" aria-controls="nav-<%= category.id %>" aria-selected="false"
+                                    <% freeCategories.forEach(function(category) { %>
+                                        <a class="nav-item nav-link" id="nav-<%= category._id %>" data-toggle="tab" href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>" aria-selected="false"
                                             <% if (!isPremium) { %>
                                                 onclick="alert('Vui lòng đăng ký để truy cập tính năng này!'); return false;"
                                             <% } %>
                                         >
-                                            <%= category.name %>
+                                            <%= category.categoryName %>
                                         </a>
                                     <% }); %>
                                 </div>

@@ -1,9 +1,9 @@
 import express from 'express';
-import { getCategory,createPost, getPosts, updatePost, deletePost, searchPostsByTitle } from '../controllers/postController.js';
+import { getCategory } from '../controllers/categoryController.js'; // Đảm bảo đường dẫn đúng
 
 const router = express.Router();
 
-router.get('/categori', getCategory); //
-
+// Đảm bảo controller được gọi chính xác
+router.get('/categori', getCategory);
 
 export default router;
