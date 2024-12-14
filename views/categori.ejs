@@ -514,14 +514,15 @@
                             <!--Nav Button  -->                                            
                             <nav>
                                 <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                                    <% freeCategories.forEach(function(category) { %>
-                                        <a class="nav-item nav-link" id="nav-<%= category._id %>" data-toggle="tab" href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>" aria-selected="false"
-                                            <% if (!isPremium) { %>
-                                                onclick="alert('Vui lòng đăng ký để truy cập tính năng này!'); return false;"
-                                            <% } %>
-                                        >
-                                            <%= category.categoryName %>
-                                        </a>
+                                    <% memberships.forEach(function(membership) { %>
+                                      <div class="what-cap" style="margin-top: 20px;">
+                                        <span class="color1"><%= membership.category %></span>
+                                        <h4>
+                                          <a href="#"
+                                            ><%= membership.title %></a
+                                          >
+                                        </h4>
+                                      </div>
                                     <% }); %>
                                 </div>
                             </nav>
