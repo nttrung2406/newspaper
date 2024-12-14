@@ -20,6 +20,7 @@ import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import User from "./models/User.js";
 import {getMembership} from "./controllers/membershipController.js"
+import {getPostsData} from "./controllers/postController.js"
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -114,8 +115,10 @@ app.get("/categori", async (req, res) => {
   try {
       const categories = await getCategory(req, res);
       const memberships = await getMembership(req,res);
+      const posts= await getPostsData(req,res);
       res.render("categori", {
           freeCategories: categories,
+          posts,
           memberships,
           isPremium: false, // xử lí premium
       });

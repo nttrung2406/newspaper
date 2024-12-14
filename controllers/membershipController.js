@@ -5,7 +5,7 @@ export const getMembership = async (req, res) => {
         const memberships = await Membership.find();
         return memberships; // Chỉ trả về dữ liệu
     } catch (error) {
-        console.error("Error in getCategory:", error.message);
+        console.error("Error in getMembership;", error.message);
         throw error;
     }
 };
