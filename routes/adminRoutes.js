@@ -26,4 +26,7 @@ router.use("/tags", tagList)
 import tagAction from './admin/tag/tagAction.route.js'
 router.use("/tag", tagAction)
 
+import userList from './admin/user/userList.route.js'
+router.use('/users', userList)
+
 export default router;
