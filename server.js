@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import {authorizeRole} from './middlewares/authMiddleware.js'
 import userRoutes from "./routes/userRoutes.js";
+import categories from "./routes/categoryRoutes.js"
 // import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -106,25 +107,26 @@ app.use("/writer", authorizeRole(['writer']),writerRoutes);
 // Pages
 app.get('/', (req, res) => res.render('index'));
 app.get("/index", (req, res) => res.render("index"));
-app.get("/categori", (req, res) => {
-  //test
-  const user = {
-    name: "John Doe",
-    isPremium: false, // tắt chạy lại
-  };
+app.get("/categori", async (req, res) => {
+  try {
+    const response = await fetch(`http://localhost:${PORT}/categori`);
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const premiumCategories = await response.json(); // Parse JSON response
+    console.log("Premium Categories:", premiumCategories); // Log kết quả
 
-  const premiumCategories = [
-    { "id": "only fan", "name": "Only Fan"},
-    { "id": "finance", "name": "Finance" },
-    { "id": "secret tech", "name": "Secret Tech" },
-    { "id": "exclusive videos", "name": "Exclusive Videos" }
-  ];
-
-  res.render("categori", {
-    premiumCategories: premiumCategories,
-    isPremium: user.isPremium,
-  });
+    res.render("categori", {
+        premiumCategories,
+        isPremium: false, // Hoặc logic của bạn
+    });
+  } catch (error) {
+    console.error("Error fetching categories:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
 app.get('/about', (req, res) => res.render('about'));
 app.get('/latest_news', (req, res) => res.render('latest_news'));
 app.get('/contact', (req, res) => res.render('contact'));

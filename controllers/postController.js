@@ -1,4 +1,17 @@
 import Post from '../models/postModel.js';
+import Category from '../models/Category.js';
+
+export const getCategory = async (req, res) => {
+    try {
+        const categories = await Category.find(); // Truy xuất toàn bộ danh mục
+        console.log("Fetched Categories:", categories); // Log để kiểm tra dữ liệu
+        res.status(200).json(categories);
+    } catch (error) {
+        console.error("Error in getCategory:", error.message, error.stack);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 export const createPost = async (req, res) => {
   try {
