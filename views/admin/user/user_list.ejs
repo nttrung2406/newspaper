@@ -43,6 +43,8 @@
                     <a href="/admin">Trang chủ</a>
                   </li>
 
+                  
+
                   <li class="breadcrumb-item active" aria-current="page">Quản lý người dùng</li>
                 </ol>
               </nav>
@@ -74,7 +76,7 @@
                         </ul>
                       </div>
                     </div>
-            
+                    
                     <div class="row align-items-center">
                       <!-- Search Bar -->
                       <div class="col-8">
@@ -98,7 +100,7 @@
             
                       <!-- Add User Button -->
                       <div class="col-4 text-right">
-                        <button type="button" class="btn btn-success" onclick="window.location.href='/admin/users/add'">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
                           <i class="mdi mdi-plus"></i> Add User
                         </button>
                       </div>
@@ -109,12 +111,13 @@
                       <div class="col-12">
                         <div class="table-responsive">
                           <table class="table table-dark custom-table">
-                            <thead>
+                            <thead class="thead-dark">
                               <tr>
-                                <th style="width: 15%;">Username</th>
+                                <th style="width: 20%;">Username</th>
                                 <th>Email</th>
                                 <th>Role</th>
-                                <th style="width: 10%;">Action</th>
+                                <th>Ngày tạo</th>
+                                <th style="width: 13%;">Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -132,7 +135,20 @@
                                   %>">
                                     <%= user.role %>
                                   </span></td>
-                                  <td></td>
+                                  <td><%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'}) %></td>
+                                  <td>
+                                    <div class="btn-group">
+                                      <button class="btn btn-info btn-icon"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết">
+                                        <i class="mdi mdi-information-slab-circle-outline"></i>
+                                      </button>
+                                      <button class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="bottom" title="Cập nhật">
+                                        <i class="mdi mdi-update"></i>
+                                      </button>
+                                      <!-- <button class="btn btn-danger btn-icon">
+                                        <i class="mdi mdi-delete"></i>
+                                      </button> -->
+                                    </div>
+                                  </td>
                                 </tr>
                               <%}); %>
 
@@ -151,8 +167,6 @@
                               <a class="page-link" href="#" tabindex="-1">Previous</a>
                             </li>
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
                             <li class="page-item">
                               <a class="page-link" href="#">Next</a>
                             </li>
@@ -160,6 +174,107 @@
                         </nav>
                       </div>
                     </div>
+                    
+                    <!-- Modal for add User -->
+                    <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body p-0">
+                            <div class="card text-left">
+                              <div class="card-body">
+                                <h4 class="card-title">Thêm người dùng</h4>
+                                <hr>
+
+                                <form action="/admin/user/add" method="post" class="form-sample" id="addUserForm">
+                                  <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text"
+                                      class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="Nhập tên người dùng">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId" placeholder="Nhập Email">
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="fullname">Fullname</label>
+                                    <input type="text"
+                                      class="form-control" name="fullname" id="fullname" aria-describedby="helpId" placeholder="Nhập họ và tên">
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="dob">Date Of Birth</label>
+                                    <input type="date" name="dob" id="dob" class="form-control" aria-describedby="helpId">
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <select class="form-control" name="role" id="role">
+                                      <option value="writer">Writer</option>
+                                      <option value="editor">Editor</option>
+                                      <option value="membership">Membership</option>                                   
+                                    </select>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="penname">Pen Name</label>
+                                    <input type="text"
+                                      class="form-control" name="penname" id="penname" aria-describedby="helpId" placeholder="Nhập bút danh">
+                                  </div>
+
+                                  
+
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetForm()">Cancel</button>
+                                  
+                                </form>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- script for clearing the input of the add user form-->
+                    <script>
+                      function resetForm() {
+                        document.getElementById('addUserForm').reset();                     
+                      }
+
+                      
+                    </script>
+
+                    <!-- script for validating the date of birth-->
+                    <script>
+                      const today = new Date();
+                      const currentYear = today.getFullYear();
+                      const currentMonth = String(today.getMonth() + 1).padStart(2, '0');  // Month is 0-indexed
+                      const currentDay = String(today.getDate()).padStart(2, '0');
+
+                      
+                      const todayFormatted = `${currentYear}-${currentMonth}-${currentDay}`;
+                      const hundredYearsAgo = `${currentYear - 100}-${currentMonth}-${currentDay}`;
+
+                      
+                      document.getElementById('dob').setAttribute('min', hundredYearsAgo);
+                      document.getElementById('dob').setAttribute('max', todayFormatted);
+                    </script>
+
+                    <script>
+                      const roleSelect = document.getElementById('role');
+                      const penName = document.getElementById('penname');
+
+                      roleSelect.addEventListener('change', function(){
+                        if (roleSelect.value !== 'writer'){
+                          penName.value = ''
+                          penName.disabled = true;
+                        }
+                        else{
+                          penName.disabled = false;
+                        }
+                      })
+                    </script>
                   </div>
                 </div>
               </div>
