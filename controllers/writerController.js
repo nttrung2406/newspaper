@@ -41,7 +41,9 @@ const writerController = {
         errorMessage: errorMessage,
       });
     } catch (err) {
-      res.status(500).json({ message: "Internal server error", error: err });
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
     }
   },
   getPosts: async (req, res, next) => {
@@ -79,7 +81,7 @@ const writerController = {
         lastPage: lastPage,
       });
     } catch (err) {
-      const error = new Error(err.message || "Failed to fetch post");
+      const error = new Error(err);
       error.statusCode = 500;
       next(error);
     }
@@ -142,8 +144,9 @@ const writerController = {
       req.flash("success", "Post created successfully");
       res.status(201).redirect("/writer");
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: "An error occured", error: err.message });
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
     }
   },
   getEditPost: async (req, res, next) => {
@@ -191,7 +194,7 @@ const writerController = {
         pageNumber: pageNumber,
       });
     } catch (err) {
-      const error = new Error(err.message || "Failed to fetch post");
+      const error = new Error(err);
       error.statusCode = 500;
       next(error);
     }
