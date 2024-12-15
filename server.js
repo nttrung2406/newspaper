@@ -18,6 +18,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import editorRoutes from "./routes/editorRoutes.js";
 import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
+import errorController from "./controllers/error.js";
 import User from "./models/User.js";
 
 dotenv.config({ path: "./config/env/development.env" });
@@ -121,6 +122,18 @@ app.get("/elements", (req, res) => res.render("elements"));
 app.get("/blog", (req, res) => res.render("blog"));
 app.get("/single-blog", (req, res) => res.render("single-blog"));
 app.get("/details", (req, res) => res.render("details"));
+
+
+app.get('/500', errorController.get500);
+app.use(errorController.get404);
+
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+});
 
 mongoose
   .connect(process.env.MONGO_DB_URI)

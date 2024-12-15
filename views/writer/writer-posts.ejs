@@ -85,7 +85,7 @@
               <% } %>
             </ul>
             <% } else { %>
-              <h1>No post found!</h1>
+              <p class="text-center my-2 lead">How empty! <a class="text-primary" href="/writer/add-post">Create something</a></p>
             <% } %>
           </div>
           <%- include('../partials/pagination.ejs', {currentPage: currentPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage}) %>

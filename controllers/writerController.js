@@ -44,59 +44,45 @@ const writerController = {
       res.status(500).json({ message: "Internal server error", error: err });
     }
   },
-  getPosts: (req, res, next) => {
-    const page = +req.query.page || 1;
-    let totalPosts;
+  getPosts: async (req, res, next) => {
+    const page = Math.max(1, +req.query.page || 1);
 
-    let errorMessage = req.flash("error");
+    let errorMessage = req.flash("error")[0] || null;
+    let successMessage = req.flash("success")[0] || null;
 
-    if (errorMessage.length > 0) {
-      errorMessage = errorMessage[0];
-    } else {
-      errorMessage = null;
-    }
+    try {
+      const totalPosts = await Post.countDocuments({ writer: req.user._id });
 
-    let successMessage = req.flash("success");
+      const lastPage =
+        totalPosts > 0 ? Math.ceil(totalPosts / POSTS_PER_PAGE) : 1;
 
-    if (successMessage.length > 0) {
-      successMessage = successMessage[0];
-    } else {
-      successMessage = null;
-    }
+      if (page > lastPage) {
+        return res.status(404).redirect(`/writer/posts?page=${lastPage}`);
+      }
 
-    Post.find({ writer: req.user._id })
-      .countDocuments()
-      .then((numPosts) => {
-        totalPosts = numPosts;
-        if (page > Math.ceil(totalPosts / POSTS_PER_PAGE)) {
-          res.redirect(`/writer/posts?page=${page - 1}`);
-          return Promise.reject("Redirecting due to invalid page");
-        }
-        return Post.find({ writer: req.user._id })
-          .sort({ createdAt: -1 })
-          .skip((page - 1) * POSTS_PER_PAGE)
-          .limit(POSTS_PER_PAGE);
-      })
-      .then((posts) => {
-        res.render("writer/writer-posts", {
-          pageTitle: "Posts",
-          path: "/writer/posts",
-          posts: posts,
-          errorMessage: errorMessage,
-          successMessage: successMessage,
-          currentPage: page,
-          hasNextPage: POSTS_PER_PAGE * page < totalPosts,
-          hasPreviousPage: page > 1,
-          nextPage: page + 1,
-          previousPage: page - 1,
-          lastPage: Math.ceil(totalPosts / POSTS_PER_PAGE),
-        });
-      })
-      .catch((err) => {
-        const error = new Error(err.message || "Failed to fetch post");
-        error.statusCode = 500;
-        next(error);
+      const posts = await Post.find({ writer: req.user._id })
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * POSTS_PER_PAGE)
+        .limit(POSTS_PER_PAGE);
+
+      res.render("writer/writer-posts", {
+        pageTitle: "Posts",
+        path: "/writer/posts",
+        posts: posts,
+        errorMessage: errorMessage,
+        successMessage: successMessage,
+        currentPage: page,
+        hasNextPage: POSTS_PER_PAGE * page < totalPosts,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: lastPage,
       });
+    } catch (err) {
+      const error = new Error(err.message || "Failed to fetch post");
+      error.statusCode = 500;
+      next(error);
+    }
   },
   getAddPost: (req, res, next) => {
     res.render("writer/edit-post", {
@@ -273,11 +259,41 @@ const writerController = {
       next(error);
     }
   },
-  getPost: (req, res, next) => {
-    res.render("writer/writer-post-detail", {
-      pageTitle: "Post",
-      path: "/writer/posts",
-    });
+  getPost: async (req, res, next) => {
+    const postId = req.params.postId;
+
+    try {
+      const post = await Post.findById(postId);
+
+      if (!post) {
+        req.flash("error", "Post not found!");
+        return res.status(404).redirect("/writer/posts");
+      }
+
+      if (post.writer.toString() !== req.user._id.toString()) {
+        req.flash('error', 'You do not have permission to view this post!');
+        return res.status(403).redirect("/writer/posts");
+      }
+
+      const category = await Category.findById(post.category);
+
+      if (!category) {
+        req.flash("error", "Category not found!");
+        return res.status(404).redirect("/writer/posts");
+      }
+  
+      res.render("writer/writer-post-detail", {
+        pageTitle: "Post",
+        path: "/writer/posts",
+        post: post,
+        writer: req.user.username,
+        categoryName: category.categoryName,
+      });
+    } catch(err) {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    }
   },
   postDelete: async (req, res, next) => {
     const postId = req.params.postId;
