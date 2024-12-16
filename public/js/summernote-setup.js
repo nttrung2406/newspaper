@@ -13,7 +13,6 @@ $("#summernote").summernote({
   ],
   callbacks: {
     onImageUpload: function (files) {
-      console.log("img upload fired");
       const formData = new FormData();
       formData.append("file", files[0]);
 

@@ -13,22 +13,6 @@ const POSTS_PER_PAGE = 3;
 
 const writerController = {
   getWriterPage: async (req, res, next) => {
-    let errorMessage = req.flash("error");
-
-    if (errorMessage.length > 0) {
-      errorMessage = errorMessage[0];
-    } else {
-      errorMessage = null;
-    }
-
-    let successMessage = req.flash("success");
-
-    if (successMessage.length > 0) {
-      successMessage = successMessage[0];
-    } else {
-      successMessage = null;
-    }
-
     try {
       const posts = await Post.find({ writer: req.user._id })
         .sort({ createdAt: -1 })
@@ -37,8 +21,6 @@ const writerController = {
         pageTitle: "Writer",
         path: "/writer",
         posts: posts,
-        successMessage: successMessage,
-        errorMessage: errorMessage,
       });
     } catch (err) {
       const error = new Error(err);
@@ -86,29 +68,31 @@ const writerController = {
       next(error);
     }
   },
-  getAddPost: (req, res, next) => {
-    res.render("writer/edit-post", {
-      pageTitle: "Add New Post",
-      path: "/writer/add-post",
-      editing: false,
-      categoryName: "",
-      tagsString: "",
-      post: "",
-    });
+  getAddPost: async (req, res, next) => {
+    try {
+      const categories = await Category.find({parentID: {$ne: null}});
+  
+      res.render("writer/edit-post", {
+        pageTitle: "Add New Post",
+        path: "/writer/add-post",
+        editing: false,
+        categories: categories,
+        categoryId: "",
+        tagsString: "",
+        post: "",
+      });
+    } catch (err) {
+      const error = new Error(err);
+      error.statusCode = 500;
+      next(error);
+    }
   },
   postAddPost: async (req, res, next) => {
-    const { title, content, categoryName, status, tagsString } = req.body;
+    const { title, content, categoryId, status, tagsString } = req.body;
 
     const tagsArray = getTagsArray(tagsString);
 
     try {
-      const category = await Category.findOne({ categoryName: categoryName });
-
-      if (!category) {
-        req.flash("error", "Category not found");
-        return res.status(404).redirect("/writer");
-      }
-
       const tags = [];
       for (const tagName of tagsArray) {
         let tag;
@@ -133,7 +117,7 @@ const writerController = {
         content: content,
         status: status,
         writer: req.user._id,
-        category: category._id,
+        category: categoryId,
         tags: tags,
       });
       await post.save();
@@ -142,7 +126,7 @@ const writerController = {
       await req.user.save();
 
       req.flash("success", "Post created successfully");
-      res.status(201).redirect("/writer");
+      res.status(201).redirect("/writer/posts");
     } catch (err) {
       const error = new Error(err);
       error.statusCode = 500;
@@ -150,27 +134,22 @@ const writerController = {
     }
   },
   getEditPost: async (req, res, next) => {
+    const editMode = req.query.edit;
+    const pageNumber = req.query.page;
+    
+    if (!editMode) {
+      return res.redirect("/");
+    }
+    
     try {
-      const editMode = req.query.edit;
-      const pageNumber = req.query.page;
-
-      if (!editMode) {
-        return res.redirect("/");
-      }
-
+      const categories = await Category.find({parentID: {$ne: null}});
+      
       const postId = req.params.postId;
 
       const post = await Post.findById(postId);
 
       if (!post) {
         console.log("Post not found");
-        return res.status(404).redirect("/writer");
-      }
-
-      const category = await Category.findById(post.category);
-
-      if (!category) {
-        console.log("Category not found for this post");
         return res.status(404).redirect("/writer");
       }
 
@@ -189,7 +168,8 @@ const writerController = {
         path: "/writer/edit-post",
         editing: true,
         post: post,
-        categoryName: category.categoryName,
+        categoryId: post.category,
+        categories: categories,
         tagsString: tagsString,
         pageNumber: pageNumber,
       });
@@ -202,7 +182,7 @@ const writerController = {
   postEditPost: async (req, res, next) => {
     const newTitle = req.body.title;
     const newContent = req.body.content;
-    const newCategoryName = req.body.categoryName;
+    const newCategoryId = req.body.categoryId;
     const newTagsString = req.body.tagsString;
     const postId = req.body.postId;
 
@@ -215,16 +195,6 @@ const writerController = {
 
       if (!post) {
         req.flash("error", "Post not found");
-        return res.status(404).redirect(`/writer/posts?page=${pageNumber}`);
-      }
-
-      // const category = await Category.findOne({ categoryName: categoryName });
-      const newCategory = await Category.findOne({
-        categoryName: newCategoryName,
-      });
-
-      if (!newCategory) {
-        req.flash("error", "Category not found");
         return res.status(404).redirect(`/writer/posts?page=${pageNumber}`);
       }
 
@@ -249,7 +219,7 @@ const writerController = {
 
       post.title = newTitle;
       post.content = newContent;
-      post.category = newCategory;
+      post.category = newCategoryId;
       post.tags = newTags;
 
       await post.save();
