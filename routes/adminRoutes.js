@@ -20,4 +20,13 @@ router.use("/categories", categoryList)
 import categoryAction from './admin/category/categoryAction.route.js'
 router.use("/category", categoryAction)
 
+import tagList from './admin/tag/tagList.route.js'
+router.use("/tags", tagList)
+
+import tagAction from './admin/tag/tagAction.route.js'
+router.use("/tag", tagAction)
+
+import userList from './admin/user/userList.route.js'
+router.use('/users', userList)
+
 export default router;

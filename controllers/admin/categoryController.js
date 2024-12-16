@@ -2,8 +2,6 @@
 import Category from "../../models/Category.js";
 import mongoose from "mongoose";
 
-
-
 // Get Category List and Render
 const getCategories = async(req, res, next) =>{
     try {
@@ -14,15 +12,13 @@ const getCategories = async(req, res, next) =>{
         const query = search ? {categoryName: new RegExp(search, 'i')} :{};
 
         const [categories, total] = await Promise.all([
-          Category.find(query).skip(skip).limit(limit).sort({createAt:-1})
+          Category.find(query).skip(skip).limit(limit).sort({createdAt:-1})
           .populate({path: "parentID", select: "categoryName", model: "Category"}),
           Category.countDocuments(query),
         ]);
 
 
         //console.log(categories)
-        
-
 
         const message = req.flash('category_create_success')
         res.render('admin/category/category_list',{
@@ -102,7 +98,11 @@ const viewCategory = async(req, res) =>{
 
   const categoryInformation = await Category.findById(id)
     .populate({path: "parentID", select: "categoryName", model: "Category"});
-  
+  if (!categoryInformation){
+    return res.redirect('/admin/categories');
+  }
+
+
   res.render('admin/category/category_info', {categoryInformation});
 }
 

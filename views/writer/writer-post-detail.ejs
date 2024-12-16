@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>News</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+
+    <link rel="stylesheet" href="/css/ticker-style.css" />
+
+    <link rel="stylesheet" href="/css/flaticon.css" />
+
+    <link rel="stylesheet" href="/css/slicknav.css" />
+    <link rel="stylesheet" href="/css/animate.min.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/css/themify-icons.css" />
+    <link rel="stylesheet" href="/css/slick.css" />
+    <link rel="stylesheet" href="/css/nice-select.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+    <style>
+      .post-card {
+        margin-bottom: 1rem;
+      }
+      .status {
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+      .status.unapproved {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header start -->
+    <%- include('../partials/header.ejs') %>
+
+    <section class="blog_area single-post-area section-padding">
+      <div class="container">
+        <div class="row d-flex flex-column">
+          <div class="single-post">
+            <div class="blog_details">
+              <h2>
+                <%= post.title %>
+              </h2>
+              <ul class="blog-info-link mt-2 mb-4">
+                <li>
+                  <a href="#"><i class="fa fa-user"></i><%= categoryName %></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fas fa-pencil-alt"></i><span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span></a>
+                </li>
+              </ul>
+              <%- post.content %>
+            </div>
+          </div>
+          <div class="blog-author">
+            <div class="media align-items-center">
+              <img src="/img/blog/author.png" alt="" />
+              <div class="media-body">
+                <a href="#">
+                  <h4><%= writer %></h4>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer start -->
+    <%- include('../partials/footer.ejs') %>
+
+    <!-- All JS Custom Plugins Link Here here -->
+    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <!-- Date Picker -->
+    <script src="/js/gijgo.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="/js/wow.min.js"></script>
+    <script src="/js/animated.headline.js"></script>
+    <script src="/js/jquery.magnific-popup.js"></script>
+
+    <!-- Breaking New Pluging -->
+    <script src="/js/jquery.ticker.js"></script>
+    <script src="/js/site.js"></script>
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <script src="/js/jquery.nice-select.min.js"></script>
+    <script src="/js/jquery.sticky.js"></script>
+
+    <!-- contact js -->
+    <script src="/js/contact.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/mail-script.js"></script>
+    <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
