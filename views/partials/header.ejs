@@ -75,6 +75,9 @@
                         <li><a href="/details">Category Details</a></li>
                       </ul>
                     </li>
+                    <% if (role && role === 'writer') { %>
+                      <li><a href="/writer">Compose</a></li>
+                      <% } %>                   
                   </ul>
                 </nav>
               </div>

@@ -36,80 +36,75 @@
 
             <!--Page Title-->
             <div class="page-header">
-              <h3 class="page-title">Cập nhật chuyên mục</h3>
+              <h3 class="page-title">Thông tin nhãn</h3>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item">
                     <a href="/admin">Trang chủ</a>
                   </li>
                   <li class="breadcrumb-item">
-                    <a href="/admin/categories">Quản lý chuyên mục</a>
+                    <a href="/admin/tags">Quản lý nhãn</a>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">Cập nhật</li>
+                  <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
                 </ol>
               </nav>
             </div>
             
             <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-                <div class="card text-left">
-                  <div class="card-body">
-                    <h4 class="card-title">Cập nhật</h4>
-                    <hr>
-                    <form action="/admin/category/update/<%= id %>" method="post">
-                      <div class="form-group mt-3 mb-3">
-                        <label for="categoryName">Tên chuyên mục</label>
-                        <input type="text" name="categoryName" id="categoryName" class="form-control" value="<%= categoryInfo.categoryName %>">
-                        <% if (NameErr && NameErr.length > 0) { %>
-                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                              <span class="sr-only">Close</span>
-                            </button>
-                            <%= NameErr%>
-                          </div>
-                        <%} %>
-                      </div>
-  
-                      <div class="form-group mt-3 mb-3">
-                        <label for="description">Mô tả</label>
-                        <textarea name="description" id="description" class="form-control" rows="4"><%= categoryInfo.description %></textarea>
-                      </div>
-  
-                      <div class="form-group mt-3 mb-3">
-                        <label for="parentID">Chuyên mục cha</label>
-                        <select name="parentID" id="parentID" class="form-control">
-                          <% if (categoryInfo.parentID) {%>
-                            <option value="<%= categoryInfo.parentID._id %>"><%= categoryInfo.parentID.categoryName %></option>
-                            <option value="">-- None --</option>
-                          <%} else {%>
-                            <option value="">-- None --</option>
-                          <%} %>
-                          
-                          <% parentCategories.forEach(item => {%>
-                            <option value="<%= item._id %>"><%= item.categoryName %></option>
-                          <%}); %>
+              <div class="card text-left">
+                <div class="card-body">
+                  <h4 class="card-title">Chi tiết</h4>
+                  <hr>
+                  
+                  <% if (!tagInformation) {%>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                      </button>
+                      Nhãn không tồn tại
+                    </div>
+                  <% }  else {%>
 
-                        </select>
-                        <% if (ParentErr && ParentErr.length > 0) { %>
-                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                              <span class="sr-only">Close</span>
-                            </button>
-                            <%= ParentErr %>
-                          </div>
-                        <%} %>
+                    <form class="form">
+                      <div class="form-group mt-3 mb-3">
+                        <label for="" class="">Tên nhãn</label>
+                        <input type="text" name="" id="" class="form-control" placeholder="" value="<%= tagInformation.tagName %>" readonly>
                       </div>
 
-                      <button class="btn btn-primary" type="submit">Cập nhật</button>
+                      <div class="form-group mt-3 mb-3">
+                        <label for="" class="">Ghi chú</label>
+                        <textarea name="" id="" rows="" class="form-control" value readonly><%= tagInformation.description ? tagInformation.description : "N/A" %></textarea>
+                      </div>
+
+                      <div class="form-group mt-3 mb-3">
+                        <label for="" class="">Ngày tạo</label>
+                        <input type="text" name="" id="" class="form-control" placeholder=""
+                        value="<%= tagInformation.createdAt ? new Date(tagInformation.createdAt).toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + new Date(tagInformation.createdAt).toLocaleTimeString('vi-VN') : 'N/A' %>" 
+                          readonly>
+                      </div>
+
+                      <div class="form-group mt-3 mb-3">
+                        <label for="" class="">Ngày cập nhật</label>
+                        <input type="text" name="" id="" class="form-control" placeholder=""
+                        value="<%= tagInformation.updatedAt ? new Date(tagInformation.updatedAt).toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + new Date(tagInformation.updatedAt).toLocaleTimeString('vi-VN') : 'N/A' %>" 
+                          readonly>
+                      </div>
+
+                      <a href="/admin/tags" class="btn btn-primary">Trở về</a>
+
+                      <style>
+                        input:read-only, textarea:read-only{
+                          background-color: #212529 !important;
+                          color: white !important;
+                        }
+                      </style>
                     </form>
 
-                  </div>
+                  <% } %>
                 </div>
               </div>
             </div>
-
 
           </div>
           <!-- content-wrapper ends -->

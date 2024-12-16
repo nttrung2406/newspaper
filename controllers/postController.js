@@ -10,6 +10,16 @@ export const createPost = async (req, res) => {
   }
 };
 
+export const getPostsData = async (req, res) => {
+    try {
+        const posts_data = await Post.find();
+        return posts_data; // Chỉ trả về dữ liệu
+    } catch (error) {
+        console.error("Error in posts_data;", error.message);
+        throw error;
+    }
+  };
+
 export const getPosts = async (req, res) => {
   try {
       const posts = await Post.find().populate('category');
