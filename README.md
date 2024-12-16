@@ -98,8 +98,8 @@ newspaper-web-app/
 └── README.md                  # Project documentation
 
 **Install**:
->> npm install package.json
+>> npm install 
 
 *Start project*
 
->> node app.js
+>> npm run start

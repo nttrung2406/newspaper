@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'fallbackSecret';
 
 // Generate reset token
 export const generateResetToken = (userId) => {
-    return jwt.sign({ userId }, SECRET, { expiresIn: '12h' }); // Token expires in 1 hour
+    return jwt.sign({ userId }, SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
 };
 
 // Validate reset token
@@ -26,18 +26,18 @@ export const transporter = nodemailer.createTransport({
     port: process.env.SMTP_PORT,
     auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        pass: "grhf vcsa qppj mjaw",
     },
-    secure: false, // STARTTLS for port 587
+    secure: true
 });
 
 // Send password reset email
 export const sendResetEmail = async (to, token) => {
-    const resetLink = `http://sgnews.com/reset-password?token=${token}`;
+    const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
     const subject = 'Password Reset Request';
     const text = `You requested a password reset. Use the following link to reset your password: ${resetLink}`;
     const html = `<p>You requested a password reset. Click the link below to reset your password:</p>
-                  <a href="${resetLink}">${resetLink}</a>`;
+                  <a href="${resetLink}">Reset</a>`;
 
     try {
         const info = await transporter.sendMail({

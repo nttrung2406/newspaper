@@ -1,10 +1,27 @@
 import writerController from "../controllers/writerController.js";
 import express from "express";
+import { checkRole } from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
-router.get("/edit-post", writerController.getEditPost);
+router.get("/", checkRole("writer"), writerController.getWriterPage);
 
-router.post("/edit-post", writerController.postEditPost);
+router.get("/add-post", checkRole("writer"), writerController.getAddPost);
+
+router.post("/add-post", checkRole("writer"), writerController.postAddPost);
+
+router.get(
+  "/edit-post/:postId",
+  checkRole("writer"),
+  writerController.getEditPost
+);
+
+router.post("/edit-post", checkRole("writer"), writerController.postEditPost);
+
+router.get("/posts", checkRole("writer"), writerController.getPosts);
+
+router.get("/posts/:postId", checkRole("writer"), writerController.getPost);
+
+router.post('/delete-post/:postId', checkRole("writer"), writerController.postDelete);
 
 export default router;

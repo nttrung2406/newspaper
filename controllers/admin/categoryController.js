@@ -2,8 +2,6 @@
 import Category from "../../models/Category.js";
 import mongoose from "mongoose";
 
-
-
 // Get Category List and Render
 const getCategories = async(req, res, next) =>{
     try {
@@ -21,8 +19,6 @@ const getCategories = async(req, res, next) =>{
 
 
         //console.log(categories)
-        
-
 
         const message = req.flash('category_create_success')
         res.render('admin/category/category_list',{

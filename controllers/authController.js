@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import nodemailer from "nodemailer";
 import User from "../models/User.js";
 import {
   sendResetEmail,
@@ -9,16 +8,6 @@ import {
 import dotenv from "dotenv";
 dotenv.config({ path: "./config/env/development.env" });
 
-// Nodemailer transport setup
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  secure: false, // STARTTLS for port 587
-});
 
 const authController = {
   getAuth: (req, res) => {
@@ -69,13 +58,10 @@ const authController = {
     try {
       const { email, password } = req.body;
 
-      //console.log(email, password);
-
-      // Find user and verify password (hash check omitted for brevity)
       const user = await User.findOne({ email });
       //console.log(user)
       if (!user) {return res.redirect("/");}
-      if ((await bcrypt.compare(password, user.password))) {
+      if ((await !bcrypt.compare(password, user.password))) {
         return res.status(400).send("Invalid credentials");
       }
 
@@ -87,6 +73,9 @@ const authController = {
         console.log(err);
         if ( req.session.user.role === 'admin'){
           res.redirect('/admin');
+        }
+        else if ( req.session.user.role === 'editor'){
+          res.redirect('/editor');
         }
         else {res.redirect("/index");}
       });
@@ -108,7 +97,7 @@ const authController = {
       }
 
       const token = generateResetToken(user._id);
-      const resetLink = `http://localhost:4000/reset-password?token=${token}`;
+      const resetLink = `https://newspaper-2uw4.onrender.com/auth/reset_password?token=${token}`;
 
       await sendResetEmail(
         email,

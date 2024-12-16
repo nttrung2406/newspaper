@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>News</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+
+    <link rel="stylesheet" href="/css/ticker-style.css" />
+
+    <link rel="stylesheet" href="/css/flaticon.css" />
+
+    <link rel="stylesheet" href="/css/slicknav.css" />
+    <link rel="stylesheet" href="/css/animate.min.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/css/themify-icons.css" />
+    <link rel="stylesheet" href="/css/slick.css" />
+    <link rel="stylesheet" href="/css/nice-select.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+    <style>
+      .post-card {
+        margin-bottom: 1rem;
+      }
+      .status {
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+      .status.unapproved {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header start -->
+    <%- include('../partials/header.ejs') %>
+
+    <main>
+        <!-- Card for listing posts -->
+        <div class="container my-5">
+          <div class="card mb-5">
+            <div class="card-header" style="font-size: 1.5rem">
+              List of Posts
+            </div>
+            <% if (posts && posts.length > 0) { %>
+            <ul class="list-group list-group-flush">
+              <% for (const post of posts) { %>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
+                  <div class="text-muted"><%= post.createdAt %></div>
+                  <div class="text-muted">
+                    Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
+                  </div>
+                </div>
+                <div>
+                  <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-2">
+                    View
+                  </a>
+                  <% if (post.status === 'Rejected' || post.status === 'Draft') { %>
+                  <a href="/writer/edit-post/<%= post._id %>?edit=true&page=<%= currentPage %>" class="btn btn-outline-warning btn-sm">Edit</a>
+                  <button class="delete-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Delete</button>
+                  <% } %>
+                  <% if (post.status === 'Approved') { %>
+                  <button class="submit-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Submit</button>
+                  <% } %>
+                </div>
+              </li>
+              <% } %>
+            </ul>
+            <% } else { %>
+              <p class="text-center my-2 lead">How empty! <a class="text-primary" href="/writer/add-post">Create something</a></p>
+            <% } %>
+          </div>
+          <%- include('../partials/pagination.ejs', {currentPage: currentPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage}) %>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer start -->
+    <%- include('../partials/footer.ejs') %>
+
+    <%- include('../partials/sweetAlert.ejs') %>
+
+    <script src="/js/writerActions.js"></script>
+
+    <!-- All JS Custom Plugins Link Here here -->
+    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <!-- Date Picker -->
+    <script src="/js/gijgo.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="/js/wow.min.js"></script>
+    <script src="/js/animated.headline.js"></script>
+    <script src="/js/jquery.magnific-popup.js"></script>
+
+    <!-- Breaking New Pluging -->
+    <script src="/js/jquery.ticker.js"></script>
+    <script src="/js/site.js"></script>
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <script src="/js/jquery.sticky.js"></script>
+
+    <!-- contact js -->
+    <script src="/js/contact.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/mail-script.js"></script>
+    <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
