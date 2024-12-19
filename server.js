@@ -1,3 +1,4 @@
+// Import các package cần thiết
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
@@ -8,14 +9,15 @@ import session from "express-session";
 import flash from "connect-flash";
 import connectMongoDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
-import postRoutes from "./routes/postRoutes.js";
+import postRoutes from "./routes/postRoutes.js"; // Đã có route postRoutes
 import authMiddleware from "./middlewares/authMiddleware.js";
-import {authorizeRole} from './middlewares/authMiddleware.js'
+import { authorizeRole } from './middlewares/authMiddleware.js';
 import userRoutes from "./routes/userRoutes.js";
 import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import editorRoutes from "./routes/editorRoutes.js";
+import homeRoutes from "./routes/homeRoutes.js";
 import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import User from "./models/User.js";
@@ -25,7 +27,7 @@ dotenv.config({ path: "./config/env/development.env" });
 const app = express();
 const store = new MongoDBStore(session)({
   uri: process.env.MONGO_DB_URI,
-  collection: "sesions",
+  collection: "sessions",
 });
 const PORT = process.env.PORT || 4000;
 
@@ -103,10 +105,8 @@ app.use("/users", authorizeRole(['membership', 'editor', 'writer']), userRoutes)
 app.use("/admin", authorizeRole(['admin']), adminRoutes);
 app.use("/editor", authorizeRole(['editor']), editorRoutes);
 app.use("/writer", authorizeRole(['writer']),writerRoutes);
+app.use("/", homeRoutes);
 
-// Pages
-app.get("/", (req, res) => res.render("index"));
-app.get("/index", (req, res) => res.render("index"));
 app.get("/categori", (req, res) => res.render("categori"));
 app.get("/about", (req, res) => res.render("about"));
 app.get("/latest_news", (req, res) => res.render("latest_news"));
