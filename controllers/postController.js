@@ -40,16 +40,30 @@ export const deletePost = async (req, res) => {
 };
 
 export const searchPostsByTitle = async (req, res) => {
-  const { query } = req.query; // Changed from 'title' to 'query'
+  const { query } = req.query;
 
   if (!query || typeof query !== 'string') {
-    return res.status(400).json({ error: "Query parameter must be a valid string." });
+      return res.status(400).render('errorPage', { error: "Query parameter must be a valid string." });
   }
 
   try {
-    const posts = await Post.find({ title: { $regex: query, $options: 'i' } });
-    res.status(200).json(posts);
+      const results = await Post.find({ title: { $regex: query, $options: 'i' } });
+      res.render('searchResult', { query, results }); // Pass 'results' and 'query'
   } catch (error) {
-    res.status(500).json({ error: error.message });
+      res.status(500).render('errorPage', { error: error.message });
   }
+};
+
+export const getPostById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await Post.findById(id);
+
+        if (!post) {
+            return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
+        }
+        res.render('details', { post });
+    } catch (error) {
+        res.status(500).render('errorPage', { error: error.message });
+    }
 };
