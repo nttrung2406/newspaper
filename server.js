@@ -27,7 +27,7 @@ dotenv.config({ path: "./config/env/development.env" });
 const app = express();
 const store = new MongoDBStore(session)({
   uri: process.env.MONGO_DB_URI,
-  collection: "sesions",
+  collection: "sessions",
 });
 const PORT = process.env.PORT || 4000;
 

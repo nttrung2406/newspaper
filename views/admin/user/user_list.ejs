@@ -105,7 +105,17 @@
                         </button>
                       </div>
                     </div>
-            
+                    
+                    <% if (typeof successMessage !== 'undefined' && successMessage.length >0) {%>
+                      <div class="alert alert-success alert-dismissible my-3" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                          <span class="sr-only">Close</span>
+                        </button>
+                        <%= successMessage %>
+                      </div>
+                    <% }%>
+
                     <!-- Table -->
                     <div class="row mt-4">
                       <div class="col-12">
@@ -122,35 +132,39 @@
                             </thead>
                             <tbody>
                               <!-- Dynamic Content Goes Here -->
-                              <% userList.forEach(user => { %>
-                                <tr>
-                                  <td><%= user.username %></td>
-                                  <td><%= user.email %></td>
-                                  <td><span class="badge badge-outline<%= 
-                                    user.role === 'admin' ? '-primary' : 
-                                    user.role === 'editor' ? '-success' : 
-                                    user.role === 'membership' ? '-warning' : 
-                                    user.role === 'writer' ? '-info' : 
-                                    '' 
-                                  %>">
-                                    <%= user.role %>
-                                  </span></td>
-                                  <td><%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'}) %></td>
-                                  <td>
-                                    <div class="btn-group">
-                                      <button class="btn btn-info btn-icon"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết">
-                                        <i class="mdi mdi-information-slab-circle-outline"></i>
-                                      </button>
-                                      <button class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="bottom" title="Cập nhật">
-                                        <i class="mdi mdi-update"></i>
-                                      </button>
-                                      <!-- <button class="btn btn-danger btn-icon">
-                                        <i class="mdi mdi-delete"></i>
-                                      </button> -->
-                                    </div>
-                                  </td>
-                                </tr>
-                              <%}); %>
+                              <% if (!userList || userList.length === 0) {%>
+                                <td colspan="5" class="text-center">Không có người dùng nào.</td>
+                              <% } else{ %>
+                                <% userList.forEach(user => { %>
+                                  <tr>
+                                    <td><%= user.username %></td>
+                                    <td><%= user.email %></td>
+                                    <td><span class="badge badge-outline<%= 
+                                      user.role === 'admin' ? '-primary' : 
+                                      user.role === 'editor' ? '-success' : 
+                                      user.role === 'membership' ? '-warning' : 
+                                      user.role === 'writer' ? '-info' : 
+                                      '' 
+                                    %>">
+                                      <%= user.role %>
+                                    </span></td>
+                                    <td><%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'}) %></td>
+                                    <td>
+                                      <div class="btn-group">
+                                        <button class="btn btn-info btn-icon"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết">
+                                          <i class="mdi mdi-information-slab-circle-outline"></i>
+                                        </button>
+                                        <button class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="bottom" title="Cập nhật">
+                                          <i class="mdi mdi-update"></i>
+                                        </button>
+                                        <!-- <button class="btn btn-danger btn-icon">
+                                          <i class="mdi mdi-delete"></i>
+                                        </button> -->
+                                      </div>
+                                    </td>
+                                  </tr>
+                                <%}); %>
+                              <% } %>
 
                             </tbody>
                           </table>
@@ -187,39 +201,46 @@
 
                                 <form action="/admin/user/add" method="post" class="form-sample" id="addUserForm">
                                   <div class="form-group">
-                                    <label for="username">Username</label>
+                                    <label for="usernameadd">Username</label>
                                     <input type="text"
-                                      class="form-control" name="username" id="username" aria-describedby="helpId" placeholder="Nhập tên người dùng">
+                                      class="form-control" name="usernameadd" id="usernameadd" aria-describedby="helpId" placeholder="Nhập tên người dùng" required
+                                    value="">
+                                    
                                   </div>
                                   <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId" placeholder="Nhập Email">
+                                    <label for="emailadd">Email</label>
+                                    <input type="emailadd" class="form-control" name="emailadd" id="emailadd" aria-describedby="emailHelpId" placeholder="Nhập Email" required
+                                    value="">
+                                    <div class="invalid-feedback" id="email-error"></div>
                                   </div>
 
                                   <div class="form-group">
-                                    <label for="fullname">Fullname</label>
+                                    <label for="fullnameadd">Fullname</label>
                                     <input type="text"
-                                      class="form-control" name="fullname" id="fullname" aria-describedby="helpId" placeholder="Nhập họ và tên">
+                                      class="form-control" name="fullnameadd" id="fullnameadd" aria-describedby="helpId" placeholder="Nhập họ và tên" required
+                                      value="">
                                   </div>
 
                                   <div class="form-group">
-                                    <label for="dob">Date Of Birth</label>
-                                    <input type="date" name="dob" id="dob" class="form-control" aria-describedby="helpId">
+                                    <label for="dobadd">Date Of Birth</label>
+                                    <input type="date" name="dobadd" id="dobadd" class="form-control" aria-describedby="helpId" required
+                                    value="">
                                   </div>
 
                                   <div class="form-group">
-                                    <label for="role">Role</label>
-                                    <select class="form-control" name="role" id="role">
-                                      <option value="writer">Writer</option>
-                                      <option value="editor">Editor</option>
-                                      <option value="membership">Membership</option>                                   
+                                    <label for="roleadd">Role</label>
+                                    <select class="form-control" name="roleadd" id="roleadd">
+                                      <option value="writer" >Writer</option>
+                                      <option value="editor"  >Editor</option>
+                                      <option value="membership" >Membership</option>                                   
                                     </select>
                                   </div>
 
                                   <div class="form-group">
-                                    <label for="penname">Pen Name</label>
+                                    <label for="pennameadd">Pen Name</label>
                                     <input type="text"
-                                      class="form-control" name="penname" id="penname" aria-describedby="helpId" placeholder="Nhập bút danh">
+                                      class="form-control" name="pennameadd" id="pennameadd" aria-describedby="helpId" placeholder="Nhập bút danh"
+                                      value="">
                                   </div>
 
                                   
@@ -245,6 +266,39 @@
                       
                     </script>
 
+                    <script>
+                      const addForm = document.getElementById('addUserForm');
+                      const addModal = document.getElementById('addUser');
+
+                      const email_input = document.getElementById('emailadd')
+                      const email_error = document.getElementById('email-error')
+
+                      addForm.addEventListener('submit', async function (event) {
+                        event.preventDefault();
+                        const formData = new FormData(addForm)
+
+                        const response = await fetch('/admin/user/add', {
+                          method: "POST",
+                          body: formData,
+                        })
+                        
+
+                        const result = await response.json()
+
+                        if (!result.success)
+                        {
+                          email_input.classList.add('is-invalid')
+                          email_error.textContent = result.error;
+                          return;
+                        }
+                      
+                        email_input.classList.remove('is-invalid');
+                        email_error.textContent = '';
+                        window.location.reload();
+                      })
+
+                    </script>
+
                     <!-- script for validating the date of birth-->
                     <script>
                       const today = new Date();
@@ -262,8 +316,8 @@
                     </script>
 
                     <script>
-                      const roleSelect = document.getElementById('role');
-                      const penName = document.getElementById('penname');
+                      const roleSelect = document.getElementById('roleadd');
+                      const penName = document.getElementById('pennameadd');
 
                       roleSelect.addEventListener('change', function(){
                         if (roleSelect.value !== 'writer'){
@@ -274,6 +328,8 @@
                           penName.disabled = false;
                         }
                       })
+                      
+
                     </script>
                   </div>
                 </div>
