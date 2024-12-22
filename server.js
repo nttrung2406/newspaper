@@ -19,6 +19,7 @@ import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import User from "./models/User.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import commentRoutes from './routes/commentRoutes.js';
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -104,6 +105,8 @@ app.use("/admin", authorizeRole(['admin']), adminRoutes);
 app.use("/editor", authorizeRole(['editor']), editorRoutes);
 app.use("/writer", authorizeRole(['writer']),writerRoutes);
 app.use("/categori", categoryRoutes);
+app.use('/comments', commentRoutes);
+
 // Pages
 
 
