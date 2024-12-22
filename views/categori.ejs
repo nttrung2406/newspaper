@@ -80,9 +80,9 @@
                                                               <img src="/img/news/whatNews1.jpg" alt="" />
                                                           </div>
                                                           <div class="what-cap">
-                                                              <span class="color1">bùn ngủ quá</span>
+                                                              <span class="color1"><%= post.category %></span>
                                                               <h4>
-                                                                  <a href="#"> <%= post.title %> </a>
+                                                                  <a href="/posts/<%= post._id%>"> <%= post.title %> </a>
                                                               </h4>
                                                           </div>
                                                       </div>
@@ -94,7 +94,7 @@
                                                               <img src="/img/news/whatNews1.jpg" alt="" />
                                                           </div>
                                                           <div class="what-cap">
-                                                              <span class="color1">huhuhuhu</span>
+                                                              <span class="color1"><%= post.category %></span>
                                                               <h4>
                                                                   <a href="#"> <%= post.title %> </a>
                                                               </h4>
@@ -125,7 +125,7 @@
                                       <div class="what-cap" style="margin-top: 20px;">
                                         <span class="color1"><%= membership.category %></span>
                                         <h4>
-                                          <a href="#"
+                                          <a href="/posts/<%= membership._id%>"
                                             ><%= membership.title %></a
                                           >
                                         </h4>

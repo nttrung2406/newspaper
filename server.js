@@ -11,7 +11,6 @@ import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import {authorizeRole} from './middlewares/authMiddleware.js'
 import userRoutes from "./routes/userRoutes.js";
-import { getCategory } from './controllers/categoryController.js';
 // import setUserData from "./middlewares/setUserData.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -19,8 +18,7 @@ import editorRoutes from "./routes/editorRoutes.js";
 import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import User from "./models/User.js";
-import {getMembership} from "./controllers/membershipController.js"
-import {getPostsData} from "./controllers/postController.js"
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -105,29 +103,13 @@ app.use("/users", authorizeRole(['admin']), userRoutes);
 app.use("/admin", authorizeRole(['admin']), adminRoutes);
 app.use("/editor", authorizeRole(['editor']), editorRoutes);
 app.use("/writer", authorizeRole(['writer']),writerRoutes);
-
+app.use("/categori", categoryRoutes);
 // Pages
 
 
 app.get('/', (req, res) => res.render('index'));
 app.get("/index", async (req, res) => {res.render("index")});
-app.get("/categori", async (req, res) => {
-  try {
-      const categories = await getCategory(req, res);
-      const memberships = await getMembership(req,res);
-      const posts= await getPostsData(req,res);
-      res.render("categori", {
-          freeCategories: categories,
-          posts,
-          memberships,
-          isPremium: false, // xử lí premium
-      });
 
-  } catch (error) {
-      console.error("Error fetching categories:", error.message);
-      res.status(500).send("Internal Server Error");
-  }
-});
 
 
 app.get('/about', (req, res) => res.render('about'));

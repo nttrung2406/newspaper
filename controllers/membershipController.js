@@ -9,3 +9,14 @@ export const getMembership = async (req, res) => {
         throw error;
     }
 };
+
+export const getMembershipPostById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const membership = await Membership.findById(id);
+        return membership; // Chỉ trả về dữ liệu
+    } catch (error) {
+        console.error("Error in getMembershipPostById;", error.message);
+        throw error;
+    }
+}
