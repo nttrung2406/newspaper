@@ -63,3 +63,17 @@ export const searchPostsByTitle = async (req, res) => {
       res.status(500).render('errorPage', { error: error.message });
   }
 };
+
+export const getPostById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await Post.findById(id);
+
+        if (!post) {
+            return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
+        }
+        res.render('details', { post });
+    } catch (error) {
+        res.status(500).render('errorPage', { error: error.message });
+    }
+};

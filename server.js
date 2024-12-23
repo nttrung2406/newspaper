@@ -14,6 +14,7 @@ import userRoutes from "./routes/userRoutes.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import editorRoutes from "./routes/editorRoutes.js";
+import homeRoutes from "./routes/homeRoutes.js";
 import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import errorController from "./controllers/error.js";
@@ -111,6 +112,7 @@ app.use(
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
 app.use("/writer", authorizeRole(["writer"]), writerRoutes);
+app.use("/", homeRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));
@@ -141,16 +143,16 @@ app.get("/single-blog", (req, res) => res.render("single-blog"));
 app.get("/details", (req, res) => res.render("details"));
 
 
-app.get('/500', errorController.get500);
-app.use(errorController.get404);
+// app.get('/500', errorController.get500);
+// app.use(errorController.get404);
 
-app.use((error, req, res, next) => {
-  res.status(500).render("500", {
-    pageTitle: "Error",
-    path: "/500",
-    isAuthenticated: req.session.isLoggedIn,
-  });
-});
+// app.use((error, req, res, next) => {
+//   res.status(500).render("500", {
+//     pageTitle: "Error",
+//     path: "/500",
+//     isAuthenticated: req.session.isLoggedIn,
+//   });
+// });
 
 mongoose
   .connect(process.env.MONGO_DB_URI)
