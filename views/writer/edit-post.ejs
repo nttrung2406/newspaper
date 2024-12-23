@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
+    <title><%= pageTitle %></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -60,28 +60,21 @@
             <label for="content" class="form-label">
               <strong>Content</strong>
             </label>
-            <textarea id="summernote" name="content" id="content"><%= editing ? post.content : '' %></textarea>
+            <textarea id="summernote" name="content" id="content">
+<%= editing ? post.content : '' %></textarea
+            >
           </div>
           <div class="mb-3">
-            <label for="category" class="form-label"
-              ><strong>Category</strong></label
-            ><br />
-            <input type="radio" id="business" name="categoryName" value="Kinh doanh" <%= categoryName === 'Kinh doanh' ? 'checked="checked"' : ''
-            %> />
-            <label for="business">Kinh doanh</label><br />
-            <input type="radio" id="seafood" name="categoryName" value="Hải sản"
-            <%= categoryName === 'Hải sản' ? 'checked="checked"' : '' %> />
-            <label for="seafood">Hải sản</label><br />
-            <input type="radio" id="agriculturalProduct" name="categoryName"
-            value="Nông sản" <%= categoryName === 'Nông sản' ?
+            <label for="category" class="form-label">
+              <strong>Category</strong>
+            </label>
+            <br />
+            <% if (categories.length > 0) { %> <% categories.forEach(cat => { %>
+            <input type="radio" id="<%= cat._id %>" name="categoryId" value="<%=
+            cat._id %>" <%= categoryId.toString() === cat._id.toString() ?
             'checked="checked"' : '' %> />
-            <label for="agriculturalProduct">Nông sản</label><br />
-            <input type="radio" id="agriculture" name="categoryName" value="Nông nghiệp" <%= categoryName === 'Nông nghiệp' ? 'checked="checked"' :
-            '' %> />
-            <label for="agriculture">Nông nghiệp</label><br />
-            <input type="radio" id="estate" name="categoryName" value="Bất động sản" <%= categoryName === 'Bất động sản' ? 'checked="checked"' : ''
-            %> />
-            <label for="estate">Bất động sản</label><br />
+            <label for="<%= cat._id %>"><%= cat.categoryName %></label><br />
+            <% }) %> <% } %>
           </div>
           <div class="mb-3">
             <label for="tags"><strong>Tags</strong></label>
@@ -100,11 +93,11 @@
             name="status"
             value="Draft"
           >
-          <%= editing ? 'Save Post' : 'Create Post' %>
+            <%= editing ? 'Save Post' : 'Create Post' %>
           </button>
-          <input type="hidden" name="postId" value="<%= post._id %>">
+          <input type="hidden" name="postId" value="<%= post._id %>" />
           <% if (editing) { %>
-          <input type="hidden" name="pageNumber" value="<%= pageNumber %>">
+          <input type="hidden" name="pageNumber" value="<%= pageNumber %>" />
           <% } %>
         </form>
       </div>
