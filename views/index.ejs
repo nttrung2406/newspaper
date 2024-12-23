@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="/css/slick.css" />
     <link rel="stylesheet" href="/css/nice-select.css" />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/image.css" />
   </head>
 
   <body>
@@ -49,150 +50,79 @@
             <div class="row">
               <div class="col-lg-8">
                 <!-- Trending Top -->
-                <div class="trending-top mb-30">
-                  <div class="trend-top-img">
-                    <img src="/img/trending/trending_top.jpg" alt="" />
-                    <div class="trend-top-cap">
-                      <span>Fishery</span>
-                      <h2>
-                        <a href="details"
-                          >Launching the "Blue Ocean - Blue Foods"<br />
-                          program aimed at selling carbon credits under the sea</a
-                        >
-                      </h2>
+                <% if (posts && posts.length > 0) { %>
+                  <div class="trending-top mb-30">
+                    <div class="trend-top-img">
+                      <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
+                      <div class="trend-top-cap">
+                        <span><%= posts[0].category || 'Uncategorized' %></span>
+                        <h2>
+                          <a href="/posts/<%= posts[0]._id %>">
+                            <%= posts[0].title %>
+                          </a>
+                        </h2>
+                      </div>
                     </div>
                   </div>
-                </div>
+                <% } else { %>
+                  <p>No posts available.</p>
+                <% } %>
+              
                 <!-- Trending Bottom -->
                 <div class="trending-bottom">
                   <div class="row">
-                    <div class="col-lg-4">
-                      <div class="single-bottom mb-35">
-                        <div class="trend-bottom-img mb-30">
-                          <img
-                            src="/img/trending/trending_bottom1.jpg"
-                            alt=""
-                          />
+                    <% if (posts && posts.length > 1) { %>
+                      <% posts.slice(1, 4).forEach(post => { %> <!-- Take posts from index 1 to 3 -->
+                        <div class="col-lg-4">
+                          <div class="single-bottom mb-35">
+                            <div class="trend-bottom-img mb-30">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                            </div>
+                            <div class="trend-bottom-cap">
+                              <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
+                                <%= post.category || 'Uncategorized' %>
+                              </span>
+                              <h4>
+                                <a href="/posts/<%= post._id %>">
+                                  <%= post.title %>
+                                </a>
+                              </h4>
+                            </div>
+                          </div>
                         </div>
-                        <div class="trend-bottom-cap">
-                          <span class="color1">Market</span>
-                          <h4>
-                            <a href="details"
-                              >Opportunities for Vietnamese businesses in Halal</a
-                            >
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4">
-                      <div class="single-bottom mb-35">
-                        <div class="trend-bottom-img mb-30">
-                          <img
-                            src="/img/trending/trending_bottom2.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="trend-bottom-cap">
-                          <span class="color2">Agriculture</span>
-                          <h4>
-                            <h4>
-                              <a href="details"
-                                >Raise the export target of agricultural, forestry and fishery products in 2024 to 57 - 58 billion USD</a
-                              >
-                            </h4>
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-4">
-                      <div class="single-bottom mb-35">
-                        <div class="trend-bottom-img mb-30">
-                          <img
-                            src="/img/trending/trending_bottom3.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="trend-bottom-cap">
-                          <span class="color3">Market</span>
-                          <h4>
-                            <a href="details">
-                              Exports of wood and forest products reach nearly 8 billion USD in the first half of 2024</a
-                            >
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
+                      <% }); %>
+                    <% } else { %>
+                      <p>No additional posts to display.</p>
+                    <% } %>
                   </div>
                 </div>
               </div>
+              
+              
               <!-- Riht content -->
               <div class="col-lg-4">
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img src="/img/trending/right1.jpeg" alt="" />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color1">Economy</span>
-                    <h4>
-                      <a href="details"
-                        >Solution for inventorying greenhouse gas emissions for businesses</a
-                      >
-                    </h4>
-                  </div>
-                </div>
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img src="/img/trending/right2.jpg" alt="" />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color3">Economy</span>
-                    <h4>
-                      <a href="details"
-                        >UNDP: Transitioning to a circular economy requires a comprehensive approach</a
-                      >
-                    </h4>
-                  </div>
-                </div>
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img src="/img/trending/right3.jpg" alt="" />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color2">Environment</span>
-                    <h4>
-                      <a href="details"
-                        >Businesses increase investment in sustainable development and climate action</a
-                      >
-                    </h4>
-                  </div>
-                </div>
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img src="/img/trending/right4.jpg" alt="" />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color4">Eco-economy</span>
-                    <h4>
-                      <a href="details"
-                        >Transforming a circular, green, low-carbon economy based on digital transformation applications</a
-                      >
-                    </h4>
-                  </div>
-                </div>
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img src="/img/trending/right5.jpg" alt="" />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color1">Environment</span>
-                    <h4>
-                      <a href="details"
-                        >Proposal to research and apply emissions tax to reduce air pollution</a
-                      >
-                    </h4>
-                  </div>
-                </div>
+                <% if (posts && posts.length > 0) { %>
+                  <% posts.slice(0, 4).forEach(post => { %> <!-- Take only the first 4 posts -->
+                    <div class="trand-right-single d-flex">
+                      <div class="trand-right-img">
+                        <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                      </div>
+                      <div class="trand-right-cap">
+                        <span class="color<%= Math.floor(Math.random() * 4) + 1 %>"><%= post.category || 'Uncategorized' %></span>
+                        <h4>
+                          <a href="/posts/<%= post._id %>">
+                            <%= post.title %>
+                          </a>
+                        </h4>
+                      </div>
+                    </div>
+                  <% }); %>
+                <% } else { %>
+                  <p>No trending posts available.</p>
+                <% } %>
               </div>
+              
+              
             </div>
           </div>
         </div>

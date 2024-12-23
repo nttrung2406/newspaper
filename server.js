@@ -35,6 +35,7 @@ import errorController from "./controllers/error.js";
 import {getMembership} from "./controllers/membershipController.js"
 import {getPostsData} from "./controllers/postController.js"
 import { getCategory } from './controllers/categoryController.js';
+import { getIndex } from './controllers/categoryController.js';
 
 
 dotenv.config({ path: "./config/env/development.env" });
@@ -131,9 +132,9 @@ app.use('/comments', commentRoutes);
 app.use("/", homeRoutes);
 
 // Pages
-app.get("/", (req, res) => res.render("index"));
-app.get("/index", (req, res) => res.render("index"));
-app.get("/categori", (req, res) => res.render("categori"));
+// app.get("/", (req, res) => res.render("index"));
+app.get("/index", getIndex);
+app.get("/categori", getCategory);
 app.get("/about", (req, res) => res.render("about"));
 app.get("/latest_news", (req, res) => res.render("latest_news"));
 app.get("/contact", (req, res) => res.render("contact"));

@@ -23,7 +23,8 @@ export const getPostsData = async (req, res) => {
 export const getPosts = async (req, res) => {
   try {
       const posts = await Post.find().populate('category');
-      res.status(200).json(posts);
+    //   res.status(200).json(posts);
+      res.render('index', { posts });
   } catch (error) {
       res.status(500).json({ error: error.message });
   }
