@@ -1,5 +1,5 @@
 import Post from '../models/postModel.js';
-
+import Membership from '../models/Membership.js';
 export const createPost = async (req, res) => {
   try {
       const newPost = new Post(req.body);
@@ -67,12 +67,18 @@ export const searchPostsByTitle = async (req, res) => {
 export const getPostById = async (req, res) => {
     try {
         const { id } = req.params;
-        const post = await Post.findById(id);
+        const normal_post = await Post.findById(id);
+        const premium = await Membership.findById(id);
+        const post = normal_post || premium || null;
+        console.log("test:",post); // Kiểm tra nội dung của `post`
 
         if (!post) {
+            console.log(`Post with id ${id} not found`);
             return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
         }
-        res.render('details', { post });
+        else {
+            res.render('details', { post });
+        }
     } catch (error) {
         res.status(500).render('errorPage', { error: error.message });
     }

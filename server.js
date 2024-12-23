@@ -1,3 +1,4 @@
+//  Import lib
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
@@ -6,22 +7,35 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import flash from "connect-flash";
+import MongoDBStore from "connect-mongodb-session";
+import { dirname } from "path";
+
+// Import db connection
 import connectMongoDB from "./db.js";
+
+// Import Middleware
+import { authorizeRole } from "./middlewares/authMiddleware.js";
+
+//  Import Routes
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
-import { authorizeRole } from "./middlewares/authMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import writerRoutes from "./routes/writerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import editorRoutes from "./routes/editorRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
-import { dirname } from "path";
-import MongoDBStore from "connect-mongodb-session";
-import errorController from "./controllers/error.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import commentRoutes from './routes/commentRoutes.js';
+
+// Import Model
 import User from "./models/User.js";
+
+// Import Controller
+import errorController from "./controllers/error.js";
 import {getMembership} from "./controllers/membershipController.js"
 import {getPostsData} from "./controllers/postController.js"
 import { getCategory } from './controllers/categoryController.js';
+
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -112,28 +126,14 @@ app.use(
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
 app.use("/writer", authorizeRole(["writer"]), writerRoutes);
+app.use("/categori", categoryRoutes);
+app.use('/comments', commentRoutes);
 app.use("/", homeRoutes);
 
 // Pages
 app.get("/", (req, res) => res.render("index"));
 app.get("/index", (req, res) => res.render("index"));
-app.get("/categori", async (req, res) => {
-  try {
-      const categories = await getCategory(req, res);
-      const memberships = await getMembership(req,res);
-      const posts= await getPostsData(req,res);
-      res.render("categori", {
-          freeCategories: categories,
-          posts,
-          memberships,
-          isPremium: false, // xử lí premium
-      });
-
-  } catch (error) {
-      console.error("Error fetching categories:", error.message);
-      res.status(500).send("Internal Server Error");
-  }
-});
+app.get("/categori", (req, res) => res.render("categori"));
 app.get("/about", (req, res) => res.render("about"));
 app.get("/latest_news", (req, res) => res.render("latest_news"));
 app.get("/contact", (req, res) => res.render("contact"));

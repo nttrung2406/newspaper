@@ -36,7 +36,34 @@
                     <div class="col-lg-8">
                         <div class="post-details">
                             <h2><%- post.title %></h2>
-                            <%- post.content.replace(/\[IMAGE:\s*(https?:\/\/[^\]]+)\]/g, '<img src="$1" alt="Image" style="max-width:100%; display:block; margin-bottom: 20px;">') %>
+                            <%- post.content.replace(/\[IMAGE:\s*(https?:\/\/[^\]]+)\]/g, '<img src="$1" alt="Image" style="max-width:100%; display:block; margin-bottom: 20px;">'
+                                ) %>
+                        </div>
+                        <div>
+                            <section class="comments-section mt-5">
+                                <h3 class="mb-4">Comments</h3>
+                                <div id="comments-list" class="list-group">
+                                    <!-- Comment sẽ được load từ API -->
+                                </div>
+                            </section>
+
+                            <section class="add-comment mt-5">
+                                <h4 class="mb-4">Add a Comment</h4>
+                                <form id="comment-form" class="needs-validation" novalidate>
+                                    <input type="hidden" id="postId" value="<%- post._id %>">
+                                    <div class="mb-3">
+                                        <label for="author" class="form-label">Name:</label>
+                                        <input type="text" id="author" class="form-control" required>
+                                        <div class="invalid-feedback">Please enter your name.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="content" class="form-label">Comment:</label>
+                                        <textarea id="content" class="form-control" rows="3" required></textarea>
+                                        <div class="invalid-feedback">Please enter a comment.</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                </form>
+                            </section>
                         </div>
                     </div>
                 </div>
