@@ -6,4 +6,8 @@ import userController from '../../../controllers/admin/userController.js';
 
 router.route('/add')
 .post(upload.none(), userController.addUser)
+
+router.route('/info/:id')
+.get(userController.viewUserDetail)
+
 export default router;

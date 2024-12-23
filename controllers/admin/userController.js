@@ -24,7 +24,6 @@ const getUserList = async(req, res) => {
             .skip((pageIdx - 1) * limit);
 
         const successMessage = req.flash('addSuccess') || req.flash('updateSuccess')
-
         // Render the user list view with pagination
         res.render('admin/user/user_list', {
             role, 
@@ -44,7 +43,7 @@ const getUserList = async(req, res) => {
 const addUser = async(req, res) =>{
     try {
         const {usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd =  null} = req.body;
-        console.log(usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd)
+        //console.log(usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd)
 
         const checkExistingEmail = await User.findOne({email: emailadd});
         if (checkExistingEmail){
@@ -81,7 +80,29 @@ const addUser = async(req, res) =>{
     }
 }
 
+const viewUserDetail = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await UserInformation.findOne({ accountID: id })
+            .populate('accountID', 'username email role createdAt updatedAt');
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({
+            accountID: user.accountID,
+            fullname: user.fullname,
+            dateOfBirth: user.dateOfBirth,
+            penName: user.penName
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
+
 export default{
     getUserList,
-    addUser
+    addUser,
+    viewUserDetail,
 }

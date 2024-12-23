@@ -77,8 +77,9 @@
                       </div>
                     </div>
                     
+                    <!-- Search Bar -->
                     <div class="row align-items-center">
-                      <!-- Search Bar -->
+
                       <div class="col-8">
                         <form method="GET" action="/admin/users" class="input-group">
                           <input 
@@ -106,6 +107,7 @@
                       </div>
                     </div>
                     
+                    <!-- Alert-->
                     <% if (typeof successMessage !== 'undefined' && successMessage.length >0) {%>
                       <div class="alert alert-success alert-dismissible my-3" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -151,10 +153,10 @@
                                     <td><%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'}) %></td>
                                     <td>
                                       <div class="btn-group">
-                                        <button class="btn btn-info btn-icon"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết">
+                                        <button class="btn btn-info btn-icon view-user"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết" data-id="<%= user._id %>">
                                           <i class="mdi mdi-information-slab-circle-outline"></i>
                                         </button>
-                                        <button class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="bottom" title="Cập nhật">
+                                        <button class="btn btn-primary btn-icon edit-user" data-toggle="tooltip" data-placement="bottom" title="Cập nhật" data-id="<%= user._id %>">
                                           <i class="mdi mdi-update"></i>
                                         </button>
                                         <!-- <button class="btn btn-danger btn-icon">
@@ -173,23 +175,34 @@
                     </div>
             
                     <!-- Pagination -->
-                    <div class="row mt-3">
-                      <div class="col-12 d-flex justify-content-center">
-                        <nav aria-label="Page navigation">
-                          <ul class="pagination">
-                            <li class="page-item disabled">
-                              <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#">Next</a>
-                            </li>
-                          </ul>
-                        </nav>
+                    <% if (totalPages > 1) { %>
+                      <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-center">
+                          <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                              <!-- Previous Page -->
+                              <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                                <a class="page-link" 
+                                  href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page - 1 %>" 
+                                  tabindex="-1">&laquo;</a>
+                              </li>
+                              
+                              <!-- Current Page -->
+                              <li class="page-item active"><a class="page-link" href="#"><%= page %></a></li>
+                              
+                              <!-- Next Page -->
+                              <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                                <a class="page-link" 
+                                  href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page + 1 %>">&raquo;</a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
                       </div>
-                    </div>
+                    <% } %>
                     
-                    <!-- Modal for add User -->
+                    
+                    <!-- Modal for adding a User -->
                     <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                         <div class="modal-content">
@@ -257,15 +270,134 @@
                       </div>
                     </div>
 
+                    <!-- Modal for viewing a User-->
+                    <div class="modal fade" id="viewUser" tabindex="-1" role="dialog" aria-labelledby="viewUserModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable view-user-modal" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body p-0">
+                            <div class="card text-left">
+                              <div class="card-body">
+                                <h4 class="card-title" id="viewUserModalTitle">User Details</h4>
+                                <hr>
+                                <div id="viewUserModalBody">
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="usernameview">Username</label>
+                                        <input type="text" id="usernameview" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="emailview">Email</label>
+                                        <input type="text" id="emailview" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="fullnameview">Fullname</label>
+                                        <input type="text" id="fullnameview" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="dobview">Date Of Birth</label>
+                                        <input type="text" id="dobview" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="form-group d-flex align-items-center">
+                                    <label for="roleview" class="mr-2">Role</label>
+                                    <span id="roleview" class="badge badge-outline align-middle"></span>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="pennameview">Pen Name</label>
+                                    <input type="text" id="pennameview" class="form-control" readonly>
+                                  </div>
+
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="createdDateView">Created Date</label>
+                                        <input type="text" id="createdDateView" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="updatedDateView">Updated Date</label>
+                                        <input type="text" id="updatedDateView" class="form-control" readonly>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <button type="button" class="btn btn-dark" id="viewModalDismiss" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <!-- script for clearing the input of the add user form-->
                     <script>
                       function resetForm() {
                         document.getElementById('addUserForm').reset();                     
                       }
-
-                      
                     </script>
 
+                    <!-- Script for viewing a user-->
+                    <script>
+                      const closeBtn = document.getElementById('viewModalDismiss');
+                      const usernameView = document.getElementById('usernameview');
+                      const emailView = document.getElementById('emailview');
+                      const roleView = document.getElementById('roleview');
+                      const fullnameView = document.getElementById('fullnameview');
+                      const dobView = document.getElementById('dobview');
+                      const penNameView = document.getElementById('pennameview');
+                      const createdDateView = document.getElementById('createdDateView');
+                      const updatedDateView = document.getElementById('updatedDateView');
+
+                      document.querySelectorAll('.view-user').forEach(button => {
+                        button.addEventListener('click', async () => {
+                          const userID = button.getAttribute('data-id');
+
+                          const response = await fetch(`/admin/user/info/${userID}`);
+                          
+                          const result = await response.json();
+                          //console.log(result);
+
+                          usernameView.value = result.accountID.username;
+                          emailView.value = result.accountID.email;
+                          roleView.className = 'badge badge-outline' + (
+                            result.accountID.role === 'admin' ? '-primary' :
+                            result.accountID.role === 'editor' ? '-success' :
+                            result.accountID.role === 'membership' ? '-warning' :
+                            result.accountID.role === 'writer' ? '-info' : ''
+                          );
+                          roleView.textContent = result.accountID.role;
+                          fullnameView.value = result.fullname;
+                          dobView.value = new Date(result.dateOfBirth).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'});
+                          penNameView.value = result.penName ? result.penName : 'N/A';
+
+                          createdDateView.value = `${new Date(result.accountID.createdAt).toLocaleTimeString('vi-VN',{hour:"2-digit", minute:"2-digit" ,second:"2-digit" })} ${new Date(result.accountID.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'})}`;
+                          updatedDateView.value = `${new Date(result.accountID.updatedAt).toLocaleTimeString('vi-VN',{hour:"2-digit", minute:"2-digit" ,second:"2-digit" })} ${new Date(result.accountID.updatedAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'})}`;
+                          // Set modal options and show the modal
+                          $('#viewUser').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                          }).modal('show');
+                        });
+                      });
+
+                      closeBtn.addEventListener('click',()=>{
+                        $('#viewUser').modal('hide');
+                      })
+                    </script>
+
+                    <!--Script for submit the user creation form-->
                     <script>
                       const addForm = document.getElementById('addUserForm');
                       const addModal = document.getElementById('addUser');
@@ -308,11 +440,11 @@
 
                       
                       const todayFormatted = `${currentYear}-${currentMonth}-${currentDay}`;
-                      const hundredYearsAgo = `${currentYear - 100}-${currentMonth}-${currentDay}`;
-
-                      
-                      document.getElementById('dob').setAttribute('min', hundredYearsAgo);
-                      document.getElementById('dob').setAttribute('max', todayFormatted);
+                    
+                      const hundredYearsAgo = `${currentYear-120}-${currentMonth}-${currentDay}`;
+                     
+                      document.getElementById('dobadd').setAttribute('min', hundredYearsAgo);
+                      document.getElementById('dobadd').setAttribute('max', todayFormatted);
                     </script>
 
                     <script>
@@ -334,7 +466,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> 
             
             <style>
              
@@ -401,6 +533,14 @@
                   position: absolute !important;
                   z-index: 1050;
                 }
+              }
+
+              input:read-only{
+                background-color: #2A3038 !important;
+              }
+
+              .modal-dialog.view-user-modal {
+                max-width: 50%;
               }
             </style>
             
