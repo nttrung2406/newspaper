@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
+    <title><%= pageTitle %></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -54,15 +54,19 @@
         <div class="row d-flex flex-column">
           <div class="single-post">
             <div class="blog_details">
-              <h2>
-                <%= post.title %>
-              </h2>
+              <h2><%= post.title %></h2>
               <ul class="blog-info-link mt-2 mb-4">
                 <li>
                   <a href="#"><i class="fa fa-user"></i><%= categoryName %></a>
                 </li>
                 <li>
-                  <a href="#"><i class="fas fa-pencil-alt"></i><span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span></a>
+                  <a href="#"
+                    ><i class="fas fa-pencil-alt"></i
+                    ><span
+                      class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"
+                      ><%= post.status %></span
+                    ></a
+                  >
                 </li>
               </ul>
               <%- post.content %>

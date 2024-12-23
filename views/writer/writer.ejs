@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
+    <title><%= pageTitle %></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -90,7 +90,10 @@
                 </div>
               </div>
               <div>
-                <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-2">
+                <a
+                  href="/writer/posts/<%= post._id %>"
+                  class="btn btn-outline-info btn-sm mr-2"
+                >
                   View
                 </a>
               </div>
@@ -104,8 +107,6 @@
 
     <!-- Footer start -->
     <%- include('../partials/footer.ejs') %>
-
-    <%- include('../partials/sweetAlert.ejs') %>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
