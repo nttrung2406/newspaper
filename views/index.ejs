@@ -51,78 +51,87 @@
               <div class="col-lg-8">
                 <!-- Trending Top -->
                 <% if (posts && posts.length > 0) { %>
-                  <div class="trending-top mb-30">
-                    <div class="trend-top-img">
-                      <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
-                      <div class="trend-top-cap">
-                        <span><%= posts[0].category || 'Uncategorized' %></span>
-                        <h2>
-                          <a href="/posts/<%= posts[0]._id %>">
-                            <%= posts[0].title %>
-                          </a>
-                        </h2>
-                      </div>
+                <div class="trending-top mb-30">
+                  <div class="trend-top-img">
+                    <img
+                      src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>"
+                      alt="<%= posts[0].title %>"
+                    />
+                    <div class="trend-top-cap">
+                      <span><%= posts[0].category || 'Uncategorized' %></span>
+                      <h2>
+                        <a href="/posts/<%= posts[0]._id %>">
+                          <%= posts[0].title %>
+                        </a>
+                      </h2>
                     </div>
                   </div>
+                </div>
                 <% } else { %>
-                  <p>No posts available.</p>
+                <p>No posts available.</p>
                 <% } %>
-              
+
                 <!-- Trending Bottom -->
                 <div class="trending-bottom">
                   <div class="row">
-                    <% if (posts && posts.length > 1) { %>
-                      <% posts.slice(1, 4).forEach(post => { %> <!-- Take posts from index 1 to 3 -->
-                        <div class="col-lg-4">
-                          <div class="single-bottom mb-35">
-                            <div class="trend-bottom-img mb-30">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                            </div>
-                            <div class="trend-bottom-cap">
-                              <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
-                                <%= post.category || 'Uncategorized' %>
-                              </span>
-                              <h4>
-                                <a href="/posts/<%= post._id %>">
-                                  <%= post.title %>
-                                </a>
-                              </h4>
-                            </div>
-                          </div>
+                    <% if (posts && posts.length > 1) { %> <% posts.slice(1,
+                    4).forEach(post => { %>
+                    <!-- Take posts from index 1 to 3 -->
+                    <div class="col-lg-4">
+                      <div class="single-bottom mb-35">
+                        <div class="trend-bottom-img mb-30">
+                          <img
+                            src="<%= post.imageUrl || '/img/default-image.jpg' %>"
+                            alt="<%= post.title %>"
+                          />
                         </div>
-                      <% }); %>
-                    <% } else { %>
-                      <p>No additional posts to display.</p>
+                        <div class="trend-bottom-cap">
+                          <span
+                            class="color<%= Math.floor(Math.random() * 3) + 1 %>"
+                          >
+                            <%= post.category || 'Uncategorized' %>
+                          </span>
+                          <h4>
+                            <a href="/posts/<%= post._id %>">
+                              <%= post.title %>
+                            </a>
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                    <% }); %> <% } else { %>
+                    <p>No additional posts to display.</p>
                     <% } %>
                   </div>
                 </div>
               </div>
-              
-              
+
               <!-- Riht content -->
               <div class="col-lg-4">
-                <% if (posts && posts.length > 0) { %>
-                  <% posts.slice(0, 4).forEach(post => { %> <!-- Take only the first 4 posts -->
-                    <div class="trand-right-single d-flex">
-                      <div class="trand-right-img">
-                        <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                      </div>
-                      <div class="trand-right-cap">
-                        <span class="color<%= Math.floor(Math.random() * 4) + 1 %>"><%= post.category || 'Uncategorized' %></span>
-                        <h4>
-                          <a href="/posts/<%= post._id %>">
-                            <%= post.title %>
-                          </a>
-                        </h4>
-                      </div>
-                    </div>
-                  <% }); %>
-                <% } else { %>
-                  <p>No trending posts available.</p>
+                <% if (posts && posts.length > 0) { %> <% posts.slice(0,
+                4).forEach(post => { %>
+                <!-- Take only the first 4 posts -->
+                <div class="trand-right-single d-flex">
+                  <div class="trand-right-img">
+                    <img
+                      class="resize-img"
+                      src="<%= post.imageUrl || '/img/default-image.jpg' %>"
+                      alt="<%= post.title %>"
+                    />
+                  </div>
+                  <div class="trand-right-cap">
+                    <span class="color<%= Math.floor(Math.random() * 4) + 1 %>"
+                      ><%= post.category || 'Uncategorized' %></span
+                    >
+                    <h4>
+                      <a href="/posts/<%= post._id %>"> <%= post.title %> </a>
+                    </h4>
+                  </div>
+                </div>
+                <% }); %> <% } else { %>
+                <p>No trending posts available.</p>
                 <% } %>
               </div>
-              
-              
             </div>
           </div>
         </div>
@@ -140,7 +149,10 @@
                     <h3>Whats New</h3>
                   </div>
                 </div>
-                <div class="col-lg-9 col-md-9">
+                <% if (categories.length > 0) { %>
+                <div
+                  class="col-lg-<%= (categories.length + 1) * 2 %> col-md-<%= (categories.length + 1) * 2 %>"
+                >
                   <div class="properties__button">
                     <!--Nav Button  -->
                     
@@ -156,6 +168,7 @@
                           aria-selected="true"
                           >All</a
                         >
+                        <% categories.forEach(cat => { %>
                         <a
                           class="nav-item nav-link"
                           id="nav-profile-tab"
@@ -164,43 +177,16 @@
                           role="tab"
                           aria-controls="nav-profile"
                           aria-selected="false"
-                          >Agriculture</a
+                          data-cat-id="<%= cat._id %>"
+                          ><%= cat.categoryName %></a
                         >
-                        <a
-                          class="nav-item nav-link"
-                          id="nav-contact-tab"
-                          data-toggle="tab"
-                          href="#nav-contact"
-                          role="tab"
-                          aria-controls="nav-contact"
-                          aria-selected="false"
-                          >Fishery</a
-                        >
-                        <a
-                          class="nav-item nav-link"
-                          id="nav-last-tab"
-                          data-toggle="tab"
-                          href="#nav-last"
-                          role="tab"
-                          aria-controls="nav-contact"
-                          aria-selected="false"
-                          >Economy</a
-                        >
-                        <a
-                          class="nav-item nav-link"
-                          id="nav-Sports"
-                          data-toggle="tab"
-                          href="#nav-nav-Sport"
-                          role="tab"
-                          aria-controls="nav-contact"
-                          aria-selected="false"
-                          >Environment</a
-                        >
+                        <% }) %>
                       </div>
                     </nav>
                     <!--End Nav Button  -->
                   </div>
                 </div>
+                <% } %>
               </div>
               <div class="row">
                 <div class="col-12">
@@ -224,7 +210,8 @@
                                 <span class="color1">Goverment</span>
                                 <h4>
                                   <a href="#"
-                                    >Prime Minister: The emulation movement is absolutely not formal or perfunctory</a
+                                    >Prime Minister: The emulation movement is
+                                    absolutely not formal or perfunctory</a
                                   >
                                 </h4>
                               </div>
@@ -239,7 +226,8 @@
                                 <span class="color1">People</span>
                                 <h4>
                                   <a href="#"
-                                    >Hanoi needs to be determined to perfect its organizational structure</a
+                                    >Hanoi needs to be determined to perfect its
+                                    organizational structure</a
                                   >
                                 </h4>
                               </div>
@@ -254,7 +242,8 @@
                                 <span class="color1">Economy</span>
                                 <h4>
                                   <a href="#"
-                                    >Vietnam's economic overview in November 2024</a
+                                    >Vietnam's economic overview in November
+                                    2024</a
                                   >
                                 </h4>
                               </div>
@@ -269,7 +258,8 @@
                                 <span class="color1">Finance</span>
                                 <h4>
                                   <a href="#"
-                                    >Credit growth as of December 7 reached about 12.5%</a
+                                    >Credit growth as of December 7 reached
+                                    about 12.5%</a
                                   >
                                 </h4>
                               </div>
@@ -294,7 +284,10 @@
                 <div class="single-box">
                   <div class="follow-us d-flex align-items-center">
                     <div class="follow-social">
-                      <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
+                      <a
+                        href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"
+                        ><img src="/img/news/icon-fb.png" alt=""
+                      /></a>
                     </div>
                     <div class="follow-count">
                       <span>News</span>
@@ -302,7 +295,10 @@
                   </div>
                   <div class="follow-us d-flex align-items-center">
                     <div class="follow-social">
-                      <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
+                      <a
+                        href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
+                        ><img src="/img/news/icon-tw.png" alt=""
+                      /></a>
                     </div>
                     <div class="follow-count">
                       <span>News</span>
@@ -320,7 +316,9 @@
                   </div>
                   <div class="follow-us d-flex align-items-center">
                     <div class="follow-social">
-                      <a href="https://www.youtube.com/c/VnExpressOfficial"><img src="/img/news/icon-yo.png" alt="" /></a>
+                      <a href="https://www.youtube.com/c/VnExpressOfficial"
+                        ><img src="/img/news/icon-yo.png" alt=""
+                      /></a>
                     </div>
                     <div class="follow-count">
                       <span>News</span>
@@ -360,7 +358,9 @@
                       <span class="color1">Economy</span>
                       <p>25 Dec 2024</p>
                       <h4>
-                        <a href="#">Human centric in developing circular economy</a>
+                        <a href="#"
+                          >Human centric in developing circular economy</a
+                        >
                       </h4>
                     </div>
                   </div>
@@ -372,7 +372,10 @@
                       <span class="color1">Economy</span>
                       <p>25 Dec 2024</p>
                       <h4>
-                        <a href="#">Controversy surrounding COP29 results and solutions</a>
+                        <a href="#"
+                          >Controversy surrounding COP29 results and
+                          solutions</a
+                        >
                       </h4>
                     </div>
                   </div>
@@ -384,7 +387,10 @@
                       <span class="color1">investment</span>
                       <p>25 Dec 2024</p>
                       <h4>
-                        <a href="#">Green investment new approach to sustainable development</a>
+                        <a href="#"
+                          >Green investment new approach to sustainable
+                          development</a
+                        >
                       </h4>
                     </div>
                   </div>
@@ -396,7 +402,9 @@
                       <span class="color1">transportation</span>
                       <p>25 Dec 2024</p>
                       <h4>
-                        <a href="#">Ho Chi Minh City promotes green transportation</a>
+                        <a href="#"
+                          >Ho Chi Minh City promotes green transportation</a
+                        >
                       </h4>
                     </div>
                   </div>
@@ -408,7 +416,9 @@
                       <span class="color1">transportation</span>
                       <p>25 Dec 2024</p>
                       <h4>
-                        <a href="#">Ho Chi Minh City promotes green transportation</a>
+                        <a href="#"
+                          >Ho Chi Minh City promotes green transportation</a
+                        >
                       </h4>
                     </div>
                   </div>
@@ -426,26 +436,50 @@
             <div class="col-12">
               <div class="video-items-active">
                 <div class="video-items text-center">
-                  <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
-                    <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="Video Thumbnail">
+                  <a
+                    href="https://www.youtube.com/watch?v=whVWBQghrZ0"
+                    target="_blank"
+                  >
+                    <img
+                      src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg"
+                      alt="Video Thumbnail"
+                    />
                   </a>
                 </div>
                 <div class="video-items text-center">
-                  <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
-                    <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="Video Thumbnail">
+                  <a
+                    href="https://www.youtube.com/watch?v=DpKdcPkdrUE"
+                    target="_blank"
+                  >
+                    <img
+                      src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg"
+                      alt="Video Thumbnail"
+                    />
                   </a>
                 </div>
                 <div class="video-items text-center">
-                  <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
-                    <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="Video Thumbnail">
+                  <a
+                    href="https://www.youtube.com/watch?v=6sdYuIYlxyc"
+                    target="_blank"
+                  >
+                    <img
+                      src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg"
+                      alt="Video Thumbnail"
+                    />
                   </a>
                 </div>
                 <div class="video-items text-center">
-                  <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                    <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="Video Thumbnail">
+                  <a
+                    href="https://www.youtube.com/watch?v=pknlc60sbIM"
+                    target="_blank"
+                  >
+                    <img
+                      src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
+                      alt="Video Thumbnail"
+                    />
                   </a>
                 </div>
-              </div>              
+              </div>
             </div>
           </div>
           <div class="video-info">
@@ -457,10 +491,17 @@
                   </div>
                   <div class="bottom-caption">
                     <h2>
-                      DxTalks | Season 3 | Episode 2: “Net Zero & The Great Green Transformation Journey of Vietnamese Agriculture”
+                      DxTalks | Season 3 | Episode 2: “Net Zero & The Great
+                      Green Transformation Journey of Vietnamese Agriculture”
                     </h2>
                     <p>
-                      DxTalks is a series of talk shows sharing real stories about Digital Transformation and Green Transformation from Vietnamese and International organizations and businesses. Experts focused on discussing the process of accessing comprehensive platforms to build a roadmap for Digital Transformation and Green Transformation towards Sustainable Development.
+                      DxTalks is a series of talk shows sharing real stories
+                      about Digital Transformation and Green Transformation from
+                      Vietnamese and International organizations and businesses.
+                      Experts focused on discussing the process of accessing
+                      comprehensive platforms to build a roadmap for Digital
+                      Transformation and Green Transformation towards
+                      Sustainable Development.
                     </p>
                   </div>
                 </div>
@@ -468,47 +509,76 @@
               <div class="col-lg-6">
                 <div class="testmonial-nav text-center">
                   <div class="single-video">
-                    <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
-                      <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="DxTalks">
+                    <a
+                      href="https://www.youtube.com/watch?v=whVWBQghrZ0"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg"
+                        alt="DxTalks"
+                      />
                     </a>
                     <div class="video-intro">
                       <h4>DxTalks</h4>
                     </div>
                   </div>
                   <div class="single-video">
-                    <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
-                      <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="DxTalks">
+                    <a
+                      href="https://www.youtube.com/watch?v=DpKdcPkdrUE"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg"
+                        alt="DxTalks"
+                      />
                     </a>
                     <div class="video-intro">
                       <h4>DxTalks</h4>
                     </div>
                   </div>
                   <div class="single-video">
-                    <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
-                      <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="DxTalks">
+                    <a
+                      href="https://www.youtube.com/watch?v=6sdYuIYlxyc"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg"
+                        alt="DxTalks"
+                      />
                     </a>
                     <div class="video-intro">
                       <h4>DxTalks</h4>
                     </div>
                   </div>
                   <div class="single-video">
-                    <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                      <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
+                    <a
+                      href="https://www.youtube.com/watch?v=pknlc60sbIM"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
+                        alt="DxTalks"
+                      />
                     </a>
                     <div class="video-intro">
                       <h4>DxTalks</h4>
                     </div>
                   </div>
                   <div class="single-video">
-                    <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                      <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
+                    <a
+                      href="https://www.youtube.com/watch?v=pknlc60sbIM"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
+                        alt="DxTalks"
+                      />
                     </a>
                     <div class="video-intro">
                       <h4>DxTalks</h4>
                     </div>
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -595,7 +665,6 @@
     <!-- Jquery Plugins, main Jquery -->
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
-    
   </body>
 </html>
 <script src="/js/head.js"></script>
