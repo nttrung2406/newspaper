@@ -85,7 +85,7 @@
                           <input 
                             type="text" 
                             name="search" 
-                            placeholder="Enter username" 
+                            placeholder="Nhập username" 
                             class="form-control"
                             value="<%= search || '' %>"
                           />
@@ -102,7 +102,7 @@
                       <!-- Add User Button -->
                       <div class="col-4 text-right">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
-                          <i class="mdi mdi-plus"></i> Add User
+                          <i class="mdi mdi-plus"></i> Thêm tài khoản
                         </button>
                       </div>
                     </div>
@@ -122,7 +122,7 @@
                     <div class="row mt-4">
                       <div class="col-12">
                         <div class="table-responsive">
-                          <table class="table table-dark custom-table">
+                          <table class="table table-dark table-hover custom-table">
                             <thead class="thead-dark">
                               <tr>
                                 <th style="width: 20%;">Username</th>
@@ -381,13 +381,16 @@
                     <!-- Script clearing the form-->
                     <script>
                       function resetForm() {
-                        document.getElementById('addUserForm').reset();                     
+                        document.getElementById('addUserForm').reset();
+                        document.getElementById('emailadd').classList.remove('is-invalid');            
                       }
 
                       function resetUpdateForm() {
                         document.getElementById('updateUserForm').reset(); 
                         $('#updateUser').modal('hide');                    
                       }
+
+                      
                     </script>
 
                     <!-- Script for viewing a user-->
@@ -510,10 +513,6 @@
                     <!-- Script for editing a user-->
                     <script>
                       const updateForm = document.getElementById('updateUserForm');
-
-
-                      
-
                       document.querySelectorAll('.edit-user').forEach(button =>{
                         button.addEventListener('click', async()=> {
                           const userID = button.getAttribute('data-id');
