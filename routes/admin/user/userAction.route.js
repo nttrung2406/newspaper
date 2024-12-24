@@ -10,4 +10,7 @@ router.route('/add')
 router.route('/info/:id')
 .get(userController.viewUserDetail)
 
+router.route('/update/:id')
+.post(upload.none(), userController.updateUser)
+
 export default router;

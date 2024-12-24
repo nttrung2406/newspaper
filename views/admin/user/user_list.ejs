@@ -341,10 +341,52 @@
                       </div>
                     </div>
 
-                    <!-- script for clearing the input of the add user form-->
+                    <!-- Modal for updating a User -->
+                    <div class="modal fade" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="updateUserModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body p-0">
+                            <div class="card text-left">
+                              <div class="card-body">
+                                <h4 class="card-title" id="updateUserModalTitle">Cập nhật người dùng</h4>
+                                <hr>
+                                <form action="/admin/user/update" method="post" class="form-sample" id="updateUserForm">
+                                  <input type="hidden" name="userId" id="userIdUpdate">
+                                  <div class="form-group">
+                                    <label for="usernameUpdate">Tên người dùng</label>
+                                    <input type="text" class="form-control" name="usernameUpdate" id="usernameUpdate" aria-describedby="helpId" placeholder="Nhập tên người dùng" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="fullnameUpdate">Họ và tên</label>
+                                    <input type="text" class="form-control" name="fullnameUpdate" id="fullnameUpdate" aria-describedby="helpId" placeholder="Nhập họ và tên" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="dobUpdate">Ngày sinh</label>
+                                    <input type="date" name="dobUpdate" id="dobUpdate" class="form-control" aria-describedby="helpId" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="pennameUpdate">Bút danh</label>
+                                    <input type="text" class="form-control" name="pennameUpdate" id="pennameUpdate" aria-describedby="helpId" placeholder="Nhập bút danh">
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                  <button type="button" class="btn btn-dark" onclick="resetUpdateForm()">Cancel</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Script clearing the form-->
                     <script>
                       function resetForm() {
                         document.getElementById('addUserForm').reset();                     
+                      }
+
+                      function resetUpdateForm() {
+                        document.getElementById('updateUserForm').reset(); 
+                        $('#updateUser').modal('hide');                    
                       }
                     </script>
 
@@ -397,7 +439,7 @@
                       })
                     </script>
 
-                    <!--Script for submit the user creation form-->
+                    <!-- Script for creating a user-->
                     <script>
                       const addForm = document.getElementById('addUserForm');
                       const addModal = document.getElementById('addUser');
@@ -447,6 +489,7 @@
                       document.getElementById('dobadd').setAttribute('max', todayFormatted);
                     </script>
 
+                    <!-- Script for disabling pen name input when role is not writer-->
                     <script>
                       const roleSelect = document.getElementById('roleadd');
                       const penName = document.getElementById('pennameadd');
@@ -462,6 +505,71 @@
                       })
                       
 
+                    </script>
+
+                    <!-- Script for editing a user-->
+                    <script>
+                      const updateForm = document.getElementById('updateUserForm');
+
+
+                      
+
+                      document.querySelectorAll('.edit-user').forEach(button =>{
+                        button.addEventListener('click', async()=> {
+                          const userID = button.getAttribute('data-id');
+                          const response = await fetch(`/admin/user/info/${userID}`);
+                          const result = await response.json();
+                          
+                          document.getElementById('userIdUpdate').value = result.accountID._id;
+                          document.getElementById('usernameUpdate').value = result.accountID.username;
+                          document.getElementById('fullnameUpdate').value = result.fullname;
+                          document.getElementById('dobUpdate').value = new Date(result.dateOfBirth).toISOString().split('T')[0];
+                          document.getElementById('pennameUpdate').value = result.penName || '';
+
+                          if (result.accountID.role !== 'writer') {
+                            document.getElementById('pennameUpdate').disabled = true;
+                            document.getElementById('pennameUpdate').parentElement.style.display = 'none';
+                          } else {
+                            document.getElementById('pennameUpdate').disabled = false;
+                            document.getElementById('pennameUpdate').parentElement.style.display = 'block';
+                          }
+
+                          updateForm.setAttribute('data-id', userID);
+
+                          $('#updateUser').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                          }).modal('show');
+                        })
+
+                      })
+
+
+                      updateForm.addEventListener('submit', async function(event){
+                        event.preventDefault();
+                        const formData = new FormData(updateForm);
+                        
+                        const userId = updateForm.getAttribute('data-id');
+
+                        try {
+                          const response = await fetch(`/admin/user/update/${userId}`, {
+                          method: "POST",
+                          body: formData,
+                        })
+
+                        
+
+                        if (!response.ok) {
+                          const result = await response.json();
+                          console.error('Error updating user:', result.message || 'Unknown error');
+                        }
+                        else{
+                          window.location.reload();
+                        }
+                      } catch (error) {
+                          consosle.error('Error updating user:', error);
+                      }
+                      })
                     </script>
                   </div>
                 </div>
