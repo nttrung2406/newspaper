@@ -68,9 +68,7 @@ export const searchPostsByTitle = async (req, res) => {
 export const getPostById = async (req, res) => {
     try {
         const { id } = req.params;
-        const normal_post = await Post.findById(id);
-        const premium = await Membership.findById(id);
-        const post = normal_post || premium || null;
+        const post = await Post.findById(id);
         console.log("test:",post); // Kiểm tra nội dung của `post`
 
         if (!post) {

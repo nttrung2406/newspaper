@@ -11,7 +11,6 @@ export const getCategory = async (req, res) => {
           freeCategories: categories,
           posts,
           memberships,
-          isPremium: false, // xử lí premium
       });
 
   } catch (error) {

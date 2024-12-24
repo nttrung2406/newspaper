@@ -26,6 +26,7 @@ import editorRoutes from "./routes/editorRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import commentRoutes from './routes/commentRoutes.js';
+import membershipRoutes from './routes/membershipRoutes.js';
 
 // Import Model
 import User from "./models/User.js";
@@ -129,7 +130,6 @@ app.get("/elements", (req, res) => res.render("elements"));
 app.get("/blog", (req, res) => res.render("blog"));
 app.get("/single-blog", (req, res) => res.render("single-blog"));
 app.get("/details", (req, res) => res.render("details"));
-
 
 
 mongoose
