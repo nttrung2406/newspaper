@@ -1,670 +1,524 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
 
-    <!-- CSS here -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/ticker-style.css" />
-    <link rel="stylesheet" href="/css/flaticon.css" />
-    <link rel="stylesheet" href="/css/slicknav.css" />
-    <link rel="stylesheet" href="/css/animate.min.css" />
-    <link rel="stylesheet" href="/css/magnific-popup.css" />
-    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/css/themify-icons.css" />
-    <link rel="stylesheet" href="/css/slick.css" />
-    <link rel="stylesheet" href="/css/nice-select.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/image.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>News</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
 
-  <body>
-    <%- include('./partials/header.ejs') %>
-    <main>
-      <!-- Trending Area Start -->
-      <div class="trending-area fix">
-        <div class="container">
-          <div class="trending-main">
-            <!-- Trending Tittle -->
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="trending-tittle">
-                  <strong>Trending now</strong>
-                  <!-- <p>Rem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  <div class="trending-animated">
-                    <ul id="js-news" class="js-hidden">
-                      <li class="news-item">Why are you gay ?</li>
-                      <li class="news-item">Who says I'm gay.......</li>
-                      <li class="news-item">You are gay !!</li>
-                    </ul>
-                  </div>
+  <!-- CSS here -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/css/ticker-style.css" />
+  <link rel="stylesheet" href="/css/flaticon.css" />
+  <link rel="stylesheet" href="/css/slicknav.css" />
+  <link rel="stylesheet" href="/css/animate.min.css" />
+  <link rel="stylesheet" href="/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/css/themify-icons.css" />
+  <link rel="stylesheet" href="/css/slick.css" />
+  <link rel="stylesheet" href="/css/nice-select.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/image.css" />
+</head>
+
+<body>
+  <%- include('./partials/header.ejs') %>
+  <main>
+    <!-- Trending Area Start -->
+    <div class="trending-area fix">
+      <div class="container">
+        <div class="trending-main">
+          <!-- Trending Title -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="trending-tittle">
+                <strong>Trending now</strong>
+                <div class="trending-animated">
+                  <ul id="js-news" class="js-hidden">
+                    <li class="news-item">Why are you gay ?</li>
+                    <li class="news-item">Who says I'm gay.......</li>
+                    <li class="news-item">You are gay !!</li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-8">
-                <!-- Trending Top -->
-                <% if (posts && posts.length > 0) { %>
-                <div class="trending-top mb-30">
-                  <div class="trend-top-img">
-                    <img
-                      src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>"
-                      alt="<%= posts[0].title %>"
-                    />
-                    <div class="trend-top-cap">
-                      <span><%= posts[0].category || 'Uncategorized' %></span>
-                      <h2>
-                        <a href="/posts/<%= posts[0]._id %>">
-                          <%= posts[0].title %>
-                        </a>
-                      </h2>
-                    </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- Trending Top -->
+              <% if (posts && posts.length > 0) { %>
+              <div class="trending-top mb-30">
+                <div class="trend-top-img">
+                  <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
+                  <div class="trend-top-cap">
+                    <span><%= posts[0].category || 'Uncategorized' %></span>
+                    <h2>
+                      <a href="/posts/<%= posts[0]._id %>">
+                        <%= posts[0].title %>
+                      </a>
+                    </h2>
                   </div>
                 </div>
-                <% } else { %>
-                <p>No posts available.</p>
-                <% } %>
+              </div>
+              <% } else { %>
+              <p>No posts available.</p>
+              <% } %>
 
-                <!-- Trending Bottom -->
-                <div class="trending-bottom">
-                  <div class="row">
-                    <% if (posts && posts.length > 1) { %> <% posts.slice(1,
-                    4).forEach(post => { %>
-                    <!-- Take posts from index 1 to 3 -->
-                    <div class="col-lg-4">
-                      <div class="single-bottom mb-35">
-                        <div class="trend-bottom-img mb-30">
-                          <img
-                            src="<%= post.imageUrl || '/img/default-image.jpg' %>"
-                            alt="<%= post.title %>"
-                          />
-                        </div>
-                        <div class="trend-bottom-cap">
-                          <span
-                            class="color<%= Math.floor(Math.random() * 3) + 1 %>"
-                          >
-                            <%= post.category || 'Uncategorized' %>
-                          </span>
-                          <h4>
-                            <a href="/posts/<%= post._id %>">
-                              <%= post.title %>
-                            </a>
-                          </h4>
-                        </div>
+              <!-- Trending Bottom -->
+              <div class="trending-bottom">
+                <div class="row">
+                  <% if (posts && posts.length > 1) { %>
+                  <% posts.slice(1, 4).forEach(post => { %>
+                  <!-- Take posts from index 1 to 3 -->
+                  <div class="col-lg-4">
+                    <div class="single-bottom mb-35">
+                      <div class="trend-bottom-img mb-30">
+                        <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                      </div>
+                      <div class="trend-bottom-cap">
+                        <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
+                          <%= post.category || 'Uncategorized' %>
+                        </span>
+                        <h4>
+                          <a href="/posts/<%= post._id %>">
+                            <%= post.title %>
+                          </a>
+                        </h4>
                       </div>
                     </div>
-                    <% }); %> <% } else { %>
-                    <p>No additional posts to display.</p>
-                    <% } %>
                   </div>
+                  <% }); %>
+                  <% } else { %>
+                  <p>No additional posts to display.</p>
+                  <% } %>
                 </div>
               </div>
+            </div>
 
-              <!-- Riht content -->
-              <div class="col-lg-4">
-                <% if (posts && posts.length > 0) { %> <% posts.slice(0,
-                4).forEach(post => { %>
-                <!-- Take only the first 4 posts -->
-                <div class="trand-right-single d-flex">
-                  <div class="trand-right-img">
-                    <img
-                      class="resize-img"
-                      src="<%= post.imageUrl || '/img/default-image.jpg' %>"
-                      alt="<%= post.title %>"
-                    />
-                  </div>
-                  <div class="trand-right-cap">
-                    <span class="color<%= Math.floor(Math.random() * 4) + 1 %>"
-                      ><%= post.category || 'Uncategorized' %></span
-                    >
-                    <h4>
-                      <a href="/posts/<%= post._id %>"> <%= post.title %> </a>
-                    </h4>
-                  </div>
+            <!-- Right Content -->
+            <div class="col-lg-4">
+              <% if (posts && posts.length > 0) { %>
+              <% posts.slice(0, 4).forEach(post => { %>
+              <!-- Take only the first 4 posts -->
+              <div class="trand-right-single d-flex">
+                <div class="trand-right-img">
+                  <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
                 </div>
-                <% }); %> <% } else { %>
-                <p>No trending posts available.</p>
-                <% } %>
+                <div class="trand-right-cap">
+                  <span class="color<%= Math.floor(Math.random() * 4) + 1 %>">
+                    <%= post.category || 'Uncategorized' %>
+                  </span>
+                  <h4>
+                    <a href="/posts/<%= post._id %>">
+                      <%= post.title %>
+                    </a>
+                  </h4>
+                </div>
               </div>
+              <% }); %>
+              <% } else { %>
+              <p>No trending posts available.</p>
+              <% } %>
             </div>
           </div>
         </div>
       </div>
-      <!-- Trending Area End -->
-      <!-- End Weekly-News -->
-      <!-- Whats New Start -->
-      <section class="whats-news-area pt-50 pb-20">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-8">
-              <div class="row d-flex justify-content-between">
-                <div class="col-lg-3 col-md-3">
-                  <div class="section-tittle mb-30">
-                    <h3>Whats New</h3>
-                  </div>
+    </div>
+
+    <!-- Trending Area End -->
+    <!-- Whats New Start -->
+    <section class="whats-news-area pt-50 pb-20">
+      <div class="container">
+        <div class="row">
+
+            <div class="row justify-content-between">
+              <div class="col-lg-8 col-md-8">
+                <div class="section-tittle mb-30">
+                  <h3>Whats New</h3>
                 </div>
-                <% if (categories.length > 0) { %>
-                <div
-                  class="col-lg-<%= (categories.length + 1) * 2 %> col-md-<%= (categories.length + 1) * 2 %>"
-                >
-                  <div class="properties__button">
-                    <!--Nav Button  -->
-                    
-                    <nav>
-                      <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a
-                          class="nav-item nav-link active"
-                          id="nav-home-tab"
-                          data-toggle="tab"
-                          href="#nav-home"
-                          role="tab"
-                          aria-controls="nav-home"
-                          aria-selected="true"
-                          >All</a
-                        >
-                        <% categories.forEach(cat => { %>
-                        <a
-                          class="nav-item nav-link"
-                          id="nav-profile-tab"
-                          data-toggle="tab"
-                          href="#nav-profile"
-                          role="tab"
-                          aria-controls="nav-profile"
-                          aria-selected="false"
-                          data-cat-id="<%= cat._id %>"
-                          ><%= cat.categoryName %></a
-                        >
-                        <% }) %>
-                      </div>
-                    </nav>
-                    <!--End Nav Button  -->
-                  </div>
+                <!-- Nav Button -->
+                <% if (categories && categories.length > 0) { %>
+                <div class="properties__button">
+                  <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                        All
+                      </a>
+                      <% categories.forEach(cat => { %>
+                      <a class="nav-item nav-link" id="nav-category-tab-<%= cat._id %>" data-toggle="tab" href="#nav-category-<%= cat._id %>" role="tab" aria-controls="nav-category-<%= cat._id %>" aria-selected="false" data-cat-id="<%= cat._id %>">
+                        <%= cat.categoryName %>
+                      </a>
+                      <% }); %>
+                    </div>
+                  </nav>
                 </div>
+                <% } else { %>
+                <p>No categories available.</p>
                 <% } %>
-              </div>
-              <div class="row">
+                <!-- End Nav Button -->
                 <div class="col-12">
                   <!-- Nav Card -->
                   <div class="tab-content" id="nav-tabContent">
-                    <!-- card one -->
-                    <div
-                      class="tab-pane fade show active"
-                      id="nav-home"
-                      role="tabpanel"
-                      aria-labelledby="nav-home-tab"
-                    >
+                    <!-- Default tab for "All" -->
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      <div class="whats-news-caption">
+                        <div class="row">
+                          <% if (posts.length > 0) { %>
+                          <div class="col-lg-6 col-md-6">
+                            <!-- First column -->
+                            <% posts.slice(0, 3).forEach(post => { %>
+                            <div class="single-news mb-4">
+                              <div class="news-img">
+                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                              </div>
+                              <div class="news-caption">
+                                <h4>
+                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                                </h4>
+                                <p><%= post.description || 'No description available.' %></p>
+                              </div>
+                            </div>
+                            <% }); %>
+                          </div>
+                          <div class="col-lg-6 col-md-6">
+                            <!-- Second column -->
+                            <% posts.slice(3, 6).forEach(post => { %>
+                            <div class="single-news mb-4">
+                              <div class="news-img">
+                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                              </div>
+                              <div class="news-caption">
+                                <h4>
+                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                                </h4>
+                                <p><%= post.description || 'No description available.' %></p>
+                              </div>
+                            </div>
+                            <% }); %>
+                          </div>
+                          <% } else { %>
+                          <p>No posts available.</p>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Dynamic category tabs -->
+                    <% categories.forEach(cat => { %>
+                    <div class="tab-pane fade" id="nav-category-<%= cat._id %>" role="tabpanel" aria-labelledby="nav-category-tab-<%= cat._id %>">
                       <div class="whats-news-caption">
                         <div class="row">
                           <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                              <div class="what-img">
-                                <img src="/img/news/whatNews1.jpg" alt="" />
+                            <!-- First column -->
+                            <% posts.slice(0, 3).forEach(post => { %>
+                            <div class="single-news mb-4">
+                              <div class="news-img">
+                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
                               </div>
-                              <div class="what-cap">
-                                <span class="color1">Goverment</span>
+                              <div class="news-caption">
                                 <h4>
-                                  <a href="#"
-                                    >Prime Minister: The emulation movement is
-                                    absolutely not formal or perfunctory</a
-                                  >
+                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
                                 </h4>
+                                <p><%= post.description || 'No description available.' %></p>
                               </div>
                             </div>
+                            <% }); %>
                           </div>
                           <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                              <div class="what-img">
-                                <img src="/img/news/whatNews2.jpg" alt="" />
+                            <!-- Second column -->
+                            <% posts.slice(3, 6).forEach(post => { %>
+                            <div class="single-news mb-4">
+                              <div class="news-img">
+                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
                               </div>
-                              <div class="what-cap">
-                                <span class="color1">People</span>
+                              <div class="news-caption">
                                 <h4>
-                                  <a href="#"
-                                    >Hanoi needs to be determined to perfect its
-                                    organizational structure</a
-                                  >
+                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
                                 </h4>
+                                <p><%= post.description || 'No description available.' %></p>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                              <div class="what-img">
-                                <img src="/img/news/whatNews3.jpg" alt="" />
-                              </div>
-                              <div class="what-cap">
-                                <span class="color1">Economy</span>
-                                <h4>
-                                  <a href="#"
-                                    >Vietnam's economic overview in November
-                                    2024</a
-                                  >
-                                </h4>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                              <div class="what-img">
-                                <img src="/img/news/whatNews4.jpg" alt="" />
-                              </div>
-                              <div class="what-cap">
-                                <span class="color1">Finance</span>
-                                <h4>
-                                  <a href="#"
-                                    >Credit growth as of December 7 reached
-                                    about 12.5%</a
-                                  >
-                                </h4>
-                              </div>
-                            </div>
+                            <% }); %>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- card Six -->
+                    <% }); %>
                   </div>
-                  <!-- End Nav Card -->
+                </div>
+              </div>
+   
+              <div class="col-lg-4">
+                <!-- Section Tittle -->
+                <div class="section-tittle mb-40">
+                  <h3>Follow Us</h3>
+                </div>
+                <!-- Flow Socail -->
+                <div class="single-follow mb-45">
+                  <div class="single-box">
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>News</span>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>News</span>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="https://www.instagram.com/vnexpress.official/"><img src="/img/news/icon-ins.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>News</span>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="https://www.youtube.com/c/VnExpressOfficial"><img src="/img/news/icon-yo.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>News</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- New Poster -->
+                <div class="news-poster d-none d-lg-block">
+                  <img src="/img/news/news_card.jpg" alt="" />
                 </div>
               </div>
             </div>
-            <div class="col-lg-4">
-              <!-- Section Tittle -->
-              <div class="section-tittle mb-40">
-                <h3>Follow Us</h3>
-              </div>
-              <!-- Flow Socail -->
-              <div class="single-follow mb-45">
-                <div class="single-box">
-                  <div class="follow-us d-flex align-items-center">
-                    <div class="follow-social">
-                      <a
-                        href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"
-                        ><img src="/img/news/icon-fb.png" alt=""
-                      /></a>
-                    </div>
-                    <div class="follow-count">
-                      <span>News</span>
-                    </div>
-                  </div>
-                  <div class="follow-us d-flex align-items-center">
-                    <div class="follow-social">
-                      <a
-                        href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
-                        ><img src="/img/news/icon-tw.png" alt=""
-                      /></a>
-                    </div>
-                    <div class="follow-count">
-                      <span>News</span>
-                    </div>
-                  </div>
-                  <div class="follow-us d-flex align-items-center">
-                    <div class="follow-social">
-                      <a href="https://www.instagram.com/vnexpress.official/"
-                        ><img src="/img/news/icon-ins.png" alt=""
-                      /></a>
-                    </div>
-                    <div class="follow-count">
-                      <span>News</span>
-                    </div>
-                  </div>
-                  <div class="follow-us d-flex align-items-center">
-                    <div class="follow-social">
-                      <a href="https://www.youtube.com/c/VnExpressOfficial"
-                        ><img src="/img/news/icon-yo.png" alt=""
-                      /></a>
-                    </div>
-                    <div class="follow-count">
-                      <span>News</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- New Poster -->
-              <div class="news-poster d-none d-lg-block">
-                <img src="/img/news/news_card.jpg" alt="" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Whats New End -->
-      <!--   Weekly2-News start -->
-      <div class="weekly2-news-area weekly2-pading gray-bg">
-        <div class="container">
-          <div class="weekly2-wrapper">
-            <!-- section Tittle -->
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="section-tittle mb-30">
-                  <h3>Weekly Top News</h3>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="weekly2-news-active dot-style d-flex dot-style">
-                  <div class="weekly2-single">
-                    <div class="weekly2-img">
-                      <img src="/img/news/weekly2News1.jpg" alt="" />
-                    </div>
-                    <div class="weekly2-caption">
-                      <span class="color1">Economy</span>
-                      <p>25 Dec 2024</p>
-                      <h4>
-                        <a href="#"
-                          >Human centric in developing circular economy</a
-                        >
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="weekly2-single">
-                    <div class="weekly2-img">
-                      <img src="/img/news/weekly2News2.jpg" alt="" />
-                    </div>
-                    <div class="weekly2-caption">
-                      <span class="color1">Economy</span>
-                      <p>25 Dec 2024</p>
-                      <h4>
-                        <a href="#"
-                          >Controversy surrounding COP29 results and
-                          solutions</a
-                        >
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="weekly2-single">
-                    <div class="weekly2-img">
-                      <img src="/img/news/weekly2News3.jpg" alt="" />
-                    </div>
-                    <div class="weekly2-caption">
-                      <span class="color1">investment</span>
-                      <p>25 Dec 2024</p>
-                      <h4>
-                        <a href="#"
-                          >Green investment new approach to sustainable
-                          development</a
-                        >
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="weekly2-single">
-                    <div class="weekly2-img">
-                      <img src="/img/news/weekly2News4.jpg" alt="" />
-                    </div>
-                    <div class="weekly2-caption">
-                      <span class="color1">transportation</span>
-                      <p>25 Dec 2024</p>
-                      <h4>
-                        <a href="#"
-                          >Ho Chi Minh City promotes green transportation</a
-                        >
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="weekly2-single">
-                    <div class="weekly2-img">
-                      <img src="/img/news/weekly2News4.jpg" alt="" />
-                    </div>
-                    <div class="weekly2-caption">
-                      <span class="color1">transportation</span>
-                      <p>25 Dec 2024</p>
-                      <h4>
-                        <a href="#"
-                          >Ho Chi Minh City promotes green transportation</a
-                        >
-                      </h4>
-                    </div>
-                  </div>
-                </div>
+            <!-- End Nav Card -->
+    </section>
+    <!-- Whats New End -->
+    <!--   Weekly-News start -->
+    <div class="weekly2-news-area weekly2-pading gray-bg">
+      <div class="container">
+        <div class="weekly2-wrapper">
+          <!-- section Tittle -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="section-tittle mb-30">
+                <h3>Weekly Top News</h3>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- End Weekly-News -->
-      <!-- Start Youtube -->
-      <div class="youtube-area video-padding">
-        <div class="container">
           <div class="row">
             <div class="col-12">
-              <div class="video-items-active">
-                <div class="video-items text-center">
-                  <a
-                    href="https://www.youtube.com/watch?v=whVWBQghrZ0"
-                    target="_blank"
-                  >
-                    <img
-                      src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg"
-                      alt="Video Thumbnail"
-                    />
-                  </a>
-                </div>
-                <div class="video-items text-center">
-                  <a
-                    href="https://www.youtube.com/watch?v=DpKdcPkdrUE"
-                    target="_blank"
-                  >
-                    <img
-                      src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg"
-                      alt="Video Thumbnail"
-                    />
-                  </a>
-                </div>
-                <div class="video-items text-center">
-                  <a
-                    href="https://www.youtube.com/watch?v=6sdYuIYlxyc"
-                    target="_blank"
-                  >
-                    <img
-                      src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg"
-                      alt="Video Thumbnail"
-                    />
-                  </a>
-                </div>
-                <div class="video-items text-center">
-                  <a
-                    href="https://www.youtube.com/watch?v=pknlc60sbIM"
-                    target="_blank"
-                  >
-                    <img
-                      src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
-                      alt="Video Thumbnail"
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="video-info">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="video-caption">
-                  <div class="top-caption">
-                    <span class="color1">Politics</span>
+              <div class="weekly2-news-active dot-style d-flex dot-style">
+                <% if (posts && posts.length > 1) { %>
+                <% posts.slice(1, 5).forEach(post => { %>
+                <div class="weekly2-single">
+                  <div class="weekly2-img">
+                    <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
                   </div>
-                  <div class="bottom-caption">
-                    <h2>
-                      DxTalks | Season 3 | Episode 2: “Net Zero & The Great
-                      Green Transformation Journey of Vietnamese Agriculture”
-                    </h2>
-                    <p>
-                      DxTalks is a series of talk shows sharing real stories
-                      about Digital Transformation and Green Transformation from
-                      Vietnamese and International organizations and businesses.
-                      Experts focused on discussing the process of accessing
-                      comprehensive platforms to build a roadmap for Digital
-                      Transformation and Green Transformation towards
-                      Sustainable Development.
-                    </p>
+                  <div class="weekly2-caption">
+                    <span class="color<%= Math.floor(Math.random() * 5) + 1 %>">
+                      <%= posts[0].category || 'Uncategorized' %></span>
+                    <h4>
+                      <a href="/posts/<%= posts[0]._id %>">
+                        <%= posts[0].title %>
+                      </a>
+                      </h2>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="testmonial-nav text-center">
-                  <div class="single-video">
-                    <a
-                      href="https://www.youtube.com/watch?v=whVWBQghrZ0"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg"
-                        alt="DxTalks"
-                      />
-                    </a>
-                    <div class="video-intro">
-                      <h4>DxTalks</h4>
-                    </div>
-                  </div>
-                  <div class="single-video">
-                    <a
-                      href="https://www.youtube.com/watch?v=DpKdcPkdrUE"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg"
-                        alt="DxTalks"
-                      />
-                    </a>
-                    <div class="video-intro">
-                      <h4>DxTalks</h4>
-                    </div>
-                  </div>
-                  <div class="single-video">
-                    <a
-                      href="https://www.youtube.com/watch?v=6sdYuIYlxyc"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg"
-                        alt="DxTalks"
-                      />
-                    </a>
-                    <div class="video-intro">
-                      <h4>DxTalks</h4>
-                    </div>
-                  </div>
-                  <div class="single-video">
-                    <a
-                      href="https://www.youtube.com/watch?v=pknlc60sbIM"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
-                        alt="DxTalks"
-                      />
-                    </a>
-                    <div class="video-intro">
-                      <h4>DxTalks</h4>
-                    </div>
-                  </div>
-                  <div class="single-video">
-                    <a
-                      href="https://www.youtube.com/watch?v=pknlc60sbIM"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg"
-                        alt="DxTalks"
-                      />
-                    </a>
-                    <div class="video-intro">
-                      <h4>DxTalks</h4>
-                    </div>
-                  </div>
-                </div>
+                <% }); %>
+                <% } else { %>
+                <p>No posts available.s</p>
+                <% } %>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- End Start youtube -->
-
-      <!--Start pagination -->
-      <div class="pagination-area pb-45 text-center">
-        <div class="container">
+    </div>
+    <!-- End Weekly-News -->
+    <!-- Start Youtube -->
+    <div class="youtube-area video-padding">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="video-items-active">
+              <div class="video-items text-center">
+                <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
+                  <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="Video Thumbnail">
+                </a>
+              </div>
+              <div class="video-items text-center">
+                <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
+                  <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="Video Thumbnail">
+                </a>
+              </div>
+              <div class="video-items text-center">
+                <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
+                  <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="Video Thumbnail">
+                </a>
+              </div>
+              <div class="video-items text-center">
+                <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
+                  <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="Video Thumbnail">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="video-info">
           <div class="row">
-            <div class="col-xl-12">
-              <div class="single-wrap d-flex justify-content-center">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination justify-content-start">
-                    <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><span class="flaticon-arrow roted"></span
-                      ></a>
-                    </li>
-                    <li class="page-item active">
-                      <a class="page-link" href="#">01</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">02</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">03</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><span class="flaticon-arrow right-arrow"></span
-                      ></a>
-                    </li>
-                  </ul>
-                </nav>
+            <div class="col-lg-6">
+              <div class="video-caption">
+                <div class="top-caption">
+                  <span class="color1">Politics</span>
+                </div>
+                <div class="bottom-caption">
+                  <h2>
+                    DxTalks | Season 3 | Episode 2: “Net Zero & The Great Green Transformation Journey of Vietnamese Agriculture”
+                  </h2>
+                  <p>
+                    DxTalks is a series of talk shows sharing real stories about Digital Transformation and Green Transformation from Vietnamese and International organizations and businesses. Experts focused on discussing the process of accessing comprehensive platforms to build a roadmap for Digital Transformation and Green Transformation towards Sustainable Development.
+                  </p>
+                </div>
               </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="testmonial-nav text-center">
+                <div class="single-video">
+                  <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
+                    <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="DxTalks">
+                  </a>
+                  <div class="video-intro">
+                    <h4>DxTalks</h4>
+                  </div>
+                </div>
+                <div class="single-video">
+                  <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
+                    <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="DxTalks">
+                  </a>
+                  <div class="video-intro">
+                    <h4>DxTalks</h4>
+                  </div>
+                </div>
+                <div class="single-video">
+                  <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
+                    <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="DxTalks">
+                  </a>
+                  <div class="video-intro">
+                    <h4>DxTalks</h4>
+                  </div>
+                </div>
+                <div class="single-video">
+                  <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
+                    <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
+                  </a>
+                  <div class="video-intro">
+                    <h4>DxTalks</h4>
+                  </div>
+                </div>
+                <div class="single-video">
+                  <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
+                    <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
+                  </a>
+                  <div class="video-intro">
+                    <h4>DxTalks</h4>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
-      <!-- End pagination  -->
-    </main>
+    </div>
+    <!-- End Start youtube -->
 
-    <%- include('./partials/footer.ejs') %>
+    <!--Start pagination -->
+    <div class="pagination-area pb-45 text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="single-wrap d-flex justify-content-center">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                  <li class="page-item">
+                    <a class="page-link" href="#"><span class="flaticon-arrow roted"></span></a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="#">01</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">02</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">03</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="#"><span class="flaticon-arrow right-arrow"></span></a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End pagination  -->
+  </main>
 
-    <!-- JS here -->
+  <%- include('./partials/footer.ejs') %>
 
-    <!-- All JS Custom Plugins Link Here here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-    <!-- Jquery, Popper, Bootstrap -->
-    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <!-- Jquery Mobile Menu -->
-    <script src="/js/jquery.slicknav.min.js"></script>
+  <!-- JS here -->
 
-    <!-- Jquery Slick , Owl-Carousel Plugins -->
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <!-- Date Picker -->
-    <script src="/js/gijgo.min.js"></script>
-    <!-- One Page, Animated-HeadLin -->
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
+  <!-- All JS Custom Plugins Link Here here -->
+  <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+  <!-- Jquery, Popper, Bootstrap -->
+  <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- Jquery Mobile Menu -->
+  <script src="/js/jquery.slicknav.min.js"></script>
 
-    <!-- Breaking New Pluging -->
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
+  <!-- Jquery Slick , Owl-Carousel Plugins -->
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/slick.min.js"></script>
+  <!-- Date Picker -->
+  <script src="/js/gijgo.min.js"></script>
+  <!-- One Page, Animated-HeadLin -->
+  <script src="/js/wow.min.js"></script>
+  <script src="/js/animated.headline.js"></script>
+  <script src="/js/jquery.magnific-popup.js"></script>
 
-    <!-- Scrollup, nice-select, sticky -->
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
+  <!-- Breaking New Pluging -->
+  <script src="/js/jquery.ticker.js"></script>
+  <script src="/js/site.js"></script>
 
-    <!-- contact js -->
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
+  <!-- Scrollup, nice-select, sticky -->
+  <script src="/js/jquery.scrollUp.min.js"></script>
+  <script src="/js/jquery.nice-select.min.js"></script>
+  <script src="/js/jquery.sticky.js"></script>
 
-    <!-- Jquery Plugins, main Jquery -->
-    <script src="/js/plugins.js"></script>
-    <script src="/js/main.js"></script>
-  </body>
+  <!-- contact js -->
+  <script src="/js/contact.js"></script>
+  <script src="/js/jquery.form.js"></script>
+  <script src="/js/jquery.validate.min.js"></script>
+  <script src="/js/mail-script.js"></script>
+  <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+  <!-- Jquery Plugins, main Jquery -->
+  <script src="/js/plugins.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/head.js"></script>
+  <script src="/js/category_selections.js"></script>
+</body>
+
 </html>
-<script src="/js/head.js"></script>
