@@ -11,6 +11,7 @@ export const getCategory = async (req, res) => {
           freeCategories: categories,
           posts,
           memberships,
+          messages: req.flash()
       });
 
   } catch (error) {

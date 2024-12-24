@@ -42,12 +42,14 @@
               %>
             </li>
             <li>
-              <strong>Allowed Categories:</strong>
+              <strong>Your premium status:</strong>
               <ul>
-                <% user.membership.categories.forEach(category => { %>
-                <li><%= category.name %></li>
-                <% }); %>
+                <li>Type: <%= user.membership.type %></li>
+                <li>Start Date: <%= user.membership.startDate %></li>
+                <li>End Date: <%= user.membership.endDate %></li>
+                <li>Status: <%= user.membership.status %></li>
               </ul>
+              
             </li>
             <% } %>
           </ul>

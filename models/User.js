@@ -11,8 +11,13 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     membership: {
-      expiryDate: { type: Date },
-      categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+      type: {
+        type: String, // Ví dụ: "basic", "premium"
+        required: true
+      },
+      startDate: { type: Date, required: true },
+      endDate: { type: Date, required: true },
+      status: { type: String, enum: ["active", "inactive"], required: true }
     },
     writerPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     editorPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

@@ -25,7 +25,6 @@
 
   <body>
     <%- include('./partials/header.ejs') %>
-
     <main>
       <!-- Whats New Start -->
       <section class="whats-news-area pt-50 pb-20">
@@ -276,5 +275,16 @@
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/head.js"></script>
+    <!-- alert -->
+    <% if (messages.error && messages.error.length > 0) { %>
+      <script type="text/javascript">
+        window.onload = function() {
+          const userResponse = confirm("<%= messages.error %> \n\nDo you want to upgrade to premium?");
+          if (userResponse) {
+            window.location.href = '/premium-signup';
+          }
+        };
+      </script>
+    <% } %>
   </body>
 </html>

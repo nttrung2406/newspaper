@@ -114,6 +114,7 @@ app.use((req, res, next) => {
 // routes
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
+app.use("/posts/membership",authorizeRole(['membership']), membershipRoutes);
 app.use("/users", authorizeRole(['admin']), userRoutes);
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
