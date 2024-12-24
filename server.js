@@ -122,8 +122,6 @@ app.use('/comments', commentRoutes);
 app.use("/", homeRoutes);
 
 // Pages
-app.get("/", (req, res) => res.render("index"));
-app.get("/index", (req, res) => res.render("index"));
 app.get("/about", (req, res) => res.render("about"));
 app.get("/latest_news", (req, res) => res.render("latest_news"));
 app.get("/contact", (req, res) => res.render("contact"));
