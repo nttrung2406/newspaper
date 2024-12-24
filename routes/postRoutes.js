@@ -15,6 +15,6 @@ router.post('/', createPost);            // Create a post
 router.get('/', getPosts);               // Get all posts
 router.put('/:id', updatePost);          // Update a post by ID
 router.delete('/:id', deletePost);       // Delete a post by ID
-router.get('/:id', getPostById);         // Get a post by ID
+router.get('/:id', getPostById); // Search posts by title
 
 export default router;

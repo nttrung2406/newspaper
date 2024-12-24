@@ -4,6 +4,6 @@ import { getCategory } from '../controllers/categoryController.js'; // Đảm b�
 const router = express.Router();
 
 // Đảm bảo controller được gọi chính xác
-router.get('/categori', getCategory);
+router.get('/', getCategory);
 
 export default router;

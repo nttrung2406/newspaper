@@ -1,91 +1,202 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>News</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="manifest" href="site.webmanifest">
-		<link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
 
-		<!-- CSS here -->
-            <link rel="stylesheet" href="/css/bootstrap.min.css">
-            <link rel="stylesheet" href="/css/owl.carousel.min.css">
-            <link rel="stylesheet" href="/css/ticker-style.css">
-            <link rel="stylesheet" href="/css/flaticon.css">
-            <link rel="stylesheet" href="/css/slicknav.css">
-            <link rel="stylesheet" href="/css/animate.min.css">
-            <link rel="stylesheet" href="/css/magnific-popup.css">
-            <link rel="stylesheet" href="/css/fontawesome-all.min.css">
-            <link rel="stylesheet" href="/css/themify-icons.css">
-            <link rel="stylesheet" href="/css/slick.css">
-            <link rel="stylesheet" href="/css/nice-select.css">
-            <link rel="stylesheet" href="/css/style.css">
-   </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>News</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
 
-   <body>
-       
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/ticker-style.css">
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/slicknav.css">
+    <link rel="stylesheet" href="/css/animate.min.css">
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/css/themify-icons.css">
+    <link rel="stylesheet" href="/css/slick.css">
+    <link rel="stylesheet" href="/css/nice-select.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+
 
     <%- include('./partials/header.ejs') %>
 
-    <main>
-        <section class="post-content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="post-details">
-                            <h2><%- post.title %></h2>
-                            <%- post.content.replace(/\[IMAGE:\s*(https?:\/\/[^\]]+)\]/g, '<img src="$1" alt="Image" style="max-width:100%; display:block; margin-bottom: 20px;">') %>
+        <main>
+            <section class="post-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="post-details">
+                                <h2><%- post.title %></h2>
+                                <%- post.content.replace(/\[IMAGE:\s*(https?:\/\/[^\]]+)\]/g, '<img src="$1" alt="Image" style="max-width:100%; display:block; margin-bottom: 20px;">'
+                                    ) %>
+                            </div>
+                            <div>
+                                <section class="comments-section mt-5">
+                                    <h3 class="mb-4">Comments</h3>
+                                    <div id="comments-list" class="list-group">
+                                        <!-- Comment sẽ được load từ API -->
+                                    </div>
+                                </section>
+
+                                <section class="add-comment mt-5">
+                                    <h4 class="mb-4">Add a Comment</h4>
+                                    <form id="comment-form" class="needs-validation" novalidate>
+                                        <input type="hidden" id="postId" value="<%- post._id %>">
+                                        <div class="mb-3">
+                                            <label for="author" class="form-label">Name:</label>
+                                            <input type="text" id="author" class="form-control" required>
+                                            <div class="invalid-feedback">Please enter your name.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Comment:</label>
+                                            <textarea id="content" class="form-control" rows="3" required></textarea>
+                                            <div class="invalid-feedback">Please enter a comment.</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                    </form>
+                                </section>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
 
-    <%- include('./partials/footer.ejs') %>
-    
-     <!-- JS here -->
-     
-         <!-- All JS Custom Plugins Link Here here -->
-         <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-         <!-- Jquery, Popper, Bootstrap -->
-         <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-         <script src="/js/popper.min.js"></script>
-         <script src="/js/bootstrap.min.js"></script>
-         <!-- Jquery Mobile Menu -->
-         <script src="/js/jquery.slicknav.min.js"></script>
- 
-         <!-- Jquery Slick , Owl-Carousel Plugins -->
-         <script src="/js/owl.carousel.min.js"></script>
-         <script src="/js/slick.min.js"></script>
-         <!-- Date Picker -->
-         <script src="/js/gijgo.min.js"></script>
-         <!-- One Page, Animated-HeadLin -->
-         <script src="/js/wow.min.js"></script>
-         <script src="/js/animated.headline.js"></script>
-         <script src="/js/jquery.magnific-popup.js"></script>
- 
-         <!-- Breaking New Pluging -->
-         <script src="/js/jquery.ticker.js"></script>
-         <script src="/js/site.js"></script>
- 
-         <!-- Scrollup, nice-select, sticky -->
-         <script src="/js/jquery.scrollUp.min.js"></script>
-         <script src="/js/jquery.nice-select.min.js"></script>
-         <script src="/js/jquery.sticky.js"></script>
-         
-         <!-- contact js -->
-         <script src="/js/contact.js"></script>
-         <script src="/js/jquery.form.js"></script>
-         <script src="/js/jquery.validate.min.js"></script>
-         <script src="/js/mail-script.js"></script>
-         <script src="/js/jquery.ajaxchimp.min.js"></script>
-         
-         <!-- Jquery Plugins, main Jquery -->	
-         <script src="/js/plugins.js"></script>
-         <script src="/js/main.js"></script>
-         <script src="/js/head.js"></script>
-     </body>
- </html>
+
+        <%- include('./partials/footer.ejs') %>
+
+            <!-- JS here -->
+
+            <!-- All JS Custom Plugins Link Here here -->
+            <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+            <!-- Jquery, Popper, Bootstrap -->
+            <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+            <script src="/js/popper.min.js"></script>
+            <script src="/js/bootstrap.min.js"></script>
+            <!-- Jquery Mobile Menu -->
+            <script src="/js/jquery.slicknav.min.js"></script>
+
+            <!-- Jquery Slick , Owl-Carousel Plugins -->
+            <script src="/js/owl.carousel.min.js"></script>
+            <script src="/js/slick.min.js"></script>
+            <!-- Date Picker -->
+            <script src="/js/gijgo.min.js"></script>
+            <!-- One Page, Animated-HeadLin -->
+            <script src="/js/wow.min.js"></script>
+            <script src="/js/animated.headline.js"></script>
+            <script src="/js/jquery.magnific-popup.js"></script>
+
+            <!-- Breaking New Pluging -->
+            <script src="/js/jquery.ticker.js"></script>
+            <script src="/js/site.js"></script>
+
+            <!-- Scrollup, nice-select, sticky -->
+            <script src="/js/jquery.scrollUp.min.js"></script>
+            <script src="/js/jquery.nice-select.min.js"></script>
+            <script src="/js/jquery.sticky.js"></script>
+
+            <!-- contact js -->
+            <script src="/js/contact.js"></script>
+            <script src="/js/jquery.form.js"></script>
+            <script src="/js/jquery.validate.min.js"></script>
+            <script src="/js/mail-script.js"></script>
+            <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+            <!-- Jquery Plugins, main Jquery -->
+            <script src="/js/plugins.js"></script>
+            <script src="/js/main.js"></script>
+            <!-- Load comments và gửi comment mới -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const postId = document.getElementById('postId').value;
+                    const commentsList = document.getElementById('comments-list');
+                    const commentForm = document.getElementById('comment-form');
+                    const submitButton = commentForm.querySelector('button[type="submit"]');
+
+                    const loadComments = async () => {
+                        try {
+                            const response = await fetch(`/comments/${postId}`);
+                            const comments = await response.json();
+                            commentsList.innerHTML = comments.map(comment => `
+                        <div class="list-group-item">
+                            <strong>${comment.author}</strong>
+                            <p class="mb-1">${comment.content}</p>
+                            <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                        </div>
+                    `).join('');
+                        } catch (error) {
+                            console.error('Error loading comments:', error);
+                        }
+                    };
+
+                    commentForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+
+                        if (!commentForm.checkValidity()) {
+                            commentForm.classList.add('was-validated');
+                            return;
+                        }
+
+                        const author = document.getElementById('author').value;
+                        const content = document.getElementById('content').value;
+
+                        submitButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+                        submitButton.disabled = true;
+
+                        try {
+                            const response = await fetch('/comments', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ postId, author, content })
+                            });
+
+                            if (response.ok) {
+                                document.getElementById('author').value = '';
+                                document.getElementById('content').value = '';
+                                commentForm.classList.remove('was-validated');
+                                loadComments();
+
+                                Toastify({
+                                    text: "Comment added successfully!",
+                                    duration: 3000,
+                                    gravity: "bottom",
+                                    position: "left",
+                                    backgroundColor: "#4caf50",
+                                    stopOnFocus: true,
+                                }).showToast();
+                            }
+                        } catch (error) {
+                            console.error('Error adding comment:', error);
+
+                            Toastify({
+                                text: "Failed to add comment. Please try again!",
+                                duration: 3000,
+                                gravity: "bottom",
+                                position: "left",
+                                backgroundColor: "#f44336",
+                                stopOnFocus: true,
+                            }).showToast();
+                        } finally {
+                            // Khôi phục nút submit
+                            submitButton.innerHTML = 'Submit';
+                            submitButton.disabled = false;
+                        }
+                    });
+
+                    loadComments();
+                });</script>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+
+</html>

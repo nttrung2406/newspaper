@@ -19,9 +19,8 @@ import { dirname } from "path";
 import MongoDBStore from "connect-mongodb-session";
 import errorController from "./controllers/error.js";
 import User from "./models/User.js";
-import {getMembership} from "./controllers/membershipController.js"
-import {getPostsData} from "./controllers/postController.js"
-import { getCategory } from './controllers/categoryController.js';
+import categoryRoutes from "./routes/categoryRoutes.js";
+import commentRoutes from './routes/commentRoutes.js';
 
 dotenv.config({ path: "./config/env/development.env" });
 
@@ -103,56 +102,30 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/auth", authRoutes);
-app.use("/posts", authorizeRole(["admin", "editor", "writer"]), postRoutes);
-app.use(
-  "/users",
-  authorizeRole(["membership", "editor", "writer"]),
-  userRoutes
-);
-app.use("/admin", authorizeRole(["admin"]), adminRoutes);
-app.use("/editor", authorizeRole(["editor"]), editorRoutes);
-app.use("/writer", authorizeRole(["writer"]), writerRoutes);
-app.use("/", homeRoutes);
+app.use("/posts", postRoutes); 
+app.use("/users", authorizeRole(['admin']), userRoutes);
+app.use("/admin", authorizeRole(['admin']), adminRoutes);
+app.use("/editor", authorizeRole(['editor']), editorRoutes);
+app.use("/writer", authorizeRole(['writer']),writerRoutes);
+app.use("/categori", categoryRoutes);
+app.use('/comments', commentRoutes);
 
 // Pages
-app.get("/", (req, res) => res.render("index"));
-app.get("/index", (req, res) => res.render("index"));
-app.get("/categori", async (req, res) => {
-  try {
-      const categories = await getCategory(req, res);
-      const memberships = await getMembership(req,res);
-      const posts= await getPostsData(req,res);
-      res.render("categori", {
-          freeCategories: categories,
-          posts,
-          memberships,
-          isPremium: false, // xử lí premium
-      });
-
-  } catch (error) {
-      console.error("Error fetching categories:", error.message);
-      res.status(500).send("Internal Server Error");
-  }
-});
-app.get("/about", (req, res) => res.render("about"));
-app.get("/latest_news", (req, res) => res.render("latest_news"));
-app.get("/contact", (req, res) => res.render("contact"));
-app.get("/elements", (req, res) => res.render("elements"));
-app.get("/blog", (req, res) => res.render("blog"));
-app.get("/single-blog", (req, res) => res.render("single-blog"));
-app.get("/details", (req, res) => res.render("details"));
 
 
-// app.get('/500', errorController.get500);
-// app.use(errorController.get404);
+app.get('/', (req, res) => res.render('index'));
+app.get("/index", async (req, res) => {res.render("index")});
 
-// app.use((error, req, res, next) => {
-//   res.status(500).render("500", {
-//     pageTitle: "Error",
-//     path: "/500",
-//     isAuthenticated: req.session.isLoggedIn,
-//   });
-// });
+
+
+app.get('/about', (req, res) => res.render('about'));
+app.get('/latest_news', (req, res) => res.render('latest_news'));
+app.get('/contact', (req, res) => res.render('contact'));
+app.get('/elements', (req, res) => res.render('elements'));
+app.get('/blog', (req, res) => res.render('blog'));
+app.get('/single-blog', (req, res) => res.render('single-blog'));
+app.get('/details', (req, res) => res.render('details'));
+app.get("/searchResults", (req, res) => res.render("searchResults"));
 
 mongoose
   .connect(process.env.MONGO_DB_URI)
