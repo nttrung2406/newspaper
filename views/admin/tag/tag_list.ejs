@@ -225,17 +225,19 @@
 
                     <!-- Modal to Delete Tag -->
                     <div class="modal fade" id="deleteTagModal" tabindex="-1" role="dialog" aria-labelledby="deleteTagModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-dialog modal-dialog-centered" style="width: 30%;" role="document">
                         <div class="modal-content">
                           <div class="card text-left">
                             <div class="card-body">
-                              <h4 class="card-title">Xóa nhãn</h4>
-                              <hr>
+                              <h4 class="card-title">Delete Confirmation</h4>
+                              
                               <form action="" class="deleteTagForm" method="POST">
                                 <p>Bạn có chắc chắn muốn xóa nhãn này không?</p>
                                 <input type="hidden" name="tagIdDelete" id="tagIdDelete">
-                                <button type="submit" class="btn btn-danger">Xóa</button>
-                                <button type="button" class="btn btn-dark" data-dismiss="modal">Hủy</button>
+                                <div class="d-flex justify-content-center">
+                                  <button type="submit" class="btn btn-danger mr-3">Delete</button>
+                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetDeleteForm()">Cancel</button>
+                                </div>
                               </form>
                             </div>
                           </div>
@@ -254,6 +256,11 @@
                         document.querySelector('.editTagForm').reset();
                         document.getElementById('tagNameEdit').classList.remove('is-invalid');
                         $('#editTagModal').modal('hide');
+                      }
+
+                      function resetDeleteForm() {
+                        document.querySelector('.deleteTagForm').reset();
+                        $('#deleteTagModal').modal('hide');
                       }
                     </script>
 
@@ -302,7 +309,7 @@
                         event.preventDefault();
                         const tagId = updateForm.getAttribute('data-id');
                         const formData = new FormData(updateForm);
-                        
+
                         const response = await fetch(`/admin/tag/update/${tagId}`, {
                           method: 'POST',
                           body: formData
@@ -323,7 +330,32 @@
 
                     <!-- Script for deleting a tag-->
                      <script>
+                      const deleteForm = document.querySelector('.deleteTagForm');
 
+                      document.querySelectorAll('.delete-tag').forEach(button=>{
+                        button.addEventListener('click', async()=>{
+                          const tagId = button.getAttribute('data-id');
+                          document.getElementById('tagIdDelete').value = tagId;
+                          $('#deleteTagModal').modal('show');
+                        })
+                      })
+
+                      document.querySelector('.deleteTagForm').addEventListener('submit', async function(event) {
+                        event.preventDefault();
+                        const tagId = document.getElementById('tagIdDelete').value;
+                        const response = await fetch(`/admin/tag/delete/${tagId}`, {
+                          method: 'POST',
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                          window.location.reload();
+                        }
+                        else
+                        {
+                          alert(result.error);
+                        }
+                      });
                      </script>
 
                   </div>

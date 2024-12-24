@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 import Tag from '../../models/Tag.js';
 
 const viewTagList = async(req, res) =>{
@@ -102,9 +102,34 @@ const updateTag = async(req,res) => {
     }
 }
 
+const deleteTag = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id))
+        {
+            console.log("Invalid ObjectID: ",id)
+            return res.status(400).send('Invalid ID format.')
+        }
+
+        const tagInformation = await Tag.findById(id);
+        if (!tagInformation){
+            return res.status(500).send('ID nhãn không tồn tại')
+        }
+
+        await Tag.findByIdAndDelete(id);
+
+        req.flash('tag_success','Nhãn đã xóa thành công.')
+        res.json({success: true})
+    } catch (error) {
+        console.log("Error deleting tag: ", error.message)
+        res.status(500).search("Server error: "+ error.message)
+    }
+}
+
 export default {
     viewTagList,
     addTag,
     viewTag,
     updateTag,
+    deleteTag
 }

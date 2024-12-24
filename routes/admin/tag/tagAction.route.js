@@ -16,4 +16,8 @@ router.route('/info/:id')
 router.route('/update/:id')
 .post(upload.none(), tagController.updateTag)
 
+
+router.route('/delete/:id')
+.post(tagController.deleteTag)
+
 export default router;
