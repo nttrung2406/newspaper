@@ -1,0 +1,18 @@
+.resize-img {
+    width: 120px;
+    height: 100px;
+    object-fit: cover; 
+    border-radius: 5px; 
+  }
+
+  .news-img img {
+    width: 120px;
+    height: 100px;
+    object-fit: cover; 
+  }
+  .weekly2-img {
+    width: 263px;
+    height: 170px;
+    object-fit: cover;
+  }
+  

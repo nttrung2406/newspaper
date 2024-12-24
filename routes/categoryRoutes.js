@@ -1,9 +1,12 @@
 import express from 'express';
-import { getCategory } from '../controllers/categoryController.js'; // Đảm bảo đường dẫn đúng
+import { getCategory, getIndex } from '../controllers/categoryController.js'; // Import both controllers
 
 const router = express.Router();
 
-// Đảm bảo controller được gọi chính xác
+// Route to render the 'categori' page
 router.get('/', getCategory);
+
+// Route to render the 'index' page
+router.get('/index', getIndex); // You can also use '/index' if you want to have a separate route for 'index'
 
 export default router;
