@@ -25,15 +25,15 @@ import adminRoutes from "./routes/adminRoutes.js";
 import editorRoutes from "./routes/editorRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-import commentRoutes from './routes/commentRoutes.js';
-import membershipRoutes from './routes/membershipRoutes.js';
+import commentRoutes from "./routes/commentRoutes.js";
+import membershipRoutes from "./routes/membershipRoutes.js";
 
 // Import Model
 import User from "./models/User.js";
 
 // Import Controller
 import errorController from "./controllers/error.js";
-import getPostsByCategory from './controllers/postController.js';
+import getPostsByCategory from "./controllers/postController.js";
 dotenv.config({ path: "./config/env/development.env" });
 
 const app = express();
@@ -115,13 +115,13 @@ app.use((req, res, next) => {
 // routes
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use("/posts/membership",authorizeRole(['membership']), membershipRoutes);
-app.use("/users", authorizeRole(['admin']), userRoutes);
+app.use("/posts/membership", authorizeRole(["membership"]), membershipRoutes);
+app.use("/users", authorizeRole(["admin"]), userRoutes);
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
-app.use("/writer", authorizeRole(["writer"]), writerRoutes);
+app.use("/writer", writerRoutes);
 app.use("/categori", categoryRoutes);
-app.use('/comments', commentRoutes);
+app.use("/comments", commentRoutes);
 app.use("/", homeRoutes);
 
 // Pages
