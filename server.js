@@ -33,6 +33,7 @@ import User from "./models/User.js";
 
 // Import Controller
 import errorController from "./controllers/error.js";
+import getPostsByCategory from './controllers/postController.js';
 dotenv.config({ path: "./config/env/development.env" });
 
 const app = express();
@@ -131,7 +132,7 @@ app.get("/elements", (req, res) => res.render("elements"));
 app.get("/blog", (req, res) => res.render("blog"));
 app.get("/single-blog", (req, res) => res.render("single-blog"));
 app.get("/details", (req, res) => res.render("details"));
-
+app.get("/api/posts", getPostsByCategory);
 
 mongoose
   .connect(process.env.MONGO_DB_URI)

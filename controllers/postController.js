@@ -82,3 +82,30 @@ export const getPostById = async (req, res) => {
         res.status(500).render('errorPage', { error: error.message });
     }
 };
+
+const getPostByCategory = async (req, res) => {
+    try {
+        const { category, page } = req.query;
+        const currentPage = parseInt(page) || 1;
+        const limit = 10;
+        const skip = (currentPage - 1) * limit;
+        console.log("category:",category);
+        console.log("currentPage:",currentPage);
+        // Query bài viết theo category
+        const posts = await Post.find({ category })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const totalPosts = await Post.countDocuments({ category });
+
+        res.json({
+            posts,
+            totalPosts,
+            currentPage,
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch posts' });
+    }
+}
+export default getPostByCategory;

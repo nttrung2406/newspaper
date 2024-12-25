@@ -1,198 +1,182 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
+<!-- Chưa hiện số trang theo số bài viết -->
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>News</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
 
-    <!-- CSS here -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/ticker-style.css" />
-    <link rel="stylesheet" href="/css/flaticon.css" />
-    <link rel="stylesheet" href="/css/slicknav.css" />
-    <link rel="stylesheet" href="/css/animate.min.css" />
-    <link rel="stylesheet" href="/css/magnific-popup.css" />
-    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/css/themify-icons.css" />
-    <link rel="stylesheet" href="/css/slick.css" />
-    <link rel="stylesheet" href="/css/nice-select.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
+  <!-- CSS here -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/css/ticker-style.css" />
+  <link rel="stylesheet" href="/css/flaticon.css" />
+  <link rel="stylesheet" href="/css/slicknav.css" />
+  <link rel="stylesheet" href="/css/animate.min.css" />
+  <link rel="stylesheet" href="/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/css/themify-icons.css" />
+  <link rel="stylesheet" href="/css/slick.css" />
+  <link rel="stylesheet" href="/css/nice-select.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
 
-  <body>
-    <%- include('./partials/header.ejs') %>
+<body>
+  <%- include('./partials/header.ejs') %>
     <main>
       <!-- Whats New Start -->
       <section class="whats-news-area pt-50 pb-20">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="col d-flex justify-content-between align-items-center">
-                        <div class="col-lg-3 col-md-3">
-                            <div class="section-tittle mb-30">
-                                <h3>Whats New</h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-10 col-md-10 pt-10 pb-30">
-                            <div class="properties__button">
-                                <!--Nav Button  -->                                            
-                                <nav>                                                                     
-                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All</a>
-                                        <% freeCategories.forEach(function(category) { %>
-                                          <a class="nav-item nav-link active" id="nav-<%= category._id %>" data-toggle="tab" href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>" aria-selected="false"
-                                          >
-                                              <%= category.categoryName %>
-                                          </a>
-                                        <% }); %>
-                                        <!-- <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Lifestyle</a>
-                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Travel</a>
-                                        <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-contact" aria-selected="false">Fashion</a>
-                                        <a class="nav-item nav-link" id="nav-Sports" data-toggle="tab" href="#nav-nav-Sport" role="tab" aria-controls="nav-contact" aria-selected="false">Sports</a>
-                                        <a class="nav-item nav-link" id="nav-technology" data-toggle="tab" href="#nav-techno" role="tab" aria-controls="nav-contact" aria-selected="false">Technology</a>
-                                        <a class="nav-item nav-link" id="nav-technology" data-toggle="tab" href="#nav-techno" role="tab" aria-controls="nav-contact" aria-selected="false">Technology</a> -->
-                                    </div>
-                                </nav>
-                                <!--End Nav Button  -->
-                            </div>
-                        </div>
-                        
-                        
-                    </div>
-                    <div class="row">
-                      <div class="col-12">
-                          <!-- Nav Card -->
-                          <div class="tab-content" id="nav-tabContent">
-                              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                  <div class="whats-news-caption">
-                                      <div class="row">
-                                          <!-- Loop through posts and group in pairs -->
-                                          <% posts.forEach((post, index) => { %>
-                                              <% if (index % 2 === 0) { %>
-                                                  <div class="col-lg-6 col-md-6">
-                                                      <div class="single-what-news mb-100">
-                                                          <div class="what-img">
-                                                              <img src="/img/news/whatNews1.jpg" alt="" />
-                                                          </div>
-                                                          <div class="what-cap">
-                                                              <span class="color1"><%= post.category %></span>
-                                                              <h4>
-                                                                  <a href="/posts/<%= post._id%>"> <%= post.title %> </a>
-                                                              </h4>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              <% } else { %>
-                                                  <div class="col-lg-6 col-md-6">
-                                                      <div class="single-what-news mb-100">
-                                                          <div class="what-img">
-                                                              <img src="/img/news/whatNews1.jpg" alt="" />
-                                                          </div>
-                                                          <div class="what-cap">
-                                                              <span class="color1"><%= post.category %></span>
-                                                              <h4>
-                                                                  <a href="#"> <%= post.title %> </a>
-                                                              </h4>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              <% } %>
-                                          <% }); %>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- nav here -->
+              <div class="col d-flex justify-content-between align-items-center">
+                <div class="col-lg-3 col-md-3">
+                  <div class="section-tittle mb-30">
+                    <h3>Whats New</h3>
                   </div>
-                  
-                  
                 </div>
-                <section class="col-lg-4 col-md-4">
-                    <div class="section-tittle mb-30 pl-3 pt-15">
-                        <h3>💎Premium Only💎</h3>
+
+
+
+
+                <div class="col-lg-10 col-md-10 pt-10 pb-30">
+                  <div class="properties__button">
+                    <!-- Nav Button -->
+                    <nav>
+                      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                           role="tab" aria-controls="nav-home" aria-selected="true" data-category="all">All</a> -->
+                        <% freeCategories.forEach(function(category) { %>
+                          <a class="nav-item nav-link" id="nav-<%= category._id %>" data-toggle="tab"
+                            href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>"
+                            aria-selected="false" data-category="<%= category._id %>">
+                            <%= category.categoryName %>
+                          </a>
+                          <% }); %>
+                      </div>
+                    </nav>
+
+                    <!-- End Nav Button -->
+                  </div>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      <!-- Nội dung của All -->
                     </div>
-                    <div class="row-lg-9 row-md-9" >
-                        <div class="properties__button">
-                            <!--Nav Button  -->                                            
-                            <nav>
-                                <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                                    <% memberships.forEach(function(membership) { %>
-                                      <div class="what-cap" style="margin-top: 20px;">
-                                        <span class="color1"><%= membership.category %></span>
-                                        <h4>
-                                          <a href="/posts/membership/<%= membership._id%>"
-                                            ><%= membership.title %></a
-                                          >
-                                        </h4>
-                                      </div>
-                                    <% }); %>
-                                </div>
-                            </nav>
+                    <% freeCategories.forEach(function(category) { %>
+                      <div class="tab-pane fade" id="nav-<%= category._id %>" role="tabpanel"
+                        aria-labelledby="nav-<%= category._id %>">
+                        <!-- Nội dung của category <%= category.categoryName %> -->
+                      </div>
+                      <% }); %>
+                  </div>
+                </div>
+
+
+
+              </div>
+              <!-- post container -->
+              <div class="row">
+                <div class="col-12">
+                  <!-- Nav Card -->
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      <div id="whats-news-caption" class="whats-news-caption">
+                        <div class="row" id="posts-container">
+                          <!-- Loop through posts and group in pairs  -->
                         </div>
-                        <!-- follow us -->
+                      </div>
+
                     </div>
-                    <div class="row-lg-3 row-md-3">
-                        <!-- Section Tittle -->
-                        <div class="section-tittle mb-40">
-                            <h3>Follow Us</h3>
-                        </div>
-                        <!-- Flow Socail -->
-                        <div class="single-follow mb-45">
-                          <div class="single-box">
-                            <div class="follow-us d-flex align-items-center">
-                              <div class="follow-social">
-                                <a href="#"><img src="/img/news/icon-fb.png" alt="" /></a>
-                              </div>
-                              <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                              </div>
-                            </div>
-                            <div class="follow-us d-flex align-items-center">
-                              <div class="follow-social">
-                                <a href="#"><img src="/img/news/icon-tw.png" alt="" /></a>
-                              </div>
-                              <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                              </div>
-                            </div>
-                            <div class="follow-us d-flex align-items-center">
-                              <div class="follow-social">
-                                <a href="#"
-                                  ><img src="/img/news/icon-ins.png" alt=""
-                                /></a>
-                              </div>
-                              <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                              </div>
-                            </div>
-                            <div class="follow-us d-flex align-items-center">
-                              <div class="follow-social">
-                                <a href="#"><img src="/img/news/icon-yo.png" alt="" /></a>
-                              </div>
-                              <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- New Poster -->
-                        <div class="news-poster d-none d-lg-block">
-                          <img src="/img/news/news_card.jpg" alt="" />
-                        </div>
-                    </div>
-                    
-                    
-                </section>
+                  </div>
+                </div>
+              </div>
             </div>
+            <section class="col-lg-4 col-md-4">
+              <div class="section-tittle mb-30 pl-3 pt-15">
+                <h3>💎Premium Only💎</h3>
+              </div>
+              <div class="row-lg-9 row-md-9">
+                <div class="properties__button">
+                  <!--Nav Button  -->
+                  <nav>
+                    <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
+                      <% memberships.forEach(function(membership) { %>
+                        <div class="what-cap" style="margin-top: 20px;">
+                          <span class="color1">
+                            <%= membership.category %>
+                          </span>
+                          <h4>
+                            <a href="/posts/membership/<%= membership._id%>">
+                              <%= membership.title %>
+                            </a>
+                          </h4>
+                        </div>
+                        <% }); %>
+                    </div>
+                  </nav>
+                </div>
+                <!-- follow us -->
+              </div>
+              <div class="row-lg-3 row-md-3">
+                <!-- Section Tittle -->
+                <div class="section-tittle mb-40">
+                  <h3>Follow Us</h3>
+                </div>
+                <!-- Flow Socail -->
+                <div class="single-follow mb-45">
+                  <div class="single-box">
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-fb.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-tw.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-ins.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-yo.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- New Poster -->
+                <div class="news-poster d-none d-lg-block">
+                  <img src="/img/news/news_card.jpg" alt="" />
+                </div>
+              </div>
+
+
+            </section>
           </div>
+        </div>
         </div>
       </section>
       <!-- Whats New End -->
@@ -205,23 +189,19 @@
                 <nav aria-label="Page navigation example">
                   <ul class="pagination justify-content-start">
                     <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><span class="flaticon-arrow roted"></span
-                      ></a>
+                      <a class="page-link" href="#" id="prev-btn"><span class="flaticon-arrow roted"></span></a>
                     </li>
-                    <li class="page-item active">
+                    <li class="page-item active" name="page-info">
                       <a class="page-link" href="#">01</a>
                     </li>
-                    <li class="page-item">
+                    <li class="page-item" name="page-info">
                       <a class="page-link" href="#">02</a>
                     </li>
-                    <li class="page-item">
+                    <li class="page-item" name="page-info">
                       <a class="page-link" href="#">03</a>
                     </li>
                     <li class="page-item">
-                      <a class="page-link" href="#"
-                        ><span class="flaticon-arrow right-arrow"></span
-                      ></a>
+                      <a class="page-link" href="#" id="next-btn"><span class="flaticon-arrow right-arrow"></span></a>
                     </li>
                   </ul>
                 </nav>
@@ -234,57 +214,151 @@
     </main>
     <%- include('./partials/footer.ejs') %>
 
-    <!-- JS here -->
+      <!-- JS here -->
 
-    <!-- All JS Custom Plugins Link Here here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-    <!-- Jquery, Popper, Bootstrap -->
-    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <!-- Jquery Mobile Menu -->
-    <script src="/js/jquery.slicknav.min.js"></script>
+      <!-- All JS Custom Plugins Link Here here -->
+      <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+      <!-- Jquery, Popper, Bootstrap -->
+      <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+      <!-- Jquery Mobile Menu -->
+      <script src="/js/jquery.slicknav.min.js"></script>
 
-    <!-- Jquery Slick , Owl-Carousel Plugins -->
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <!-- Date Picker -->
-    <script src="/js/gijgo.min.js"></script>
-    <!-- One Page, Animated-HeadLin -->
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
+      <!-- Jquery Slick , Owl-Carousel Plugins -->
+      <script src="/js/owl.carousel.min.js"></script>
+      <script src="/js/slick.min.js"></script>
+      <!-- Date Picker -->
+      <script src="/js/gijgo.min.js"></script>
+      <!-- One Page, Animated-HeadLin -->
+      <script src="/js/wow.min.js"></script>
+      <script src="/js/animated.headline.js"></script>
+      <script src="/js/jquery.magnific-popup.js"></script>
 
-    <!-- Breaking New Pluging -->
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
+      <!-- Breaking New Pluging -->
+      <script src="/js/jquery.ticker.js"></script>
+      <script src="/js/site.js"></script>
 
-    <!-- Scrollup, nice-select, sticky -->
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
+      <!-- Scrollup, nice-select, sticky -->
+      <script src="/js/jquery.scrollUp.min.js"></script>
+      <script src="/js/jquery.nice-select.min.js"></script>
+      <script src="/js/jquery.sticky.js"></script>
 
-    <!-- contact js -->
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
+      <!-- contact js -->
+      <script src="/js/contact.js"></script>
+      <script src="/js/jquery.form.js"></script>
+      <script src="/js/jquery.validate.min.js"></script>
+      <script src="/js/mail-script.js"></script>
+      <script src="/js/jquery.ajaxchimp.min.js"></script>
 
-    <!-- Jquery Plugins, main Jquery -->
-    <script src="/js/plugins.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/head.js"></script>
-    <!-- alert -->
-    <% if (messages.error && messages.error.length > 0) { %>
-      <script type="text/javascript">
-        window.onload = function() {
-          const userResponse = confirm("<%= messages.error %> \n\nDo you want to upgrade to premium?");
-          if (userResponse) {
-            window.location.href = '/premium-signup';
-          }
-        };
-      </script>
-    <% } %>
-  </body>
+      <!-- Jquery Plugins, main Jquery -->
+      <script src="/js/plugins.js"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/head.js"></script>
+      <!-- alert -->
+      <% if (messages.error && messages.error.length> 0) { %>
+        <script type="text/javascript">
+          window.onload = function () {
+            const userResponse = confirm("<%= messages.error %> \n\nDo you want to upgrade to premium?");
+            if (userResponse) {
+              window.location.href = '/premium-signup';
+            }
+          };
+        </script>
+        <% } %>
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              let currentCategory = '6747298ee1d6dd827c95f42c'; // Thay bằng category mặc định
+              let currentPage = 1;
+
+              const postsContainer = document.getElementById('posts-container');
+              const prevBtn = document.getElementById('prev-btn');
+              const nextBtn = document.getElementById('next-btn');
+              const pageInfo = document.getElementsByName('page-info');
+
+              const loadPosts = async (category, page) => {
+                try {
+                  const response = await fetch(`/api/posts?category=${category}&page=${page}`);
+                  const data = await response.json();
+
+                  // Xóa bài viết cũ
+                  postsContainer.innerHTML = '';
+
+                  data.posts.forEach((post, index) => {
+                    let postHTML = '';
+
+                    // Kiểm tra xem bài viết có phải là bài đầu tiên trong cặp không
+                    postHTML += `
+                              <div class="col-lg-6 col-md-6">
+                                <div class="single-what-news mb-100">
+                                  <div class="what-img">
+                                    <img src="/img/news/whatNews1.jpg" alt="" />
+                                  </div>
+                                  <div class="what-cap">
+                                    <span class="color1">
+                                      ${post.category}
+                                    </span>
+                                    <h4>
+                                      <a href="/posts/${post._id}">
+                                        ${post.title}
+                                      </a>
+                                    </h4>
+                                  </div>
+                                </div>
+                              </div>`;
+
+                    // Chèn bài viết vào container
+                    postsContainer.insertAdjacentHTML('beforeend', postHTML);
+                  });
+
+
+                  // Cập nhật thông tin phân trang
+                  currentPage = data.currentPage;
+                  console.log('Current page:', currentPage);
+                  pageInfo.innerText = `Page ${currentPage}`;
+
+                  // Bật/tắt nút phân trang
+                  if (currentPage === 1) {
+                    prevBtn.style.display = 'none'; // Ẩn nút prev nếu ở trang đầu
+                  } else {
+                    prevBtn.style.display = 'inline-block'; // Hiển thị lại nếu không phải trang đầu
+                  }
+                  console.log('Posts length:', data.posts.length);
+                  // Cập nhật trạng thái của nút "Next"
+                  if (data.posts.length < 10 || data.currentPage * 10 >= data.totalPosts) {
+                    nextBtn.style.display = 'none'; // Ẩn nút next nếu số bài viết nhỏ hơn 10
+                  } else {
+                    nextBtn.style.display = 'inline-block'; // Hiển thị lại nếu có thêm bài viết
+                  }
+                }
+                catch (error) {
+                  console.error('Error loading posts:', error);
+                }
+              };
+
+              // Sự kiện chuyển trang
+              prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) loadPosts(currentCategory, currentPage - 1);
+              });
+
+              nextBtn.addEventListener('click', () => {
+                loadPosts(currentCategory, currentPage + 1);
+              });
+
+              // Chuyển category
+              document.querySelectorAll('.nav-link').forEach((tab) => {
+                tab.addEventListener('click', (e) => {
+                  currentCategory = e.target.dataset.category;
+                  currentPage = 1; // Reset về trang đầu
+                  loadPosts(currentCategory, currentPage);
+                });
+              });
+
+              // Load posts ban đầu
+              loadPosts(currentCategory, currentPage);
+            });
+
+          </script>
+</body>
+
 </html>
