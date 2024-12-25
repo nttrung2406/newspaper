@@ -25,7 +25,7 @@ const addTag = async(req, res)=>{
     try {
         const {tagNameAdd} = req.body;
         const existingName = await Tag.findOne({tagName: tagNameAdd});
-        console.log(tagNameAdd);
+        //console.log(tagNameAdd);
         if (existingName){
             return res.json({success: false, error: 'Tên nhãn đã tồn tại.'})
         }

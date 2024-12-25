@@ -100,7 +100,7 @@
                             <th>Tên nhãn</th>
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
-                            <th>Chức năng</th>
+                            <th style="width: 10%;">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -135,9 +135,31 @@
 
 
                       <style>
-                        .custom-table th:last-child,
-                        .custom-table td:last-child{
-                          width: 10%;
+                            .custom-table {
+                            border-collapse: collapse;
+                            width: 100%;
+                          }
+                        
+                          .custom-table th, .custom-table td {
+                            border: 1px solid #dee2e620;
+                            padding: 8px;
+                          }
+                        
+                          .custom-table th {
+                            background-color: #343a40;
+                            color: white;
+                          }
+                        
+                          .custom-table tr:nth-child(even) {
+                            background-color: #f2f2f2;
+                          }
+                        
+                          .custom-table tr:hover {
+                            background-color: #f1f1f1;
+                          }
+                        
+                          .custom-table th, .custom-table td {
+                            text-align: center;
                         }
                         @media (min-width: 576px) {
                           .table-responsive {

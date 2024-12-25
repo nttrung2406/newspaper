@@ -60,17 +60,7 @@
                       <div class="form-group mt-3 mb-3">
                         <label for="categoryName">Tên chuyên mục</label>
                         <input type="text" name="categoryName" id="categoryName" class="form-control" value="<%= categoryInfo.categoryName %>">
-                        <% if (NameErr && NameErr.length > 0) { %>
-                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                              <span class="sr-only">Close</span>
-                            </button>
-                            <%= NameErr%>
-                          </div>
-                        <%} %>
                       </div>
-  
                       <div class="form-group mt-3 mb-3">
                         <label for="description">Mô tả</label>
                         <textarea name="description" id="description" class="form-control" rows="4"><%= categoryInfo.description %></textarea>
