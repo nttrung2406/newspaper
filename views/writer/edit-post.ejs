@@ -54,15 +54,28 @@
               placeholder="Enter post title"
               name="title"
               value="<%= editing ? post.title : '' %>"
+              required
             />
           </div>
           <div class="mb-3">
             <label for="content" class="form-label">
               <strong>Content</strong>
             </label>
-            <textarea id="summernote" name="content" id="content">
+            <textarea id="summernote" name="content" id="content" required>
 <%= editing ? post.content : '' %></textarea
             >
+          </div>
+          <div class="mb-3">
+            <label for="abstract" class="form-label">
+              <strong>Abstract</strong>
+            </label>
+            <textarea
+              class="form-control"
+              id="abstract"
+              placeholder="Enter post abstract"
+              name="abstract"
+              required
+            ></textarea>
           </div>
           <div class="mb-3">
             <label for="category" class="form-label">
@@ -72,7 +85,7 @@
             <% if (categories.length > 0) { %> <% categories.forEach(cat => { %>
             <input type="radio" id="<%= cat._id %>" name="categoryId" value="<%=
             cat._id %>" <%= categoryId.toString() === cat._id.toString() ?
-            'checked="checked"' : '' %> />
+            'checked="checked"' : '' %> required />
             <label for="<%= cat._id %>"><%= cat.categoryName %></label><br />
             <% }) %> <% } %>
           </div>
@@ -86,6 +99,19 @@
               name="tagsString"
               value="<%= editing ? tagsString : '' %>"
             />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              <strong>Is Premium</strong>
+            </label>
+            <div>
+              <input type="radio" id="premium" name="isPremium" value="true" />
+              <label for="premium">Yes</label>
+            </div>
+            <div>
+              <input type="radio" id="free" name="isPremium" value="false" />
+              <label for="free">No</label>
+            </div>
           </div>
           <button
             type="submit"

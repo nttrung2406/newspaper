@@ -88,7 +88,15 @@ const writerController = {
     }
   },
   postAddPost: async (req, res, next) => {
-    const { title, content, categoryId, status, tagsString } = req.body;
+    const {
+      title,
+      content,
+      categoryId,
+      status,
+      tagsString,
+      isPremium,
+      abstract,
+    } = req.body;
 
     const tagsArray = getTagsArray(tagsString);
 
@@ -119,6 +127,8 @@ const writerController = {
         writer: req.user._id,
         category: categoryId,
         tags: tags,
+        premium: isPremium === "true",
+        abstract: abstract,
       });
       await post.save();
 
