@@ -383,24 +383,42 @@
 
                     <!-- Modal for extending premium-->
                     <div class="modal fade" id="extendPremium" tabindex="-1" role="dialog" aria-labelledby="extendPremiumModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                      <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                          <div class="modal-body p-0">
+                          <div class="modal-body">
                             <div class="card text-left">
                               <div class="card-body">
-                                <h4 class="card-title" id="extendPremiumModalTitle">Gia hạn Premium</h4>
-                                <hr>
-                                <form action="/admin/user/extendPremium" method="post" class="form-sample" id="extendPremiumForm">
-                                  <div class="form-group">
-                                    <label for="usernameExtend">Tên người dùng</label>
-                                    <input type="text" class="form-control" name="usernameExtend" id="usernameExtend" aria-describedby="helpId" placeholder="Nhập tên người dùng" required>
+                                <form id="extendPremiumForm">
+
+                                  <div class="row">
+                                    <div class="col">
+                                      <h3>Gia hạn tài khoản premium</h3>
+                                    </div>
+                                    <div class="col text-right" data-dismiss="modal">
+                                      <button class="btn btn-danger"><i class="mdi mdi-close"></i>Close</button>
+                                    </div>
+
                                   </div>
-                                  <div class="form-group">
-                                    <label for="extendDays">Số ngày gia hạn</label>
-                                    <input type="number" class="form-control" name="extendDays" id="extendDays" aria-describedby="helpId" placeholder="Nhập số ngày gia hạn" required>
+
+                                  <hr>
+
+                                  <div class="table-responsive">
+                                    <table class="table table-dark table-hover custom-table">
+                                      <thead class="thead-dark">
+                                        <tr>
+                                          <th>Username</th>
+                                          <th style="width: 30%;">Email</th>
+                                          <th style="width: 10%;">Status</th>
+                                          <th style="width: 15%;">Time Remaining</th>
+                                          <th style="width: 10%;">Extend (Days)</th>
+                                          <th style="width: 10%;">Action</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="premiumUserTable">
+                                        <!-- Rows will be dynamically inserted here -->
+                                      </tbody>
+                                    </table>
                                   </div>
-                                  <button type="submit" class="btn btn-primary">Submit</button>
-                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetExtendForm()">Cancel</button>
                                 </form>
                               </div>
                             </div>

@@ -47,7 +47,7 @@ const getUserList = async(req, res) => {
 
 const addUser = async(req, res) =>{
     try {
-        const {usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd =  null} = req.body;
+        const {usernameadd, emailadd, fullnameadd, dobadd,roleadd, pennameadd =  null} = req.body;
         //console.log(usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd)
 
         const checkExistingEmail = await User.findOne({email: emailadd});
@@ -60,19 +60,28 @@ const addUser = async(req, res) =>{
             return res.json({success: false,  error})
         }
 
+        const membership = {
+            type: 'basic',
+            startDate: Date.now(),
+            endDate: Date.now(),
+            status: 'inactive'
+        }
 
         const addUser = await User.create({
             username: usernameadd,
             email: emailadd,
+            membership: membership,
             password: await bcrypt.hash('1234567890', 10),
             role: roleadd,
         })
 
+        
+        //console.log("pemnameadd", pennameadd, fullnameadd, dobadd, addUser._id)
         await UserInformation.create({
             accountID: addUser._id,
             fullname: fullnameadd,
             dateOfBirth: dobadd,
-            penName: penameadd
+            penName: pennameadd
         })
 
         req.flash('addSuccess',"Tài khoản đã thêm thành công.")
@@ -157,7 +166,7 @@ const getPremiumUSer = async(req, res) => {
 }
 
 const extendPremium =async(req, res) => {
-    
+
 }
 
 export default{
