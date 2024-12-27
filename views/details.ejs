@@ -148,96 +148,141 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                    const postId = document.getElementById('postId').value;
-                    const commentsList = document.getElementById('comments-list');
-                    const commentForm = document.getElementById('comment-form');
-                    const submitButton = commentForm.querySelector('button[type="submit"]');
+        document.addEventListener('DOMContentLoaded', () => {
+            const postId = document.getElementById('postId').value;
+            const commentsList = document.getElementById('comments-list');
+            const commentForm = document.getElementById('comment-form');
+            const submitButton = commentForm.querySelector('button[type="submit"]');
 
-                    const loadComments = async () => {
-                        try {
-                            const response = await fetch(`/comments/${postId}`);
-                            const comments = await response.json();
-                            commentsList.innerHTML = comments.map(comment => `
-                        <div class="list-group-item">
-                            <strong>${comment.userId.username}</strong>
-                            <p class="mb-1">${comment.content}</p>
-                            <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+            const loadComments = async () => {
+                try {
+                    const response = await fetch(`/comments/${postId}`);
+                    const comments = await response.json();
+
+                    commentsList.innerHTML = comments.map(comment => `
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>${comment.userId.username}</strong>
+                                <p class="mb-1">${comment.content}</p>
+                                <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                            </div>
+                            ${
+                                comment.isOwner ? // Chỉ hiển thị nút xóa nếu là người dùng hiện tại
+                                `<button class="btn btn-danger btn-sm delete-comment" data-id="${comment._id}">Delete</button>` 
+                                : ''
+                            }
                         </div>
                     `).join('');
-                        } catch (error) {
-                            console.error('Error loading comments:', error);
-                        }
-                    };
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                }
+            };
 
-                    commentForm.addEventListener('submit', async (e) => {
-                        e.preventDefault();
 
-                        if (!commentForm.checkValidity()) {
-                            commentForm.classList.add('was-validated');
-                            return;
-                        }
-                        const content = document.getElementById('content').value;
+            commentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-                        submitButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
-                        submitButton.disabled = true;
+                if (!commentForm.checkValidity()) {
+                    commentForm.classList.add('was-validated');
+                    return;
+                }
+                const content = document.getElementById('content').value;
 
-                        try {
-                            const response = await fetch('/comments', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ postId, content })
-                            });
-                            console.log(response);
-                            if (response.status === 401) {
-                                // Người dùng chưa đăng nhập
-                                Toastify({
-                                    text: "You must be logged in to add a comment.",
-                                    duration: 1000,
-                                    gravity: "bottom",
-                                    position: "left",
-                                    backgroundColor: "#f44336",
-                                    stopOnFocus: true,
-                                }).showToast();
-                                setTimeout(() => {
-                                    window.location.href = '/auth';
-                                }, 1000);
-                            }
-                            if (response.ok) {
-                                // document.getElementById('author').value = '';
-                                document.getElementById('content').value = '';
-                                commentForm.classList.remove('was-validated');
-                                loadComments();
+                submitButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+                submitButton.disabled = true;
 
-                                Toastify({
-                                    text: "Comment added successfully!",
-                                    duration: 3000,
-                                    gravity: "bottom",
-                                    position: "left",
-                                    backgroundColor: "#4caf50",
-                                    stopOnFocus: true,
-                                }).showToast();
-                            }
-                        } catch (error) {
-                            console.error('Error adding comment:', error);
-
-                            Toastify({
-                                text: "Failed to add comment. Please try again!",
-                                duration: 3000,
-                                gravity: "bottom",
-                                position: "left",
-                                backgroundColor: "#f44336",
-                                stopOnFocus: true,
-                            }).showToast();
-                        } finally {
-                            // Khôi phục nút submit
-                            submitButton.innerHTML = 'Submit';
-                            submitButton.disabled = false;
-                        }
+                try {
+                    const response = await fetch('/comments', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ postId, content })
                     });
+                    console.log(response);
+                    if (response.status === 401) {
+                        // Người dùng chưa đăng nhập
+                        Toastify({
+                            text: "You must be logged in to add a comment.",
+                            duration: 1000,
+                            gravity: "bottom",
+                            position: "left",
+                            backgroundColor: "#f44336",
+                            stopOnFocus: true,
+                        }).showToast();
+                        setTimeout(() => {
+                            window.location.href = '/auth';
+                        }, 1000);
+                    }
+                    if (response.ok) {
+                        // document.getElementById('author').value = '';
+                        document.getElementById('content').value = '';
+                        commentForm.classList.remove('was-validated');
+                        loadComments();
 
-                    loadComments();
-                });
+                        Toastify({
+                            text: "Comment added successfully!",
+                            duration: 3000,
+                            gravity: "bottom",
+                            position: "left",
+                            backgroundColor: "#4caf50",
+                            stopOnFocus: true,
+                        }).showToast();
+                    }
+                } catch (error) {
+                    console.error('Error adding comment:', error);
+
+                    Toastify({
+                        text: "Failed to add comment. Please try again!",
+                        duration: 3000,
+                        gravity: "bottom",
+                        position: "left",
+                        backgroundColor: "#f44336",
+                        stopOnFocus: true,
+                    }).showToast();
+                } finally {
+                    // Khôi phục nút submit
+                    submitButton.innerHTML = 'Submit';
+                    submitButton.disabled = false;
+                }
+            });
+
+            const handleDelete = async (commentId) => {
+                try {
+                    const response = await fetch(`/comments/${commentId}`, { method: 'DELETE' });
+
+                    if (response.ok) {
+                        Toastify({
+                            text: "Comment deleted successfully!",
+                            duration: 3000,
+                            gravity: "bottom",
+                            position: "left",
+                            backgroundColor: "#4caf50",
+                            stopOnFocus: true,
+                        }).showToast();
+                        loadComments();
+                    } else {
+                        const data = await response.json();
+                        throw new Error(data.error);
+                    }
+                } catch (error) {
+                    Toastify({
+                        text: error.message || "Failed to delete comment. Please try again!",
+                        duration: 3000,
+                        gravity: "bottom",
+                        position: "left",
+                        backgroundColor: "#f44336",
+                        stopOnFocus: true,
+                    }).showToast();
+                }
+            };
+
+            commentsList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-comment')) {
+                    const commentId = e.target.getAttribute('data-id');
+                    handleDelete(commentId);
+                }
+            });
+            loadComments();
+        });
     </script>
 </body>
 
