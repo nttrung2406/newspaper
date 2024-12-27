@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema({
     enum: ['Draft', 'Submitted', 'Approved', 'Rejected', 'Published'], 
     default: 'Draft'
   },
+  premium: { type: Boolean, default: false},
   writer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   editor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
   rejectionReason: { type: String }, 
