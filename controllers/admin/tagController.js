@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 import Tag from '../../models/Tag.js';
 
 const viewTagList = async(req, res) =>{
@@ -23,22 +23,20 @@ const viewTagList = async(req, res) =>{
 
 const addTag = async(req, res)=>{
     try {
-        const {tagName, description} = req.body;
-        const existingName = await Tag.findOne({tagName: tagName});
-        console.log(tagName, description);
+        const {tagNameAdd} = req.body;
+        const existingName = await Tag.findOne({tagName: tagNameAdd});
+        //console.log(tagNameAdd);
         if (existingName){
-            req.flash('tag_create_err','Tên nhãn đã tồn tại.')
-            return res.redirect('/admin/tag/create');
+            return res.json({success: false, error: 'Tên nhãn đã tồn tại.'})
         }
 
        
         await Tag.create({
-            tagName: tagName,
-            description: description,
+            tagName: tagNameAdd,
         });
 
         req.flash("tag_success", 'Nhãn đã được thêm thành công.')
-        res.redirect('/admin/tags')
+        res.json({success: true})
     } catch (error) {
         console.log('Error adding tag: ', error.message);
         res.status(500).json({message: 'Server error: '+ error.message});
@@ -59,70 +57,71 @@ const viewTag = async(req, res) =>{
     const tagInformation = await Tag.findById(id)
 
     if (!tagInformation){
-        return res.redirect('/admin/tags')
+        return res.status(400).send('ID nhãn không tồn tại')
     }
-    res.render('admin/tag/tag_info',{tagInformation})
+    res.json({success: true,tagInformation})
 }
 
 
-const getTagForUpdate = async(req, res) =>{
-    try {
-        const {id} = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id))
-    {
-        console.log("Invalid ObjectID: ",id)
-        return res.status(400).send('Invalid ID format.')
-    }
-
-    const tagInformation = await Tag.findById(id);
-
-    if (!tagInformation){
-        return res.redirect('/admin/tags');
-    }
-
-    const NameErr = req.flash('tag_update_name_err');
-
-    res.render('admin/tag/tag_update',{id, tagInformation, NameErr})
-    } catch (error) {
-        console.log("Error fetching tag for update: ", error.message)
-        res.status(500).send('Server error: ' + error.message)
-    }
-}
 
 const updateTag = async(req,res) => {
     try {
         const {id} = req.params;
-        let {tagName, description} =req.body;
+        let {tagNameEdit} =req.body;
         if (!mongoose.Types.ObjectId.isValid(id))
         {
             console.log("Invalid ObjectID: ",id)
             return res.status(400).send('Invalid ID format.')
         }
+
         const tagInformation = await Tag.findById(id);
         if (!tagInformation){
-            return res.status(400).send('ID nhãn không tồn tại')
+            return res.status(500).send('ID nhãn không tồn tại')
         }
+
         const existingTag = await Tag.findOne({
             _id: {$ne: id},
-            tagName: tagName,
+            tagName: tagNameEdit,
         })
         //console.log(existingTag, id)
         if(existingTag){
-            req.flash("tag_update_name_err", 'Tên nhãn đã tồn tại.')
-            return res.redirect(`/admin/tag/update/${id}`);
+            
+            return res.json({success: false, error: 'Tên nhãn đã tồn tại.'})
         }
 
         await Tag.findByIdAndUpdate(id,{
-            tagName: tagName,
-            description: description,
+            tagName: tagNameEdit,
         })
 
         req.flash('tag_success','Nhãn đã cập nhật thành công.')
-        res.redirect('/admin/tags')
+        res.json({success: true})
 }
     catch (error){
         console.log("Error updating tag: ", error.message)
+        res.status(500).search("Server error: "+ error.message)
+    }
+}
+
+const deleteTag = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id))
+        {
+            console.log("Invalid ObjectID: ",id)
+            return res.status(400).send('Invalid ID format.')
+        }
+
+        const tagInformation = await Tag.findById(id);
+        if (!tagInformation){
+            return res.status(500).send('ID nhãn không tồn tại')
+        }
+
+        await Tag.findByIdAndDelete(id);
+
+        req.flash('tag_success','Nhãn đã xóa thành công.')
+        res.json({success: true})
+    } catch (error) {
+        console.log("Error deleting tag: ", error.message)
         res.status(500).search("Server error: "+ error.message)
     }
 }
@@ -131,6 +130,6 @@ export default {
     viewTagList,
     addTag,
     viewTag,
-    getTagForUpdate,
     updateTag,
+    deleteTag
 }

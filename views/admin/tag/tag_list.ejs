@@ -53,27 +53,34 @@
                   <div class="card-body">
                     <!-- Search Bar -->
 
-                    <div class="form-group">
-                      <form method="GET" action="/admin/tags">
-                        <div class="input-group col-12" style="padding-left: 0; padding-right: 0;">
-                          <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Nhập tên nhãn" 
-                            class="form-control"
-                            value="<%= search || '' %>"
-                          />
-                          <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary btn-icon-text">
-                              <i class="mdi mdi-magnify"></i> Tìm kiếm
-                            </button>
-                          </div>
+                    <div class="row align-items-center">
+                      <div class="col-8">
+                        <div class="form-group mb-0">
+                          <form method="GET" action="/admin/tags" class="input-group">
+                            <input 
+                              type="text" 
+                              name="search" 
+                              placeholder="Nhập tên nhãn" 
+                              class="form-control"
+                              value="<%= search || '' %>"
+                            />
+                            <div class="input-group-append">
+                              <button type="submit" class="btn btn-primary">
+                                <i class="mdi mdi-magnify"></i>
+                                Search
+                              </button>
+                            </div>
+                          </form>
                         </div>
-                      </form>
-                    </div>
+                      </div>
 
-                    <!-- Create category button-->
-                    <a href="tag/create" class="btn btn-success mb-3"><i class="mdi mdi-plus btn-icon-prepend"></i>Tạo nhãn</a>
+
+                      <div class="col-4 text-right">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#addTagModal">
+                          <i class="mdi mdi-plus"></i> Thêm nhãn
+                        </button>
+                      </div>
+                    </div>
 
                     <!-- Alert -->
                     <% if (message && message.length > 0) { %>
@@ -86,14 +93,14 @@
                       </div>
                     <% } %>
                     <!-- Table to Display Categories -->
-                    <div class="table-responsive">
-                      <table class="table table-dark custom-table">
-                        <thead>
+                    <div class="table-responsive mt-4">
+                      <table class="table table-dark table-hover custom-table">
+                        <thead class="thead-dark">
                           <tr>
                             <th>Tên nhãn</th>
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
-                            <th>Chức năng</th>
+                            <th style="width: 10%;">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -105,12 +112,12 @@
                                 <td><%= element.updatedAt ? new Date(element.updatedAt).toLocaleDateString() : "N/A" %></td>
                                 <td>
                                   <div class="btn-group">
-                                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                      <a href="tag/info/<%= element._id %>" class="btn btn-info btn-icon-text d-block"><i class="mdi mdi-information-outline btn-icon-prepend"></i></span>Info</a>
-                                      <a href="tag/update/<%= element._id %>" class="btn btn-primary btn-icon-text d-block"><i class="mdi mdi-update btn-icon-prepend"></i>Update</a>
-                                      <a href="tag/delete/<%= element._id %>" class="btn btn-danger btn-icon-text d-block"><i class="mdi mdi-delete btn-icon-prepend"></i>Delete</a>
-                                    </div>
+                                    <button type="button" class="btn btn-icon btn-primary edit-tag" data-toggle="tooltip" data-placement="top" title="Cập nhật" data-id="<%= element._id %>">
+                                      <i class="mdi mdi-update"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-icon btn-danger delete-tag" data-toggle="tooltip" data-placement="top" title="Xóa" data-id="<%= element._id %>">
+                                      <i class="mdi mdi-delete"></i>
+                                    </button>
                                   </div>
                                 </td>
                               </tr>
@@ -124,10 +131,35 @@
                           
                         </tbody>
                       </table>
+
+
+
                       <style>
-                        .custom-table th:last-child,
-                        .custom-table td:last-child{
-                          width: 10%;
+                            .custom-table {
+                            border-collapse: collapse;
+                            width: 100%;
+                          }
+                        
+                          .custom-table th, .custom-table td {
+                            border: 1px solid #dee2e620;
+                            padding: 8px;
+                          }
+                        
+                          .custom-table th {
+                            background-color: #343a40;
+                            color: white;
+                          }
+                        
+                          .custom-table tr:nth-child(even) {
+                            background-color: #f2f2f2;
+                          }
+                        
+                          .custom-table tr:hover {
+                            background-color: #f1f1f1;
+                          }
+                        
+                          .custom-table th, .custom-table td {
+                            text-align: center;
                         }
                         @media (min-width: 576px) {
                           .table-responsive {
@@ -145,26 +177,209 @@
                     </div>
             
                     <!-- Pagination -->
-                    <% if (tags.length >0) {%>
-                      <nav aria-label="Pagination pt-5">
-                        <ul class="pagination justify-content-center">
-                          <li class="page-item <%= currentPage === 1 ? 'd-none' : '' %>">
-                            <a href="?page=<%= currentPage -1 %>&search=<%= search %>" class="page-link">Previous</a>
-                          </li>
-                          
-
-                          <% for (let i =1; i<= totalPages;i++) {%>
-                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                              <a href="?page=<%= i %>&search=<%= search %>" class="page-link"><%= i %></a>
+                    <% if (totalPages > 1) {%>
+                      <div class="row mt-3">
+                        <nav aria-label="Pagination">
+                          <ul class="pagination justify-content-center">
+                            <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                              <a href="?page=<%= currentPage -1 %>&search=<%= search %>" class="page-link">&laquo;</a>
                             </li>
-
-                          <% } %>
-                          <li class="page-item <%= currentPage === totalPages ? 'd-none' : '' %>">
-                            <a href="?page=<%= currentPage + 1 %>&search=<%= search %>" class="page-link">Previous</a>
-                          </li>
-                        </ul>
-                      </nav>
+                            
+  
+                            <li class="page-item active">
+                              <a href="#" class="page-link"><%= currentPage %></a>
+                            </li>
+  
+                            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                              <a href="?page=<%= currentPage + 1 %>&search=<%= search %>" class="page-link">&raquo;</a>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
                     <% } %>
+
+                    <!-- Modal to Add Tag -->
+                    <div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="addTagModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Thêm nhãn</h4>
+                              <hr>
+                              <form action="" class="addTagForm" method="POST">
+                                <div class="form-group">
+                                  <label for="tagNameAdd">Tên nhãn</label>
+                                  <input type="text" name="tagNameAdd" id="tagNameAdd" class="form-control" placeholder="Nhập tên nhãn" aria-describedby="helpId" required>
+                                  <div class="invalid-feedback" id="addTagNameErr"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetAddForm()">Cancel</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- Modal to Edit Tag -->
+                    <div class="modal fade" id="editTagModal" tabindex="-1" role="dialog" aria-labelledby="editTagModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Cập nhật nhãn</h4>
+                              <hr>
+                              <form action="" class="editTagForm" method="POST">
+                                <div class="form-group">
+                                  <label for="tagNameEdit">Tên nhãn</label>
+                                  <input type="text" name="tagNameEdit" id="tagNameEdit" class="form-control" placeholder="Nhập tên nhãn" aria-describedby="helpId" required>
+                                  <div class="invalid-feedback" id="editTagNameErr"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetUpdateForm()">Cancel</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal to Delete Tag -->
+                    <div class="modal fade" id="deleteTagModal" tabindex="-1" role="dialog" aria-labelledby="deleteTagModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" style="width: 30%;" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Delete Confirmation</h4>
+                              
+                              <form action="" class="deleteTagForm" method="POST">
+                                <p>Bạn có chắc chắn muốn xóa nhãn này không?</p>
+                                <input type="hidden" name="tagIdDelete" id="tagIdDelete">
+                                <div class="d-flex justify-content-center">
+                                  <button type="submit" class="btn btn-danger mr-3">Delete</button>
+                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetDeleteForm()">Cancel</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Script for clearing the form-->
+                    <script>
+                      function resetAddForm() {
+                        document.querySelector('.addTagForm').reset();
+                        document.getElementById('tagNameAdd').classList.remove('is-invalid');
+                      }
+
+                      function resetUpdateForm() {
+                        document.querySelector('.editTagForm').reset();
+                        document.getElementById('tagNameEdit').classList.remove('is-invalid');
+                        $('#editTagModal').modal('hide');
+                      }
+
+                      function resetDeleteForm() {
+                        document.querySelector('.deleteTagForm').reset();
+                        $('#deleteTagModal').modal('hide');
+                      }
+                    </script>
+
+                   <!-- Script for adding a tag-->
+                    <script>
+                      document.querySelector('.addTagForm').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const formData = new FormData(e.target);
+                        const response = await fetch('/admin/tag/create', {
+                          method: 'POST',
+                          body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                          document.getElementById('addTagNameErr').textContent = '';
+                          document.getElementById('tagNameAdd').classList.remove('is-invalid');
+                          window.location.reload();
+                        } else {
+                          document.getElementById('addTagNameErr').textContent = result.error;
+                          document.getElementById('tagNameAdd').classList.add('is-invalid');
+                        }
+                      });
+                    </script>
+
+                    <!-- Script for editing a tag-->
+                     <script>
+                      const updateForm = document.querySelector('.editTagForm');
+
+                      document.querySelectorAll('.edit-tag').forEach(button=>{
+                        button.addEventListener('click', async()=>{
+                          const tagId = button.getAttribute('data-id');
+                          const response = await fetch(`/admin/tag/info/${tagId}`);
+                          const result = await response.json();
+                          if(result.success){
+                            document.getElementById('tagNameEdit').value = result.tagInformation.tagName;
+                            document.querySelector('.editTagForm').setAttribute('action', `/admin/tag/update/${tagId}`);
+                            $('#editTagModal').modal('show');
+                          }
+
+                          updateForm.setAttribute('data-id', tagId)
+                        })
+                      })
+
+                      document.querySelector('.editTagForm').addEventListener('submit', async function(event) {
+                        event.preventDefault();
+                        const tagId = updateForm.getAttribute('data-id');
+                        const formData = new FormData(updateForm);
+
+                        const response = await fetch(`/admin/tag/update/${tagId}`, {
+                          method: 'POST',
+                          body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                          document.getElementById('editTagNameErr').textContent = '';
+                          document.getElementById('tagNameEdit').classList.remove('is-invalid');
+                          window.location.reload();
+                        } else {
+                          document.getElementById('editTagNameErr').textContent = result.error;
+                          document.getElementById('tagNameEdit').classList.add('is-invalid');
+                        }
+                      });
+
+                     </script>
+
+                    <!-- Script for deleting a tag-->
+                     <script>
+                      const deleteForm = document.querySelector('.deleteTagForm');
+
+                      document.querySelectorAll('.delete-tag').forEach(button=>{
+                        button.addEventListener('click', async()=>{
+                          const tagId = button.getAttribute('data-id');
+                          document.getElementById('tagIdDelete').value = tagId;
+                          $('#deleteTagModal').modal('show');
+                        })
+                      })
+
+                      document.querySelector('.deleteTagForm').addEventListener('submit', async function(event) {
+                        event.preventDefault();
+                        const tagId = document.getElementById('tagIdDelete').value;
+                        const response = await fetch(`/admin/tag/delete/${tagId}`, {
+                          method: 'POST',
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                          window.location.reload();
+                        }
+                        else
+                        {
+                          alert(result.error);
+                        }
+                      });
+                     </script>
+
                   </div>
                 </div>
               </div>
