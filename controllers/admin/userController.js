@@ -138,9 +138,33 @@ const updateUser = async (req, res) => {
     }
 };
 
+
+const getPremiumUSer = async(req, res) => {
+    try {
+
+        const now = new Date(); 
+        
+        const userList = await User.find({role: 'membership',
+            'membership.endDate': {$lt: now}
+        })
+
+        res.json({userList})
+
+    } catch (error) {
+        console.log("Error fetching User's data: ", error.message);
+        res.status(500).send('Server error: ' + error.message);
+    }
+}
+
+const extendPremium =async(req, res) => {
+    
+}
+
 export default{
     getUserList,
     addUser,
     viewUserDetail,
     updateUser,
+    getPremiumUSer,
+    extendPremium
 }

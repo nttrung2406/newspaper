@@ -101,6 +101,9 @@
             
                       <!-- Add User Button -->
                       <div class="col-4 text-right">
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#extendPremium">
+                          <i class="mdi mdi-clock"></i> Gia hạn premium
+                        </button>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
                           <i class="mdi mdi-plus"></i> Thêm tài khoản
                         </button>
@@ -377,6 +380,42 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- Modal for extending premium-->
+                    <div class="modal fade" id="extendPremium" tabindex="-1" role="dialog" aria-labelledby="extendPremiumModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                          <div class="modal-body p-0">
+                            <div class="card text-left">
+                              <div class="card-body">
+                                <h4 class="card-title" id="extendPremiumModalTitle">Gia hạn Premium</h4>
+                                <hr>
+                                <form action="/admin/user/extendPremium" method="post" class="form-sample" id="extendPremiumForm">
+                                  <div class="form-group">
+                                    <label for="usernameExtend">Tên người dùng</label>
+                                    <input type="text" class="form-control" name="usernameExtend" id="usernameExtend" aria-describedby="helpId" placeholder="Nhập tên người dùng" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="extendDays">Số ngày gia hạn</label>
+                                    <input type="number" class="form-control" name="extendDays" id="extendDays" aria-describedby="helpId" placeholder="Nhập số ngày gia hạn" required>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetExtendForm()">Cancel</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                      function resetExtendForm() {
+                        document.getElementById('extendPremiumForm').reset();
+                      }
+                    </script>
+
+
 
                     <!-- Script clearing the form-->
                     <script>

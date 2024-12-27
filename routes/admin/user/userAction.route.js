@@ -13,4 +13,7 @@ router.route('/info/:id')
 router.route('/update/:id')
 .post(upload.none(), userController.updateUser)
 
+router.route('/list')
+.get(userController.getPremiumUSer)
+
 export default router;
