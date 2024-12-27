@@ -1,5 +1,8 @@
 import Post from '../models/postModel.js';
 import Membership from '../models/Membership.js';
+import Category from '../models/Category.js';
+import User from '../models/User.js';
+
 export const createPost = async (req, res) => {
   try {
       const newPost = new Post(req.body);
@@ -68,20 +71,28 @@ export const searchPostsByTitle = async (req, res) => {
 export const getPostById = async (req, res) => {
     try {
         const { id } = req.params;
-        const post = await Post.findById(id);
-        console.log("test:",post); // Kiểm tra nội dung của `post`
+
+        // Populate toàn bộ các trường của category và writer
+        const post = await Post.findById(id).populate('category').populate('writer');
 
         if (!post) {
             console.log(`Post with id ${id} not found`);
             return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
         }
-        else {
-            res.render('details', { post });
-        }
+        console.log("post:",post);
+        console.log("category:",post.category);
+        console.log("writer:",post.writer);
+        // Truyền đầy đủ thông tin category và writer vào view
+        res.render('details', { 
+            post,
+            category: post.category,
+            user: post.writer
+        });
     } catch (error) {
         res.status(500).render('errorPage', { error: error.message });
     }
 };
+
 
 const getPostByCategory = async (req, res) => {
     try {

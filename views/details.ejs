@@ -31,47 +31,72 @@
 
     <%- include('./partials/header.ejs') %>
 
-        <main>
-            <section class="post-content">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <div class="post-details">
-                                <h2><%- post.title %></h2>
-                                <%- post.content.replace(/\[IMAGE:\s*(https?:\/\/[^\]]+)\]/g, '<img src="$1" alt="Image" style="max-width:100%; display:block; margin-bottom: 20px;">'
-                                    ) %>
-                            </div>
-                            <div>
-                                <section class="comments-section mt-5">
-                                    <h3 class="mb-4">Comments</h3>
-                                    <div id="comments-list" class="list-group">
-                                        <!-- Comment sẽ được load từ API -->
-                                    </div>
-                                </section>
 
-                                <section class="add-comment mt-5">
-                                    <h4 class="mb-4">Add a Comment</h4>
-                                    <form id="comment-form" class="needs-validation" novalidate>
-                                        <input type="hidden" id="postId" value="<%- post._id %>">
-                                        <div class="mb-3">
-                                            <label for="author" class="form-label">Name:</label>
-                                            <input type="text" id="author" class="form-control" required>
-                                            <div class="invalid-feedback">Please enter your name.</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="content" class="form-label">Comment:</label>
-                                            <textarea id="content" class="form-control" rows="3" required></textarea>
-                                            <div class="invalid-feedback">Please enter a comment.</div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
-                                    </form>
-                                </section>
+    <main>
+        <section class="post-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <!-- Post Details -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <% if (category) { %>
+                                    <p class="text-muted mb-1">
+                                        <i class="fas fa-folder-open me-1"></i> 
+                                        <span class="fw-bold"><%- category.categoryName %></span>
+                                    </p>
+                                <% } else { %>
+                                    <p class="text-muted mb-1">
+                                        <i class="fas fa-folder-open me-1"></i> 
+                                        <span class="fw-bold">Uncategorized</span>
+                                    </p>
+                                <% } %>
+                                <h2 class="card-title text-primary mb-3"><%- post.title %></h2>
+                                <div class="d-flex justify-content-between text-muted mb-3">
+                                    <small><i class="far fa-calendar-alt me-1"></i> <%- new Date(post.createdAt).toLocaleDateString() %></small>
+                                    <small><i class="far fa-user me-1"></i> <%- user.username %></small>
+                                </div>
+                                <p class="card-text">
+                                    <%- post.content %>
+                                </p>
+                                <% if (post.tags?.length > 0) { %>
+                                    <p class="text-muted">Tags: 
+                                        <% post.tags.forEach(tag => { %>
+                                            <span class="badge bg-secondary"><%- tag.name %></span>
+                                        <% }); %>
+                                    </p>
+                                <% } %>
                             </div>
                         </div>
+    
+                        <!-- Comments Section -->
+                        <section class="comments-section">
+                            <h4 class="mb-4">Comments</h4>
+                            <div id="comments-list" class="list-group mb-4">
+                                <!-- Comments will be loaded dynamically -->
+                            </div>
+                            <form id="comment-form" class="needs-validation" novalidate>
+                                <input type="hidden" id="postId" value="<%- post._id %>">
+                                <div class="mb-3">
+                                    <label for="author" class="form-label">Name:</label>
+                                    <input type="text" id="author" class="form-control" required>
+                                    <div class="invalid-feedback">Please enter your name.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Comment:</label>
+                                    <textarea id="content" class="form-control" rows="3" required></textarea>
+                                    <div class="invalid-feedback">Please enter a comment.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                            </form>
+                        </section>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
+    </main>
+    
+    
 
 
         <%- include('./partials/footer.ejs') %>
