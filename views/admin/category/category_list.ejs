@@ -60,7 +60,7 @@
                           <input 
                             type="text" 
                             name="search" 
-                            placeholder="Nhập username" 
+                            placeholder="Nhập tên chuyên mục" 
                             class="form-control"
                             value="<%= search || '' %>"
                           />
@@ -187,7 +187,7 @@
 
                                 <div class="form-group">
                                   <label for="categoryAddDescription">Mô tả</label>
-                                  <input type="text" name="categoryAddDescription" id="categoryAddDescription" class="form-control" placeholder="Nhập mô tả" aria-describedby="helpId" required>
+                                  <textarea name="categoryAddDescription" id="categoryAddDescription" class="form-control" rows="6" required></textarea>
                                 </div>
 
                                 <div class="form-group">
@@ -225,7 +225,7 @@
 
                               <div class="form-group">
                                 <label for="categoryDescription">Mô tả</label>
-                                <input type="text" name="categoryDescription" id="categoryDescription" class="form-control" aria-describedby="helpId" readonly>
+                                <textarea name="categoryDescription" id="categoryDescription" class="form-control" rows="6" readonly></textarea>
                               </div>
 
                               <div class="form-group">
@@ -268,7 +268,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label for="updateCategoryDescription">Mô tả</label>
-                                  <textarea name="updateCategoryDescription" id="updateCategoryDescription" class="form-control" rows="4"></textarea>
+                                  <textarea name="updateCategoryDescription" id="updateCategoryDescription" class="form-control" rows="6"></textarea>
                                 </div>
             
                                 <div class="form-group">
@@ -527,7 +527,7 @@
                 text-align: center;
               }
 
-              input:read-only{
+              input:read-only, textarea:read-only {
                 background-color: #2A3038 !important;
               }
 
