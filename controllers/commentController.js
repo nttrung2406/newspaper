@@ -3,14 +3,14 @@ import Comment from '../models/commentModel.js';
 export const getCommentsByPostId = async (req, res) => {
     try {
         let userId = null;
-        if (req.session.user!==null){
-            userId = req.session.user._id;  
+        if (req.session.user !== null) {
+            userId = req.session.user._id;
         }
         const comments = await Comment.find({ postId: req.params.postId })
             .populate('userId', 'username')
             .sort({ createdAt: -1 });
         // Đính kèm isOwner cho từng bình luận
-        if (req.session.user.role === 'admin'){
+        if (req.session.user.role === 'admin') {
             const commentsWithOwnership = comments.map(comment => ({
                 ...comment.toObject(),
                 isOwner: true,
@@ -32,7 +32,7 @@ export const getCommentsByPostId = async (req, res) => {
 
 export const addComment = async (req, res) => {
     try {
-        if (!req.session.user){
+        if (!req.session.user) {
             return res.status(401).json({ error: 'Please log in to comment.', redirect: '/login' });
         }
         const userId = req.session.user._id;
