@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
 <!-- Chưa hiện số trang theo số bài viết -->
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -22,6 +23,30 @@
   <link rel="stylesheet" href="/css/slick.css" />
   <link rel="stylesheet" href="/css/nice-select.css" />
   <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 100%;
+      z-index: 1000;
+    }
+
+    .nav-item .dropdown-menu {
+      display: none;
+      background-color: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link.dropdown-toggle {
+      cursor: pointer;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f8f9fa;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,17 +73,27 @@
                     <!-- Nav Button -->
                     <nav>
                       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                           role="tab" aria-controls="nav-home" aria-selected="true" data-category="all">All</a> -->
-                        <% freeCategories.forEach(function(category) { %>
-                          <a class="nav-item nav-link" id="nav-<%= category._id %>" data-toggle="tab"
-                            href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>"
-                            aria-selected="false" data-category="<%= category._id %>">
-                            <%= category.categoryName %>
-                          </a>
+                        <% categories.forEach(function(category) { %>
+                          <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="nav-<%= category._id %>" data-toggle="dropdown"
+                              role="button" aria-haspopup="true" aria-expanded="false"
+                              data-category="<%= category._id %>">
+                              <%= category.categoryName %>
+                            </a>
+                            <% if (category.children && category.children.length> 0) { %>
+                              <div class="dropdown-menu" aria-labelledby="nav-<%= category._id %>">
+                                <% category.children.forEach(function(child) { %>
+                                  <a class="dropdown-item" data-category="<%= child._id %>">
+                                    <%= child.categoryName %>
+                                  </a>
+                                  <% }); %>
+                              </div>
+                              <% } %>
+                          </div>
                           <% }); %>
                       </div>
                     </nav>
+
 
                     <!-- End Nav Button -->
                   </div>
@@ -66,7 +101,7 @@
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                       <!-- Nội dung của All -->
                     </div>
-                    <% freeCategories.forEach(function(category) { %>
+                    <% categories.forEach(function(category) { %>
                       <div class="tab-pane fade" id="nav-<%= category._id %>" role="tabpanel"
                         aria-labelledby="nav-<%= category._id %>">
                         <!-- Nội dung của category <%= category.categoryName %> -->
@@ -268,7 +303,7 @@
         <% } %>
           <script>
             document.addEventListener('DOMContentLoaded', () => {
-              let currentCategory = '6747298ee1d6dd827c95f42c'; // Thay bằng category mặc định
+              let currentCategory = '676e10c487f7c39a0137b44a'; // Thay bằng category mặc định
               let currentPage = 1;
 
               const postsContainer = document.getElementById('posts-container');
@@ -280,7 +315,7 @@
                 try {
                   const response = await fetch(`/api/posts?category=${category}&page=${page}`);
                   const data = await response.json();
-
+                  console.log('Data:', data);
                   // Xóa bài viết cũ
                   postsContainer.innerHTML = '';
 
@@ -346,6 +381,14 @@
               });
 
               // Chuyển category
+              document.querySelectorAll('.dropdown-item').forEach((item) => {
+                item.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  currentCategory = e.target.dataset.category;
+                  currentPage = 1; // Reset về trang đầu
+                  loadPosts(currentCategory, currentPage);
+                });
+              });
               document.querySelectorAll('.nav-link').forEach((tab) => {
                 tab.addEventListener('click', (e) => {
                   currentCategory = e.target.dataset.category;
