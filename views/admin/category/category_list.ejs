@@ -53,28 +53,34 @@
                 <div class="card text-left">
                   <div class="card-body">
                     <!-- Search Bar -->
+                    <div class="row align-items-center mb-3">
 
-                    <div class="form-group">
-                      <form method="GET" action="/admin/categories">
-                        <div class="input-group col-12" style="padding-left: 0; padding-right: 0;">
+                      <div class="col-8">
+                        <form method="GET" action="/admin/categories" class="input-group">
                           <input 
                             type="text" 
                             name="search" 
-                            placeholder="Nhập tên chuyên mục" 
+                            placeholder="Nhập username" 
                             class="form-control"
                             value="<%= search || '' %>"
                           />
                           <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary btn-icon-text">
-                              <i class="mdi mdi-magnify"></i> Tìm kiếm
+                            <button type="submit" class="btn btn-primary">
+                              <i class="mdi mdi-magnify"></i>
+                              Search
                             </button>
                           </div>
-                        </div>
-                      </form>
+                        </form>
+                      </div>
+            
+                      <!-- Add User Button -->
+                      <div class="col-4 text-right">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addCategory">
+                          <i class="mdi mdi-plus"></i> Thêm chuyên mục
+                        </button>
+                      </div>
                     </div>
-
-                    <!-- Create category button-->
-                    <a href="category/create" class="btn btn-success mb-3"><i class="mdi mdi-plus btn-icon-prepend"></i>Tạo chuyên mục</a>
+                    
 
                     <!-- Alert -->
                     <% if (message && message.length > 0) { %>
@@ -86,16 +92,18 @@
                         <%= message %>
                       </div>
                     <% } %>
+
+
                     <!-- Table to Display Categories -->
                     <div class="table-responsive">
-                      <table class="table table-dark">
-                        <thead>
+                      <table class="table table-dark table-hover custom-table">
+                        <thead class="thead-dark">
                           <tr>
                             <th>Tên Chuyên Mục</th>
                             <th>Chuyên mục cha</th>
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
-                            <th>Chức năng</th>
+                            <th style="width: 10%;">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -108,12 +116,18 @@
                                 <td><%= category.updatedAt ? new Date(category.updatedAt).toLocaleDateString() : 'N/A' %></td>
                                 <td>
                                   <div class="btn-group">
-                                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
-                                    <div class="dropdown-menu">
-                                      <a href="category/info/<%= category._id %>" class="btn btn-info btn-icon-text d-block"><i class="mdi mdi-information-outline btn-icon-prepend"></i></span>Info</a>
-                                      <a href="category/update/<%= category._id %>" class="btn btn-primary btn-icon-text d-block"><i class="mdi mdi-update btn-icon-prepend"></i>Update</a>
-                                      <a href="category/delete/<%= category._id %>" class="btn btn-danger btn-icon-text d-block"><i class="mdi mdi-delete btn-icon-prepend"></i>Delete</a>
-                                    </div>
+                                    <button class="btn btn-info btn-icon view-category-btn" data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết" data-id="<%= category._id %>">
+                                      <i class="mdi mdi-information-outline"></i>
+                                    </button>
+
+                                    <button class="btn btn-primary btn-icon edit-category-btn" data-toggle="tooltip" data-placement="bottom" title="Cập nhật" data-id="<%= category._id %>">
+                                      <i class="mdi mdi-update"></i>
+                                    </button>
+
+                                    <button class="btn btn-danger btn-icon delete-category-btn" data-toggle="tooltip" data-placement="bottom" title="Xóa" data-id="<%= category._id %>">
+                                      <i class="mdi mdi-delete"></i>
+                                    </button>
+                                    
                                   </div>
                                 </td>
                               </tr>
@@ -129,24 +143,396 @@
                     </div>
             
                     <!-- Pagination -->
-                    <nav aria-label="Pagination">
-                      <ul class="pagination justify-content-center">
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                            <a 
-                              class="page-link" 
-                              href="/admin/categories?page=<%= i %>&search=<%= search || '' %>"
-                            >
-                              <%= i %>
-                            </a>
-                          </li>
-                        <% } %>
-                      </ul>
-                    </nav>
+                    <% if (totalPages > 1) { %>
+                      <div class="row mt-3">
+                        <div class="col-12 d-flex justify-content-center">
+                          <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                              <!-- Previous Page -->
+                              <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
+                                <a class="page-link" 
+                                  href="?<%= search ? 'search=' + search + '&' : '' %>page=<%= currentPage - 1 %>" 
+                                  tabindex="-1">&laquo;</a>
+                              </li>
+                              
+                              <!-- Current Page -->
+                              <li class="page-item active"><a class="page-link" href="#"><%= currentPage %></a></li>
+                              
+                              <!-- Next Page -->
+                              <li class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
+                                <a class="page-link" 
+                                  href="?<%= search ? 'search=' + search + '&' : '' %>page=<%= currentPage + 1 %>">&raquo;</a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
+                    <% } %>
+
+                    <!-- Modal for adding a new category -->
+                    <div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="addCategoryLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Thêm chuyên mục</h4>
+                              <hr>
+
+                              <form action="/admin/category/add" method="post" id="addCategoryForm">
+                                <div class="form-group">
+                                  <label for="categoryAddName">Tên chuyên mục</label>
+                                  <input type="text" name="categoryAddName" id="categoryAddName" class="form-control" placeholder="Nhập tên chuyên mục" aria-describedby="helpId" required>
+                                  <div class="invalid-feedback" id="categoryAddNameErr"></div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="categoryAddDescription">Mô tả</label>
+                                  <input type="text" name="categoryAddDescription" id="categoryAddDescription" class="form-control" placeholder="Nhập mô tả" aria-describedby="helpId" required>
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="categoryAddParent">Chuyên mục cha</label>
+                                  <select class="form-control" name="categoryAddParent" id="categoryAddParent">
+                                    <option value="">-- None --</option>
+                                    <% parentCategories.forEach( element =>{ %>
+                                      <option value="<%= element._id %>"><%= element.categoryName %></option>
+                                    <% })%>
+                                  </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="reset" class="btn btn-dark" data-dismiss="modal" onclick="resetAddForm()">Cancel</button>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- Modal for viewing the detail of category -->
+                    <div class="modal fade" id="viewCategory" tabindex="-1" role="dialog" aria-labelledby="viewCategoryLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Thông tin chi tiết</h4>
+                              <hr>
+                              <div class="form-group">
+                                <label for="categoryName">Tên chuyên mục</label>
+                                <input type="text" name="categoryName" id="categoryName" class="form-control" aria-describedby="helpId" readonly>
+                              </div>
+
+                              <div class="form-group">
+                                <label for="categoryDescription">Mô tả</label>
+                                <input type="text" name="categoryDescription" id="categoryDescription" class="form-control" aria-describedby="helpId" readonly>
+                              </div>
+
+                              <div class="form-group">
+                                <label for="parentCategory">Chuyên mục cha</label>
+                                <input type="text" name="parentCategory" id="parentCategory" class="form-control" aria-describedby="helpId" readonly>
+                              </div>
+
+                              <div class="form-group">
+                                <label for="createdAt">Ngày tạo</label>
+                                <input type="text" name="createdAt" id="createdAt" class="form-control" aria-describedby="helpId" readonly>
+                              </div>
+
+                              <div class="form-group">
+                                <label for="updatedAt">Ngày cập nhật</label>
+                                <input type="text" name="updatedAt" id="updatedAt" class="form-control" aria-describedby="helpId" readonly>
+                              </div>
+
+                              <button type="button" id="closeViewCategoryBtn" class="btn btn-dark" data-dismiss="modal">Close</button>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal for updating a category -->
+                    <div class="modal fade" id="updateCategory" tabindex="-1" role="dialog" aria-labelledby="updateCategoryLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Chỉnh sửa</h4>
+                              <hr>
+
+                              <form action="/admin/category/update/" method="post" id="updateCategoryForm">
+                                <div class="form-group">
+                                  <label for="updateCategoryName">Tên chuyên mục</label>
+                                  <input type="text" name="updateCategoryName" id="updateCategoryName" class="form-control">
+                                  <div class="invalid-feedback" id="updateCaregoryNameErr"></div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="updateCategoryDescription">Mô tả</label>
+                                  <textarea name="updateCategoryDescription" id="updateCategoryDescription" class="form-control" rows="4"></textarea>
+                                </div>
+            
+                                <div class="form-group">
+                                  <label for="updateParentID">Chuyên mục cha</label>
+                                  <select name="updateParentID" id="updateParentID" class="form-control">
+
+                                  </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="reset"  class="btn btn-dark" onclick="resetUpdateForm()">Cancel</button>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal for deleting a category -->
+                    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" style="width: 30%;" role="document">
+                        <div class="modal-content">
+                          <div class="card text-left">
+                            <div class="card-body">
+                              <h4 class="card-title">Delete Confirmation</h4>
+                              
+                              <form action="" class="deleteCategoryForm" method="POST">
+                                <p>Bạn có chắc chắn muốn xóa chuyên mục này không?</p>
+                                <input type="hidden" name="categoryIdDelete" id="categoryIdDelete">
+                                <div class="d-flex justify-content-center">
+                                  <button type="submit" class="btn btn-danger mr-3">Delete</button>
+                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetDeleteForm()">Cancel</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Script for clearing data for modal-->
+                    <script>
+                      function resetAddForm(){
+                        document.getElementById('addCategoryForm').reset();
+                        document.getElementById('categoryAddNameErr').innerHTML = '';
+                        document.getElementById('categoryAddName').classList.remove('is-invalid');
+                      }
+
+                      function resetUpdateForm(){
+                        document.getElementById('updateCategoryForm').reset();
+                        document.getElementById('updateCaregoryNameErr').innerHTML = '';
+                        document.getElementById('updateCategoryName').classList.remove('is-invalid');
+                        $('#updateCategory').modal('hide');
+                      }
+
+                      function resetDeleteForm(){
+                        document.getElementById('categoryIdDelete').value = '';
+                        $('#deleteCategoryModal').modal('hide');
+                      }
+                    </script>
+
+                    <!-- Script for adding a category-->
+                    <script>
+                      const addCategoryForm = document.getElementById('addCategoryForm');
+                      addCategoryForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(addCategoryForm);
+
+                        const response = await fetch('/admin/category/add', {
+                          method: 'POST',
+                          body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                          document.getElementById('categoryAddNameErr').innerHTML = '';
+                          document.getElementById('categoryAddName').classList.remove('is-invalid');
+                          window.location.reload();
+                        } else {
+                          document.getElementById('categoryAddNameErr').innerHTML = result.message;
+                          document.getElementById('categoryAddName').classList.add('is-invalid');
+                        }
+                      });
+                    </script>
+
+                    <!-- Script for viewing the detail of category -->
+                    <script>
+
+                      function formatDateTime(dateString) {
+                          if (!dateString) return 'N/A';
+                          const date = new Date(dateString);
+                          const time = date.toLocaleTimeString('vi-VN', { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+                          const formattedDate = date.toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'});
+                          return `${time} ${formattedDate}`;
+                      }
+
+                      document.querySelectorAll('.view-category-btn').forEach(  (button) => {
+                        button.addEventListener('click', async (event) => {
+                          const categoryId = button.getAttribute('data-id');
+                          
+                          const response = await fetch(`/admin/category/info/${categoryId}`);
+
+                          const result = await response.json();
+
+                          if (!result.success) {
+                            return alert(result.error);
+                          }
+
+                          document.getElementById('categoryName').value = result.categoryInformation.categoryName;
+                          document.getElementById('categoryDescription').value = result.categoryInformation.description;
+                          document.getElementById('parentCategory').value = result.categoryInformation.parentID ? result.categoryInformation.parentID.categoryName : 'Không có';
+                          document.getElementById('createdAt').value = formatDateTime(result.categoryInformation.createdAt);
+                          document.getElementById('updatedAt').value = formatDateTime(result.categoryInformation.updatedAt);
+
+
+
+                          $('#viewCategory').modal({
+                              backdrop: 'static',
+                              keyboard: false
+                          }).modal('show');
+                        });
+                      });
+
+                      document.getElementById('closeViewCategoryBtn').addEventListener('click', () => {
+                        $('#viewCategory').modal('hide');
+                      });
+
+                    </script>
+
+                    <!-- Script for updating a category -->
+                     <script>
+                      const updateCategoryForm = document.getElementById('updateCategoryForm');
+
+                      document.querySelectorAll('.edit-category-btn').forEach( (button) => {
+                        button.addEventListener('click', async (event) => {
+                          const categoryId = button.getAttribute('data-id');
+                          const response = await fetch(`/admin/category/update/${categoryId}`);
+                          const result = await response.json();
+
+                          if (!result.success) {
+                            return alert(result.error);
+                          }
+
+                          document.getElementById('updateCategoryName').value = result.categoryInfo.categoryName;
+                          document.getElementById('updateCategoryDescription').value = result.categoryInfo.description;
+                          document.getElementById('updateParentID').innerHTML = result.parentOptions;
+
+                          if (result.hasChildren) {
+                            document.getElementById('updateParentID').disabled = true;
+                          } else {
+                            document.getElementById('updateParentID').disabled = false;
+                          }
+                          
+                          updateCategoryForm.setAttribute('data-id', categoryId);
+
+                          $('#updateCategory').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                          }).modal('show');
+                        });
+                      });
+
+                      updateCategoryForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(updateCategoryForm);
+                        const categoryId = updateCategoryForm.getAttribute('data-id');
+
+                        const response = await fetch(`/admin/category/update/${categoryId}`, {
+                          method: 'POST',
+                          body: formData
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                          document.getElementById('updateCaregoryNameErr').innerHTML = '';
+                          document.getElementById('updateCategoryName').classList.remove('is-invalid');
+                          window.location.reload();
+                        } else {
+                          document.getElementById('updateCaregoryNameErr').innerHTML = result.error;
+                          document.getElementById('updateCategoryName').classList.add('is-invalid');
+                          if (result.isFatal) {return alert(result.error);}
+                            
+                        }
+                      });
+                     </script>
+
+
+                     <!-- Script for deleting a category -->
+                    <script>
+                      const deleteCategoryModal = document.getElementById('deleteCategoryModal');
+                      const deleteCategoryForm = deleteCategoryModal.querySelector('.deleteCategoryForm');
+
+                      document.querySelectorAll('.delete-category-btn').forEach( (button) => {
+                        button.addEventListener('click', (event) => {
+                          const categoryId = button.getAttribute('data-id');
+                          document.getElementById('categoryIdDelete').value = categoryId;
+                          deleteCategoryModal.setAttribute('data-id', categoryId)
+                          $('#deleteCategoryModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                          }).modal('show');
+                        });
+                      });
+
+                      deleteCategoryForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const categoryId = deleteCategoryModal.getAttribute('data-id');
+                        const response = await fetch(`/admin/category/delete/${categoryId}`, {
+                          method: 'POST'
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                          window.location.reload();
+                        } else {
+                          $('#deleteCategoryModal').modal('hide');
+                          alert(result.error);
+                        }
+                      });
+                      
+                    </script>
+
                   </div>
                 </div>
               </div>
             </div>
+
+            <style>
+              .custom-table {
+                border-collapse: collapse;
+                width: 100%;
+              }
+
+              .custom-table th, .custom-table td {
+                border: 1px solid #dee2e620;
+                padding: 8px;
+              }
+
+              .custom-table th {
+                background-color: #343a40;
+                color: white;
+              }
+
+              .custom-table tr:nth-child(even) {
+                background-color: #f2f2f2;
+              }
+
+              .custom-table tr:hover {
+                background-color: #f1f1f1;
+              }
+
+              .custom-table th, .custom-table td {
+                text-align: center;
+              }
+
+              input:read-only{
+                background-color: #2A3038 !important;
+              }
+
+            </style>
+
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
