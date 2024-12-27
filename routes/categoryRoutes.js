@@ -9,4 +9,5 @@ router.get('/', getCategory);
 // Route to render the 'index' page
 router.get('/index', getIndex); // You can also use '/index' if you want to have a separate route for 'index'
 
+
 export default router;

@@ -20,19 +20,21 @@ export const getPostsData = async (req, res) => {
     }
   };
 
-export const getPosts = async (req, res) => {
-  try {
-      const posts = await Post.find().populate({
-        path: 'category', 
-        select: 'categoryName', 
-      })
-      .lean();
-    //   res.status(200).json(posts);
+  export const getPosts = async (req, res) => {
+    try {
+      const posts = await Post.find()
+        .populate({
+          path: 'categories', 
+          select: 'categoryName', 
+        })
+        .lean(); 
+  
       res.render('index', { posts });
-  } catch (error) {
+    } catch (error) {
       res.status(500).json({ error: error.message });
-  }
-};
+    }
+  };
+  
 
 export const updatePost = async (req, res) => {
   try {
@@ -85,6 +87,22 @@ export const getPostById = async (req, res) => {
     } catch (error) {
         res.status(500).render('errorPage', { error: error.message });
     }
+};
+
+export const getCategoryByPost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await Post.findById(id).populate('category', 'categoryName'); // Populate category.categoryName
+    
+        if (!post) {
+          console.log(`Post with id ${id} not found`);
+          return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
+        } else {
+          res.render('details', { post });
+        }
+      } catch (error) {
+        res.status(500).render('errorPage', { error: error.message });
+      }
 };
 
 const getPostByCategory = async (req, res) => {

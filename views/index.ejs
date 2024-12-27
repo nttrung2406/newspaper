@@ -56,7 +56,7 @@
                   <div class="trend-top-img">
                     <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
                     <div class="trend-top-cap">
-                      <span><%= posts[0].category ? posts[0].category.categoryName : 'Uncategorized' %></span>
+                      <span><%= posts[0].category.categoryName %></span>
                       <h2>
                         <a href="/posts/<%= posts[0]._id %>">
                           <%= posts[0].title %>

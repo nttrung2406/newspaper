@@ -14,10 +14,7 @@ const postSchema = new mongoose.Schema({
   editor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
   rejectionReason: { type: String }, 
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }, 
-
-  tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   premium: { type: Boolean, default: false },
-
   tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}], 
 
   createdAt: { type: Date }, 
