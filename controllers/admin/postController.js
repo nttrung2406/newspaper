@@ -7,17 +7,22 @@ const getPostList = async (req, res) => {
     try {
         const {page, search} = req.query;
         const limit = 10;
+        const currentPage = parseInt(page) || 1;
+        const query = search ? {tittle: new RegExp(search, 'i')} :{};
 
-        const postList = await Post.find()
-        .limit(limit)
-
-        .populate({
+        const [postList, totalItem] = await Promise.all([
+            Post.find(query)
+            .limit(limit)
+            .skip((currentPage - 1) * limit)
+            .populate({
             path: "category",
             populate:{
                 path: "parentID",
                 select: "categoryName"
-            }
-        });
+                    }
+            }),
+            Post.countDocuments(query)
+        ]) 
 
         for (let post of postList) {
             if (post.writer)
@@ -27,13 +32,13 @@ const getPostList = async (req, res) => {
             }
         }
         
-        console.log(postList[0],  postList[0].penName);
+        //console.log(postList[0],  postList[0].penName);
         res.render("admin/post/post_list", {
             postList: postList,
-            search: "",
+            search: search,
             limit: limit,
-            currentPage: 1,
-            totalPages: 1,
+            currentPage: currentPage,
+            totalPages: Math.ceil(totalItem / limit),
         })
     } catch (error) {
         res.status(404).json({ message: error.message });

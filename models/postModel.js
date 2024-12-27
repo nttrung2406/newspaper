@@ -3,22 +3,20 @@ import mongoose from 'mongoose';
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  slug: { type: String, required: true},
+  slug: { type: String},
   status: {
     type: String,
     enum: ['Draft', 'Submitted', 'Approved', 'Rejected', 'Published'], 
     default: 'Draft'
   },
   premium: { type: Boolean, default: false},
+  abstract: { type: String, required: true },
   writer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   editor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
   rejectionReason: { type: String }, 
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }, 
 
   tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
-  premium: { type: Boolean, default: false },
-
-  tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}], 
 
   createdAt: { type: Date }, 
   updatedAt: { type: Date }, 
