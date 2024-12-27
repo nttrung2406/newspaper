@@ -22,7 +22,11 @@ export const getPostsData = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
-      const posts = await Post.find().populate('category');
+      const posts = await Post.find().populate({
+        path: 'category', 
+        select: 'categoryName', 
+      })
+      .lean();
     //   res.status(200).json(posts);
       res.render('index', { posts });
   } catch (error) {
