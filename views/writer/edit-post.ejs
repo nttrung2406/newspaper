@@ -75,7 +75,9 @@
               placeholder="Enter post abstract"
               name="abstract"
               required
-            ></textarea>
+            >
+<%= editing ? post.abstract : '' %></textarea
+            >
           </div>
           <div class="mb-3">
             <label for="category" class="form-label">
@@ -105,11 +107,13 @@
               <strong>Is Premium</strong>
             </label>
             <div>
-              <input type="radio" id="premium" name="isPremium" value="true" />
+              <input type="radio" id="premium" name="isPremium" value="true" <%=
+              isPremium === true ? checked="checked" : "" %>/>
               <label for="premium">Yes</label>
             </div>
             <div>
-              <input type="radio" id="free" name="isPremium" value="false" />
+              <input type="radio" id="free" name="isPremium" value="false" <%=
+              isPremium === false ? checked="checked" : "" %> />
               <label for="free">No</label>
             </div>
           </div>

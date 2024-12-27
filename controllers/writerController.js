@@ -80,6 +80,7 @@ const writerController = {
         categoryId: "",
         tagsString: "",
         post: "",
+        isPremium: "",
       });
     } catch (err) {
       const error = new Error(err);
@@ -181,6 +182,7 @@ const writerController = {
         categoryId: post.category,
         categories: categories,
         tagsString: tagsString,
+        isPremium: post.premium,
         pageNumber: pageNumber,
       });
     } catch (err) {
@@ -194,6 +196,8 @@ const writerController = {
     const newContent = req.body.content;
     const newCategoryId = req.body.categoryId;
     const newTagsString = req.body.tagsString;
+    const newAbstract = req.body.abstract;
+    const newPremiumCheck = req.body.isPremium;
     const postId = req.body.postId;
 
     const pageNumber = req.body.pageNumber;
@@ -231,6 +235,8 @@ const writerController = {
       post.content = newContent;
       post.category = newCategoryId;
       post.tags = newTags;
+      post.abstract = newAbstract;
+      post.premium = newPremiumCheck === "true";
 
       await post.save();
 
