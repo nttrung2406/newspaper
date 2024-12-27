@@ -5,10 +5,12 @@ import UserInformation from "../../models/UserInformation.js";
 
 const getPostList = async (req, res) => {
     try {
-        const limit = 1;
+        const {page, search} = req.query;
+        const limit = 10;
 
         const postList = await Post.find()
         .limit(limit)
+
         .populate({
             path: "category",
             populate:{
@@ -18,8 +20,6 @@ const getPostList = async (req, res) => {
         });
 
         for (let post of postList) {
-            post["premium"] =false;
-
             if (post.writer)
             {
                 const ret = await UserInformation.findOne({accountID: post.writer});
@@ -27,7 +27,7 @@ const getPostList = async (req, res) => {
             }
         }
         
-        console.log(postList[0], postList[0].premium, postList[0].penName);
+        console.log(postList[0],  postList[0].penName);
         res.render("admin/post/post_list", {
             postList: postList,
             search: "",
