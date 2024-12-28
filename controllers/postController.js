@@ -79,9 +79,6 @@ export const getPostById = async (req, res) => {
             console.log(`Post with id ${id} not found`);
             return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
         }
-        console.log("post:",post);
-        console.log("category:",post.category);
-        console.log("writer:",post.writer);
         // Truyền đầy đủ thông tin category và writer vào view
         res.render('details', { 
             post,

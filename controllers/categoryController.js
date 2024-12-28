@@ -5,10 +5,15 @@ import { getPostsData } from './postController.js';
 export const getCategory = async (req, res) => {
     try {
       const categories = await Category.find();
+      const structuredCategories = categories.filter(cat => !cat.parentID).map(parent => ({
+        ...parent.toObject(),
+        children: categories.filter(child => String(child.parentID) === String(parent._id)),
+      }));
+      
       const memberships = await Membership.find();
       const posts= await getPostsData(req,res);
       res.render("categori", {
-          freeCategories: categories,
+          categories: structuredCategories ,
           posts,
           memberships,
           messages: req.flash()
