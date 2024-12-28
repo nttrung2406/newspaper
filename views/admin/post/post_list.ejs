@@ -131,6 +131,25 @@
                   </div>
                 </div>
 
+                <!-- Modal for viewing post details -->
+                <div class="modal fade" id="postDetailModal" tabindex="-1" aria-labelledby="postDetailModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="card text-left">
+                        <div class="card-body">
+                          <h4 class="card-title">Chi tiết bài báo</h4>
+                          <hr>
+                          <div id="postDetailsContent">
+                            <!-- Dynamic content will be injected here -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
                 <!--Script for fetching data rows when load, search and apply filter-->
                 <script>
                   let totalPages = 1;
@@ -139,7 +158,7 @@
                   function changePage(page) {
                     // Prevent navigating to previous/next page if disabled
                     if (page <= 0 || page > totalPages) return;
-                    console.log(page);
+                    //console.log(page);
 
                     // Call fetchTableData to get the data for the specified page
                     fetchTableData(page);
@@ -188,10 +207,65 @@
 
                 <!--Script for viewing the detailed post-->
                 <script>
-                  
+                  const postContentContainer = document.getElementById('postDetailsContent')
+
+                  async function openPostDetailModal(postId) {
+
+                    const response = await fetch(`/admin/post/detail/${postId}`)
+                    const result = await response.json()
+
+                    if (!result.success) {
+                      return alert(result.error)
+                    }
+
+                    postContentContainer.innerHTML = `
+                      <div class="card mb-4">
+                        <div class="card-body">
+                          ${result.postContent.category
+                        ? `
+                              <p class="text-muted mb-1">
+                                <i class="fas fa-folder-open me-1"></i>
+                                <span class="fw-bold">${result.postContent.category.categoryName}</span>
+                              </p>`
+                        : `
+                              <p class="text-muted mb-1">
+                                <i class="fas fa-folder-open me-1"></i>
+                                <span class="fw-bold">Uncategorized</span>
+                              </p>`}
+                            
+                          <h2 class="card-title text-primary mb-3">${result.postContent.title}</h2>
+                          <div class="d-flex justify-content-between text-muted mb-3">
+                            <small><i class="far fa-calendar-alt me-1"></i> ${new Date(result.postContent.createdAt).toLocaleDateString()}</small>
+                            <small><i class="far fa-user me-1"></i> ${result.postContent.writer.username}</small>
+                          </div>
+                        
+                          <p class="card-text">
+                            ${result.postContent.content}
+                          </p>
+                        </div>
+                      </div>
+                    `;
+
+
+
+                    $('#postDetailModal').modal({
+                      backdrop: 'static',
+                    }).modal('show');
+                  }
+
+
                 </script>
 
+
                 <style>
+                  .post-content img {
+                    width: 100%;
+                    height: auto;
+                    object-fit: cover;
+                    max-width: 100%;
+                    display: block;
+                  }
+
                   .custom-table {
                     border-collapse: collapse;
                     width: 100%;

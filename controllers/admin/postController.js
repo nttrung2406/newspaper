@@ -57,7 +57,7 @@ const getPostList = async (req, res) => {
                         path: "parentID",
                         select: "categoryName"
                     }
-                }),
+                }).sort({ updatedAt: -1 }),
             Post.countDocuments(query)
         ])
 
@@ -116,7 +116,7 @@ const getPostList = async (req, res) => {
                   ${element.premium ? "<i class='mdi mdi-check' style='color: green;'></i>" : "<i class='mdi mdi-close' style='color: red;'></i>"}
                 </td>
                 <td>
-                  <button class="btn btn-info btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết">
+                  <button class="btn btn-info btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết" onclick="openPostDetailModal('${element._id}')">
                     <i class="mdi mdi-eye"></i>
                   </button>
                   <button class="btn btn-warning btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Premium">
@@ -147,10 +147,43 @@ const getPostList = async (req, res) => {
           `;
 
         // Return the data
-        return res.json({ table: tableHTML, pagination: paginationHTML, categories , totalPages});
+        return res.json({ table: tableHTML, pagination: paginationHTML, categories, totalPages });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
 
-export default { renderPage, getPostList };
+const viewPostContent = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            res.json(400).json({ success: false, error: "Invalid ID format." })
+        }
+        //console.log(id)
+        const postContent = await Post.findById(id)
+            .populate('writer')
+            .populate('category')
+
+        //console.log(postContent)
+        if (!postContent) {
+            res.json({success: false, error: "Không tìm thấy bài báo"})
+        }
+        
+        const writerInfo = await UserInformation.findOne({accountID: postContent.writer._id})
+        //console.log(postContent.writer._id, writerInfo.penName)
+
+
+        
+        res.json({success: true, postContent, writerInfo})
+    } catch (error) {
+        res.status(500).json({ success: false, error: error })
+        console.log("Error fetching post's content", error)
+    }
+}
+
+export default {
+    renderPage,
+    getPostList,
+    viewPostContent,
+};

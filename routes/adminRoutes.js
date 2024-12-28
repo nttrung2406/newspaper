@@ -35,5 +35,7 @@ router.use('/user',userAction)
 import postList from './admin/post/postList.route.js'
 router.use('/posts', postList)
 
+import postAction from './admin/post/postAction.route.js'
+router.use('/post', postAction)
 
 export default router;
