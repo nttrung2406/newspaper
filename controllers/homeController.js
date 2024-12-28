@@ -1,5 +1,6 @@
 import Post from "../models/postModel.js";
 import Category from "../models/Category.js";
+import * as cheerio from "cheerio"; // Import cheerio for HTML parsing
 
 export const renderHomePage = async (req, res) => {
   try {
@@ -7,15 +8,14 @@ export const renderHomePage = async (req, res) => {
     const posts = await Post.find();
     const categories = await Category.find({ parentID: { $ne: null } });
 
-    // Process the posts to extract images from content
+    // Process the posts to extract images from content using cheerio
     const processedPosts = posts.map((post) => {
       let imageUrl = null;
-      const imageMatch = post.content.match(
-        /\[IMAGE\s*:\s*(https?:\/\/[^\]]+)\]/i
-      );
 
-      if (imageMatch) {
-        imageUrl = imageMatch[1]; // Get the URL from the match
+      if (post.content) {
+        const $ = cheerio.load(post.content); // Load the content as HTML
+        const firstImg = $("img").first().attr("src"); // Get the `src` attribute of the first <img>
+        imageUrl = firstImg || null; // Assign the URL or leave null if no <img> tag exists
       }
 
       return {
