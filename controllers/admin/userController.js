@@ -153,11 +153,43 @@ const getPremiumUSer = async(req, res) => {
 
         const now = new Date(); 
         
-        const userList = await User.find({role: 'membership',
-            'membership.endDate': {$lt: now}
-        })
+        const userList = await User.find({role: 'membership'})
 
-        res.json({userList})
+        const tableRows = userList.map(user => {
+            const isPremiumActive = user.membership.endDate > now;
+            const premiumStatus = user.membership.endDate > now ? "Active" : "Expired"
+            let timeRemaining = "0 days, 0 hours, 0 minutes";
+            if (isPremiumActive) {
+                const remainingTimeInMs = user.membership.endDate - now;
+                const remainingDays = Math.floor(remainingTimeInMs / (1000 * 60 * 60 * 24));
+                const remainingHours = Math.floor((remainingTimeInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const remainingMinutes = Math.floor((remainingTimeInMs % (1000 * 60 * 60)) / (1000 * 60));
+
+                timeRemaining = `${remainingDays} ngày, ${remainingHours} giờ, ${remainingMinutes} phút`;
+            }
+            const badgeClass = isPremiumActive ? 'badge badge-outline-warning' : 'badge badge-outline-success';
+
+            const minDate = isPremiumActive 
+                ? user.membership.endDate.toISOString().slice(0, 16) 
+                : now.toISOString().slice(0, 16);
+
+            return `
+            <tr>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td><span class="${badgeClass}">${premiumStatus}</span></td>
+                <td>${timeRemaining}</td>
+                <td>
+                    <input type="datetime-local" class="form-control" id="extendDate-${user._id}" min="${minDate}">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm" onclick="submitExtension('${user._id}')">Submit</button>
+                </td>
+            </tr>
+            `
+        }).join("")
+        //console.log(tableRows)
+        res.json({tableRows})
 
     } catch (error) {
         console.log("Error fetching User's data: ", error.message);
@@ -165,9 +197,36 @@ const getPremiumUSer = async(req, res) => {
     }
 }
 
-const extendPremium =async(req, res) => {
+const extendPremium = async (req, res) => {
+    try {
+        const { id, extendDate } = req.body;
 
-}
+        if (!id || !extendDate) {
+            return res.status(400).json({ success: false, error: 'Missing userId or extendDate.' });
+        }
+        const now = new Date();
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found.' });
+        }
+
+        const newEndDate = new Date(extendDate);
+        user.membership.startDate = user.membership.endDate < now? now :user.membership.startDate
+        user.membership.endDate = newEndDate;
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+        });
+    } catch (error) {
+        console.error("Error updating User's premium: ", error.message);
+        res.status(500).json({ success: false, error: 'Server error: ' + error.message });
+    }
+};
+
 
 export default{
     getUserList,

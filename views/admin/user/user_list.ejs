@@ -71,7 +71,7 @@
                             <a href="?role=editor<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'editor' ? 'active' :'' %>">Editor</a>
                           </li>
                           <li class="nav-item">
-                            <a href="?role=membership<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'membership' ? 'active' :'' %>">Subscriber</a>
+                            <a href="?role=membership<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'membership' ? 'active' :'' %>">Membership</a>
                           </li>
                         </ul>
                       </div>
@@ -100,13 +100,15 @@
                       </div>
             
                       <!-- Add User Button -->
-                      <div class="col-4 text-right">
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#extendPremium">
-                          <i class="mdi mdi-clock"></i> Gia hạn premium
-                        </button>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
-                          <i class="mdi mdi-plus"></i> Thêm tài khoản
-                        </button>
+                      <div class="col-12 col-md-4 text-center text-md-right mb-3 mb-md-0">
+                        <div class="d-flex justify-content-center justify-content-md-end">
+                          <button type="button" class="btn btn-warning mr-2" id="toggleExetendPremium">
+                            <i class="mdi mdi-clock"></i> Gia hạn premium
+                          </button>
+                          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
+                            <i class="mdi mdi-plus"></i> Thêm tài khoản
+                          </button>
+                        </div>
                       </div>
                     </div>
                     
@@ -388,14 +390,12 @@
                           <div class="modal-body">
                             <div class="card text-left">
                               <div class="card-body">
-                                <form id="extendPremiumForm">
-
                                   <div class="row">
                                     <div class="col">
                                       <h3>Gia hạn tài khoản premium</h3>
                                     </div>
-                                    <div class="col text-right" data-dismiss="modal">
-                                      <button class="btn btn-danger"><i class="mdi mdi-close"></i>Close</button>
+                                    <div class="col text-right">
+                                      <button class="btn btn-danger" id="closeExtendBtn"><i class="mdi mdi-close"></i>Close</button>
                                     </div>
 
                                   </div>
@@ -407,10 +407,10 @@
                                       <thead class="thead-dark">
                                         <tr>
                                           <th>Username</th>
-                                          <th style="width: 30%;">Email</th>
+                                          <th style="width: 25%;">Email</th>
                                           <th style="width: 10%;">Status</th>
                                           <th style="width: 15%;">Time Remaining</th>
-                                          <th style="width: 10%;">Extend (Days)</th>
+                                          <th style="width: 15%;">Extend (Days)</th>
                                           <th style="width: 10%;">Action</th>
                                         </tr>
                                       </thead>
@@ -419,7 +419,6 @@
                                       </tbody>
                                     </table>
                                   </div>
-                                </form>
                               </div>
                             </div>
                           </div>
@@ -548,6 +547,69 @@
                       document.getElementById('dobadd').setAttribute('min', hundredYearsAgo);
                       document.getElementById('dobadd').setAttribute('max', todayFormatted);
                     </script>
+
+                    <!-- Script for extending premium-->
+                    <script>
+                      
+                      const tableBody =document.getElementById('premiumUserTable')
+                      document.getElementById('toggleExetendPremium').addEventListener('click', async ()=>{
+                        tableBody.innerHTML = ''
+                        const response = await fetch('/admin/user/list')
+                        const result = await response.json()
+
+                        tableBody.innerHTML = result.tableRows
+                        //console.log(result.tableRows)
+                        $('#extendPremium').modal({
+                          backdrop: 'static',
+                          keyboard: false,
+                        }).modal('show')
+                      })
+
+                      document.getElementById('closeExtendBtn').addEventListener('click', ()=>{
+                        $('#extendPremium').modal('hide')
+                      })
+
+                      async function submitExtension(userID){
+                        
+                        const extendDateInput = document.getElementById(`extendDate-${userID}`);
+                        const extendDate = extendDateInput.value;
+
+                        if (!extendDate) {
+                            alert('Please enter a valid date and time.');
+                            return;
+                        }
+
+                        const response = await fetch('/admin/user/extend',
+                          {
+                            method: "POST",
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              id: userID,
+                              extendDate: extendDate,
+                            })
+                          }
+                        )
+
+                        const result =await response.json()
+
+                        if (!result.success){
+                          alert(result.error)
+                        }
+                        else{
+                          alert("Gia hạn thành công")
+                        }
+
+                        const updatedResponse = await fetch('/admin/user/list');
+                        const updatedResult = await updatedResponse.json();
+
+                        tableBody.innerHTML = updatedResult.tableRows;
+                      }
+
+                    </script>
+
+
 
                     <!-- Script for disabling pen name input when role is not writer-->
                     <script>
@@ -705,17 +767,7 @@
                 }
               }
             
-              @media (min-width: 576px) {
-                .table-responsive {
-                  overflow: visible !important;
-                  position: relative;
-                }
-            
-                .dropdown-menu {
-                  position: absolute !important;
-                  z-index: 1050;
-                }
-              }
+              
 
               input:read-only{
                 background-color: #2A3038 !important;

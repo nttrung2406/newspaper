@@ -16,4 +16,7 @@ router.route('/update/:id')
 router.route('/list')
 .get(userController.getPremiumUSer)
 
+router.route('/extend')
+.post(upload.none(), userController.extendPremium)
+
 export default router;

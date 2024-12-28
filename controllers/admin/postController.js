@@ -8,6 +8,7 @@ const getPostList = async (req, res) => {
         const {page, search} = req.query;
         const limit = 10;
         const currentPage = parseInt(page) || 1;
+        console.log(search)
         const query = search ? {tittle: new RegExp(search, 'i')} :{};
 
         const [postList, totalItem] = await Promise.all([
