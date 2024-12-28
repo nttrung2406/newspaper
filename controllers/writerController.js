@@ -302,6 +302,18 @@ const writerController = {
       return res.status(500).json({ message: "Internal server error" });
     }
   },
+  postSubmit: async (req, res, next) => {
+    const postId = req.params.postId;
+
+    try {
+      const post = await Post.findById(postId);
+      post.status = "Submitted";
+      await post.save();
+      return res.status(200).json({ message: "Post submitted successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };
 
 export default writerController;

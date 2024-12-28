@@ -60,26 +60,28 @@
             <ul class="list-group list-group-flush">
               <% for (const post of posts) { %>
               <li
-                class="list-group-item d-flex justify-content-between align-items-center"
+                class="list-group-item"
               >
-                <div>
-                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
-                  <div class="text-muted"><%= post.createdAt %></div>
-                  <div class="text-muted">
-                    Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
+                <div class="row">
+                  <div class="col-md-5">
+                    <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
+                    <div class="text-muted"><%= post.createdAt %></div>
+                    <div class="text-muted">
+                      Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-2">
-                    View
-                  </a>
-                  <% if (post.status === 'Rejected' || post.status === 'Draft') { %>
-                  <a href="/writer/edit-post/<%= post._id %>?edit=true&page=<%= currentPage %>" class="btn btn-outline-warning btn-sm">Edit</a>
-                  <button class="delete-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Delete</button>
-                  <% } %>
-                  <% if (post.status === 'Approved') { %>
-                  <button class="submit-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Submit</button>
-                  <% } %>
+                  <div class="d-flex col-md-7 align-items-center justify-content-end flex-wrap">
+                    <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-1 mb-1">
+                      View
+                    </a>
+                    <% if (post.status === 'Rejected' || post.status === 'Draft') { %>
+                    <a href="/writer/edit-post/<%= post._id %>?edit=true&page=<%= currentPage %>" class="btn btn-outline-warning btn-sm mr-1 mb-1">Edit</a>
+                    <button class="delete-button btn btn-outline-info btn-sm mr-1 mb-1" data-post-id=<%= post._id %>>Delete</button>
+                    <% } %>
+                    <% if (post.status === 'Approved') { %>
+                    <button class="submit-button btn btn-outline-info btn-sm mr-1 mb-1" data-post-id=<%= post._id %>>Submit</button>
+                    <% } %>
+                  </div>
                 </div>
               </li>
               <% } %>

@@ -34,4 +34,10 @@ router.post(
   writerController.postDelete
 );
 
+router.post(
+  "/submit-post/:postId",
+  checkRole("writer"),
+  writerController.postSubmit
+);
+
 export default router;
