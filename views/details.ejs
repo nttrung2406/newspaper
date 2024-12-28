@@ -115,6 +115,39 @@
                                 </form>
                             </section>
                         </div>
+                        <!-- Các bài viết ngẫu nhiên -->
+                        <div class="col-lg-4">
+                            <aside>
+                                <h4 class="mb-1">Related Posts</h4>
+                                <% if (randomPosts && randomPosts.length> 0) { %>
+                                    <div class="row">
+                                        <% randomPosts.forEach(post=> { %>
+                                            <div class="col-lg-12">
+                                                <div class="single-what-news">
+                                                    <div class="what-img">
+                                                        <img src="<%= post.imageURL || '/img/news/whatNews1.jpg' %>"
+                                                            alt="<%- post.title %>" />
+                                                    </div>
+                                                    <div class="what-cap">
+                                                        <span class="color1">
+                                                            <%- category.categoryName || 'Uncategorized' %>
+                                                        </span>
+                                                        <h4>
+                                                            <a href="/posts/<%- post._id %>">
+                                                                <%- post.title %>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <p>No related posts found.</p>
+                                        <% } %>
+                            </aside>
+                        </div>
+
                     </div>
                 </div>
             </section>
