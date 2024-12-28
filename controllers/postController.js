@@ -79,14 +79,17 @@ export const getPostById = async (req, res) => {
             console.log(`Post with id ${id} not found`);
             return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
         }
-        console.log("post:",post);
-        console.log("category:",post.category);
-        console.log("writer:",post.writer);
+
+        // Lấy các bài viết ngẫu nhiên cùng category
+        const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
+
+
         // Truyền đầy đủ thông tin category và writer vào view
         res.render('details', { 
             post,
             category: post.category,
-            user: post.writer
+            user: post.writer,
+            randomPosts
         });
     } catch (error) {
         res.status(500).render('errorPage', { error: error.message });
@@ -120,3 +123,16 @@ const getPostByCategory = async (req, res) => {
     }
 }
 export default getPostByCategory;
+
+export const getRandomPostsByCategory = async (categoryId, postId) => {
+    try {
+        const posts = await Post.aggregate([
+            { $match: { category: categoryId, _id: { $ne: postId } } }, // Loại trừ bài viết hiện tại
+            { $sample: { size: 5 } } // Lấy ngẫu nhiên 5 bài viết
+        ]);
+        return posts;
+    } catch (error) {
+        console.error('Error fetching random posts by category:', error.message);
+        throw error;
+    }
+};

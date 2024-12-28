@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
 <!-- Chưa hiện số trang theo số bài viết -->
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -48,17 +49,28 @@
                     <!-- Nav Button -->
                     <nav>
                       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <!-- <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                           role="tab" aria-controls="nav-home" aria-selected="true" data-category="all">All</a> -->
-                        <% freeCategories.forEach(function(category) { %>
-                          <a class="nav-item nav-link" id="nav-<%= category._id %>" data-toggle="tab"
-                            href="#nav-<%= category._id %>" role="tab" aria-controls="nav-<%= category._id %>"
-                            aria-selected="false" data-category="<%= category._id %>">
-                            <%= category.categoryName %>
-                          </a>
-                          <% }); %>
+                        <% categories.forEach(function(category) { %>
+                          <div class="nav-item dropdown" onmouseover="$(this).addClass('show').find('.dropdown-menu').addClass('show')"
+                               onmouseout="$(this).removeClass('show').find('.dropdown-menu').removeClass('show')">
+                            <a class="nav-link dropdown-toggle text-danger" id="nav-<%= category._id %>" href="#" role="button"
+                              aria-haspopup="true" aria-expanded="false" data-category="<%= category._id %>">
+                              <%= category.categoryName %>
+                            </a>
+                            <% if (category.children && category.children.length > 0) { %>
+                              <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="nav-<%= category._id %>">
+                                <% category.children.forEach(function(child) { %>
+                                  <a class="dropdown-item" href="#" data-category="<%= child._id %>">
+                                    <%= child.categoryName %>
+                                  </a>
+                                <% }); %>
+                              </div>
+                            <% } %>
+                          </div>
+                        <% }); %>
                       </div>
                     </nav>
+                    
+
 
                     <!-- End Nav Button -->
                   </div>
@@ -66,7 +78,7 @@
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                       <!-- Nội dung của All -->
                     </div>
-                    <% freeCategories.forEach(function(category) { %>
+                    <% categories.forEach(function(category) { %>
                       <div class="tab-pane fade" id="nav-<%= category._id %>" role="tabpanel"
                         aria-labelledby="nav-<%= category._id %>">
                         <!-- Nội dung của category <%= category.categoryName %> -->
@@ -187,8 +199,8 @@
             <div class="col-xl-12">
               <div class="single-wrap d-flex justify-content-center">
                 <nav aria-label="Page navigation example">
-                  <ul class="pagination justify-content-start">
-                    <li class="page-item">
+                  <ul class="pagination justify-content-start" id="pagination">
+                    <!-- <li class="page-item">
                       <a class="page-link" href="#" id="prev-btn"><span class="flaticon-arrow roted"></span></a>
                     </li>
                     <li class="page-item active" name="page-info">
@@ -202,7 +214,7 @@
                     </li>
                     <li class="page-item">
                       <a class="page-link" href="#" id="next-btn"><span class="flaticon-arrow right-arrow"></span></a>
-                    </li>
+                    </li> -->
                   </ul>
                 </nav>
               </div>
@@ -268,26 +280,22 @@
         <% } %>
           <script>
             document.addEventListener('DOMContentLoaded', () => {
-              let currentCategory = '6747298ee1d6dd827c95f42c'; // Thay bằng category mặc định
+              let currentCategory = '676e10c487f7c39a0137b44a'; // Thay bằng category mặc định
               let currentPage = 1;
-
+              let postsPerPage = 10;
               const postsContainer = document.getElementById('posts-container');
-              const prevBtn = document.getElementById('prev-btn');
-              const nextBtn = document.getElementById('next-btn');
-              const pageInfo = document.getElementsByName('page-info');
+              // const prevBtn = document.getElementById('prev-btn');
+              // const nextBtn = document.getElementById('next-btn');
+              const pagination = document.getElementById('pagination');
 
               const loadPosts = async (category, page) => {
                 try {
                   const response = await fetch(`/api/posts?category=${category}&page=${page}`);
                   const data = await response.json();
-
-                  // Xóa bài viết cũ
                   postsContainer.innerHTML = '';
 
                   data.posts.forEach((post, index) => {
                     let postHTML = '';
-
-                    // Kiểm tra xem bài viết có phải là bài đầu tiên trong cặp không
                     postHTML += `
                               <div class="col-lg-6 col-md-6">
                                 <div class="single-what-news mb-100">
@@ -307,54 +315,43 @@
                                 </div>
                               </div>`;
 
-                    // Chèn bài viết vào container
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
                   });
 
-
-                  // Cập nhật thông tin phân trang
-                  currentPage = data.currentPage;
-                  console.log('Current page:', currentPage);
-                  pageInfo.innerText = `Page ${currentPage}`;
-
-                  // Bật/tắt nút phân trang
-                  if (currentPage === 1) {
-                    prevBtn.style.display = 'none'; // Ẩn nút prev nếu ở trang đầu
-                  } else {
-                    prevBtn.style.display = 'inline-block'; // Hiển thị lại nếu không phải trang đầu
-                  }
-                  console.log('Posts length:', data.posts.length);
-                  // Cập nhật trạng thái của nút "Next"
-                  if (data.posts.length < 10 || data.currentPage * 10 >= data.totalPosts) {
-                    nextBtn.style.display = 'none'; // Ẩn nút next nếu số bài viết nhỏ hơn 10
-                  } else {
-                    nextBtn.style.display = 'inline-block'; // Hiển thị lại nếu có thêm bài viết
-                  }
-                }
-                catch (error) {
+                  updatePagination(data.totalPosts, data.currentPage);
+                } catch (error) {
                   console.error('Error loading posts:', error);
                 }
               };
 
-              // Sự kiện chuyển trang
-              prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) loadPosts(currentCategory, currentPage - 1);
-              });
+              const updatePagination = (totalPosts, currentPage) => {
+                const totalPages = Math.ceil(totalPosts / postsPerPage);
+                pagination.innerHTML = ''; 
 
-              nextBtn.addEventListener('click', () => {
-                loadPosts(currentCategory, currentPage + 1);
-              });
+                for (let i = 1; i <= totalPages; i++) {
+                  const pageItem = document.createElement('li');
+                  pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                  pageItem.innerHTML = `
+        <a class="page-link" href="#">${i}</a>
+      `;
+                  pageItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadPosts(currentCategory, i);
+                  });
+                  pagination.appendChild(pageItem);
+                }
+              };
 
               // Chuyển category
-              document.querySelectorAll('.nav-link').forEach((tab) => {
-                tab.addEventListener('click', (e) => {
+              document.querySelectorAll('.dropdown-item').forEach((item) => {
+                item.addEventListener('click', (e) => {
+                  e.preventDefault();
                   currentCategory = e.target.dataset.category;
-                  currentPage = 1; // Reset về trang đầu
+                  currentPage = 1; 
                   loadPosts(currentCategory, currentPage);
                 });
               });
 
-              // Load posts ban đầu
               loadPosts(currentCategory, currentPage);
             });
 

@@ -57,97 +57,266 @@
 
     <%- include('./partials/header.ejs') %>
 
-    <main>
-        <section class="post-content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                        <!-- Post Details -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <% if (category) { %>
-                                    <p class="text-muted mb-1">
-                                        <i class="fas fa-folder-open me-1"></i> 
-                                        <span class="fw-bold"><%- category.categoryName %></span>
-                                    </p>
-                                <% } else { %>
-                                    <p class="text-muted mb-1">
-                                        <i class="fas fa-folder-open me-1"></i> 
-                                        <span class="fw-bold">Uncategorized</span>
-                                    </p>
-                                <% } %>
-                                <h2 class="card-title text-primary mb-3"><%- post.title %></h2>
-                                <div class="d-flex justify-content-between text-muted mb-3">
-                                    <small><i class="far fa-calendar-alt me-1"></i> <%- new Date(post.createdAt).toLocaleDateString() %></small>
-                                    <small><i class="far fa-user me-1"></i> <%- user.username %></small>
+        <main>
+            <section class="post-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <!-- Post Details -->
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <% if (category) { %>
+                                        <p class="text-muted mb-1">
+                                            <i class="fas fa-folder-open me-1"></i>
+                                            <span class="fw-bold"><%- category.categoryName %></span>
+                                        </p>
+                                        <% } else { %>
+                                            <p class="text-muted mb-1">
+                                                <i class="fas fa-folder-open me-1"></i>
+                                                <span class="fw-bold">Uncategorized</span>
+                                            </p>
+                                            <% } %>
+                                                <h2 class="card-title text-primary mb-3"><%- post.title %></h2>
+                                                <div class="d-flex justify-content-between text-muted mb-3">
+                                                    <small><i class="far fa-calendar-alt me-1"></i> <%- new
+                                                            Date(post.createdAt).toLocaleDateString() %></small>
+                                                    <small><i class="far fa-user me-1"></i> <%- user.username %></small>
+                                                </div>
+                                                <p class="card-text">
+                                                    <%- post.content %>
+                                                </p>
+                                                <% if (post.tags?.length> 0) { %>
+                                                    <p class="text-muted">Tags:
+                                                        <% post.tags.forEach(tag=> { %>
+                                                            <span class="badge bg-secondary"><%- tag.name %></span>
+                                                            <% }); %>
+                                                    </p>
+                                                    <% } %>
+
+                                                        <!-- Add your image here -->
+                                                        <img src="<%- post.imageURL %>" alt="Post Image">
                                 </div>
-                                <p class="card-text">
-                                    <%- post.content %>
-                                </p>
-                                <% if (post.tags?.length > 0) { %>
-                                    <p class="text-muted">Tags: 
-                                        <% post.tags.forEach(tag => { %>
-                                            <span class="badge bg-secondary"><%- tag.name %></span>
-                                        <% }); %>
-                                    </p>
-                                <% } %>
                             </div>
+
+                            <!-- Comments Section -->
+                            <section class="comments-section">
+                                <h4 class="mb-4">Comments</h4>
+                                <div id="comments-list" class="list-group mb-4">
+                                    <!-- Comments will be loaded dynamically -->
+                                </div>
+                                <form id="comment-form" class="needs-validation" novalidate>
+                                    <input type="hidden" id="postId" value="<%- post._id %>">
+                                    <div class="mb-3">
+                                        <label for="content" class="form-label">Comment:</label>
+                                        <textarea id="content" class="form-control" rows="3" required></textarea>
+                                        <div class="invalid-feedback">Please enter a comment.</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                </form>
+                            </section>
                         </div>
-    
-                        <!-- Comments Section -->
-                        <section class="comments-section">
-                            <h4 class="mb-4">Comments</h4>
-                            <div id="comments-list" class="list-group mb-4">
-                                <!-- Comments will be loaded dynamically -->
-                            </div>
-                            <form id="comment-form" class="needs-validation" novalidate>
-                                <input type="hidden" id="postId" value="<%- post._id %>">
-                                <div class="mb-3">
-                                    <label for="author" class="form-label">Name:</label>
-                                    <input type="text" id="author" class="form-control" required>
-                                    <div class="invalid-feedback">Please enter your name.</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="content" class="form-label">Comment:</label>
-                                    <textarea id="content" class="form-control" rows="3" required></textarea>
-                                    <div class="invalid-feedback">Please enter a comment.</div>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Submit</button>
-                            </form>
-                        </section>
+                        <!-- Các bài viết ngẫu nhiên -->
+                        <div class="col-lg-4">
+                            <aside>
+                                <h4 class="mb-1">Related Posts</h4>
+                                <% if (randomPosts && randomPosts.length> 0) { %>
+                                    <div class="row">
+                                        <% randomPosts.forEach(post=> { %>
+                                            <div class="col-lg-12">
+                                                <div class="single-what-news">
+                                                    <div class="what-img">
+                                                        <img src="<%= post.imageURL || '/img/news/whatNews1.jpg' %>"
+                                                            alt="<%- post.title %>" />
+                                                    </div>
+                                                    <div class="what-cap">
+                                                        <span class="color1">
+                                                            <%- category.categoryName || 'Uncategorized' %>
+                                                        </span>
+                                                        <h4>
+                                                            <a href="/posts/<%- post._id %>">
+                                                                <%- post.title %>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <p>No related posts found.</p>
+                                        <% } %>
+                            </aside>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-    
-    <%- include('./partials/footer.ejs') %>
+            </section>
+        </main>
 
-    <!-- JS here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.slicknav.min.js"></script>
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <script src="/js/gijgo.min.js"></script>
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
-    <script src="/js/plugins.js"></script>
-    <script src="/js/main.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <%- include('./partials/footer.ejs') %>
+
+            <!-- JS here -->
+            <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+            <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+            <script src="/js/popper.min.js"></script>
+            <script src="/js/bootstrap.min.js"></script>
+            <script src="/js/jquery.slicknav.min.js"></script>
+            <script src="/js/owl.carousel.min.js"></script>
+            <script src="/js/slick.min.js"></script>
+            <script src="/js/gijgo.min.js"></script>
+            <script src="/js/wow.min.js"></script>
+            <script src="/js/animated.headline.js"></script>
+            <script src="/js/jquery.magnific-popup.js"></script>
+            <script src="/js/jquery.ticker.js"></script>
+            <script src="/js/site.js"></script>
+            <script src="/js/jquery.scrollUp.min.js"></script>
+            <script src="/js/jquery.nice-select.min.js"></script>
+            <script src="/js/jquery.sticky.js"></script>
+            <script src="/js/contact.js"></script>
+            <script src="/js/jquery.form.js"></script>
+            <script src="/js/jquery.validate.min.js"></script>
+            <script src="/js/mail-script.js"></script>
+            <script src="/js/jquery.ajaxchimp.min.js"></script>
+            <script src="/js/plugins.js"></script>
+            <script src="/js/main.js"></script>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const postId = document.getElementById('postId').value;
+                    const commentsList = document.getElementById('comments-list');
+                    const commentForm = document.getElementById('comment-form');
+                    const submitButton = commentForm.querySelector('button[type="submit"]');
+
+                    const loadComments = async () => {
+                        try {
+                            const response = await fetch(`/comments/${postId}`);
+                            const comments = await response.json();
+
+                            commentsList.innerHTML = comments.map(comment => `
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>${comment.userId.username}</strong>
+                                <p class="mb-1">${comment.content}</p>
+                                <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                            </div>
+                            ${comment.isOwner ? // Chỉ hiển thị nút xóa nếu là người dùng hiện tại
+                                    `<button class="btn btn-danger btn-sm delete-comment" data-id="${comment._id}">Delete</button>`
+                                    : ''
+                                }
+                        </div>
+                    `).join('');
+                        } catch (error) {
+                            console.error('Error loading comments:', error);
+                        }
+                    };
+
+
+                    commentForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+
+                        if (!commentForm.checkValidity()) {
+                            commentForm.classList.add('was-validated');
+                            return;
+                        }
+                        const content = document.getElementById('content').value;
+
+                        submitButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...`;
+                        submitButton.disabled = true;
+
+                        try {
+                            const response = await fetch('/comments', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ postId, content })
+                            });
+                            console.log(response);
+                            if (response.status === 401) {
+                                // Người dùng chưa đăng nhập
+                                Toastify({
+                                    text: "You must be logged in to add a comment.",
+                                    duration: 1000,
+                                    gravity: "bottom",
+                                    position: "left",
+                                    backgroundColor: "#f44336",
+                                    stopOnFocus: true,
+                                }).showToast();
+                                setTimeout(() => {
+                                    window.location.href = '/auth';
+                                }, 1000);
+                            }
+                            if (response.ok) {
+                                // document.getElementById('author').value = '';
+                                document.getElementById('content').value = '';
+                                commentForm.classList.remove('was-validated');
+                                loadComments();
+
+                                Toastify({
+                                    text: "Comment added successfully!",
+                                    duration: 3000,
+                                    gravity: "bottom",
+                                    position: "left",
+                                    backgroundColor: "#4caf50",
+                                    stopOnFocus: true,
+                                }).showToast();
+                            }
+                        } catch (error) {
+                            console.error('Error adding comment:', error);
+
+                            Toastify({
+                                text: "Failed to add comment. Please try again!",
+                                duration: 3000,
+                                gravity: "bottom",
+                                position: "left",
+                                backgroundColor: "#f44336",
+                                stopOnFocus: true,
+                            }).showToast();
+                        } finally {
+                            // Khôi phục nút submit
+                            submitButton.innerHTML = 'Submit';
+                            submitButton.disabled = false;
+                        }
+                    });
+
+                    const handleDelete = async (commentId) => {
+                        try {
+                            const response = await fetch(`/comments/${commentId}`, { method: 'DELETE' });
+
+                            if (response.ok) {
+                                Toastify({
+                                    text: "Comment deleted successfully!",
+                                    duration: 3000,
+                                    gravity: "bottom",
+                                    position: "left",
+                                    backgroundColor: "#4caf50",
+                                    stopOnFocus: true,
+                                }).showToast();
+                                loadComments();
+                            } else {
+                                const data = await response.json();
+                                throw new Error(data.error);
+                            }
+                        } catch (error) {
+                            Toastify({
+                                text: error.message || "Failed to delete comment. Please try again!",
+                                duration: 3000,
+                                gravity: "bottom",
+                                position: "left",
+                                backgroundColor: "#f44336",
+                                stopOnFocus: true,
+                            }).showToast();
+                        }
+                    };
+
+                    commentsList.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('delete-comment')) {
+                            const commentId = e.target.getAttribute('data-id');
+                            handleDelete(commentId);
+                        }
+                    });
+                    loadComments();
+                });
+            </script>
 </body>
 
 </html>
