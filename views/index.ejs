@@ -180,7 +180,7 @@
                                 <h4>
                                   <a href="/posts/<%= post._id %>"><%= post.title %></a>
                                 </h4>
-                                <p><%= post.abstract || 'No description available.' %></p>
+                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
                               </div>
                             </div>
                             <% }); %>
@@ -196,7 +196,8 @@
                                 <h4>
                                   <a href="/posts/<%= post._id %>"><%= post.title %></a>
                                 </h4>
-                                <p><%= post.abstract || 'No description available.' %></p>
+                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
+
                               </div>
                             </div>
                             <% }); %>
@@ -239,7 +240,7 @@
                                 <h4>
                                   <a href="/posts/<%= post._id %>"><%= post.title %></a>
                                 </h4>
-                                <p><%= post.abstract || 'No description available.' %></p>
+                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
                               </div>
                             </div>
                             <% }); %>
