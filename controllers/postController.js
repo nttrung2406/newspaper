@@ -2,6 +2,7 @@ import Post from '../models/postModel.js';
 import Membership from '../models/Membership.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
+import * as cheerio from "cheerio"; // Import cheerio for HTML parsing
 
 export const createPost = async (req, res) => {
   try {
@@ -68,53 +69,85 @@ export const searchPostsByTitle = async (req, res) => {
   }
 };
 
+
 export const getPostById = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        // Populate toàn bộ các trường của category và writer
-        const post = await Post.findById(id).populate('category').populate('writer');
-
-        if (!post) {
-            console.log(`Post with id ${id} not found`);
-            return res.status(404).render('errorPage', { error: `Post with id ${id} not found` });
-        }
-
-        // Lấy các bài viết ngẫu nhiên cùng category
-        const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
-
-
-        // Truyền đầy đủ thông tin category và writer vào view
-        res.render('details', { 
-            post,
-            category: post.category,
-            user: post.writer,
-            randomPosts
-        });
+      const { id } = req.params;
+  
+      // Fetch the post and populate all fields of category and writer
+      const post = await Post.findById(id).populate("category").populate("writer");
+  
+      if (!post) {
+        console.log(`Post with id ${id} not found`);
+        return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
+      }
+  
+      // Use cheerio to extract the first image from the post's content
+      let imageUrl = null;
+      if (post.content) {
+        const $ = cheerio.load(post.content); // Load the post's content as HTML
+        const firstImg = $("img").first().attr("src"); // Extract the `src` attribute of the first <img>
+        imageUrl = firstImg || null; // Assign the URL or leave null if no <img> tag exists
+      }
+  
+      // Add the extracted image URL to the post object
+      const processedPost = {
+        ...post._doc, // Spread the existing post fields
+        imageUrl, // Include the extracted image URL
+      };
+  
+      // Fetch random posts from the same category
+      const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
+  
+      // Pass full details including category, writer, and random posts to the view
+      res.render("details", { 
+        post: processedPost, // Use the processed post with the image URL
+        category: post.category,
+        user: post.writer,
+        randomPosts,
+      });
     } catch (error) {
-        res.status(500).render('errorPage', { error: error.message });
+      res.status(500).render("errorPage", { error: error.message });
     }
-};
+  };
 
 
-const getPostByCategory = async (req, res) => {
+  const getPostByCategory = async (req, res) => {
     try {
         const { category, page } = req.query;
         const currentPage = parseInt(page) || 1;
         const limit = 10;
         const skip = (currentPage - 1) * limit;
-        console.log("category:",category);
-        console.log("currentPage:",currentPage);
+
+        console.log("category:", category);
+        console.log("currentPage:", currentPage);
+
         // Query bài viết theo category
         const posts = await Post.find({ category })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
+        // Process posts to extract the first image using Cheerio
+        const processedPosts = posts.map((post) => {
+            let imageUrl = null;
+
+            if (post.content) {
+                const $ = cheerio.load(post.content); // Load the content as HTML
+                const firstImg = $("img").first().attr("src"); // Extract the `src` of the first <img>
+                imageUrl = firstImg || null; // Assign the extracted URL or null if no image is found
+            }
+
+            return {
+                ...post._doc, // Include all other properties of the post
+                imageUrl, // Add the extracted image URL (or null if none found)
+            };
+        });
+
         const totalPosts = await Post.countDocuments({ category });
 
         res.json({
-            posts,
+            posts: processedPosts, // Return the posts with the extracted image URLs
             totalPosts,
             currentPage,
         });
@@ -122,17 +155,36 @@ const getPostByCategory = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch posts' });
     }
 }
+
 export default getPostByCategory;
 
 export const getRandomPostsByCategory = async (categoryId, postId) => {
     try {
-        const posts = await Post.aggregate([
-            { $match: { category: categoryId, _id: { $ne: postId } } }, // Loại trừ bài viết hiện tại
-            { $sample: { size: 5 } } // Lấy ngẫu nhiên 5 bài viết
-        ]);
-        return posts;
+      // Fetch random posts excluding the current post
+      const posts = await Post.aggregate([
+        { $match: { category: categoryId, _id: { $ne: postId } } }, // Exclude the current post
+        { $sample: { size: 5 } }, // Fetch 5 random posts
+      ]);
+  
+      // Process each post to extract the first image using cheerio
+      const processedPosts = posts.map((post) => {
+        let imageUrl = null;
+  
+        if (post.content) {
+          const $ = cheerio.load(post.content); // Load the content as HTML
+          const firstImg = $("img").first().attr("src"); // Extract the `src` of the first <img>
+          imageUrl = firstImg || null; // Assign the extracted URL or null
+        }
+  
+        return {
+          ...post, // Include all other fields of the post
+          imageUrl, // Add the extracted image URL
+        };
+      });
+  
+      return processedPosts;
     } catch (error) {
-        console.error('Error fetching random posts by category:', error.message);
-        throw error;
+      console.error("Error fetching random posts by category:", error.message);
+      throw error;
     }
-};
+  };

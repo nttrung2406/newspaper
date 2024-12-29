@@ -297,24 +297,26 @@
                   data.posts.forEach((post, index) => {
                     let postHTML = '';
                     postHTML += `
-                              <div class="col-lg-6 col-md-6">
-                                <div class="single-what-news mb-100">
-                                  <div class="what-img">
-                                    <img src="/img/news/whatNews1.jpg" alt="" />
-                                  </div>
-                                  <div class="what-cap">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="single-what-news mb-100">
+                                <div class="what-img">
+                                    <!-- Use the image URL from the post data -->
+                                    <img src="${post.imageUrl || '/img/default-image.jpg'}" alt="${post.title}" />
+                                </div>
+                                <div class="what-cap">
                                     <span class="color1">
-                                      ${post.category}
+                                        ${post.category}
                                     </span>
                                     <h4>
-                                      <a href="/posts/${post._id}">
-                                        ${post.title}
-                                      </a>
+                                        <a href="/posts/${post._id}">
+                                            ${post.title}
+                                        </a>
                                     </h4>
-                                  </div>
                                 </div>
-                              </div>`;
+                            </div>
+                        </div>`;
 
+                    // Insert the generated post HTML into the posts container
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
                   });
 
