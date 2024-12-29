@@ -3,6 +3,6 @@ import tagController from "../controllers/tagController.js";
 
 const router = express.Router();
 
-router.get("/tag/:tagId", tagController.getPostsByTag);
+router.get("/tags/:tagId", tagController.getPostsByTag);
 
 export default router;
