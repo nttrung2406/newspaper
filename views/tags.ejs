@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>News</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/css/ticker-style.css" />
+    <link rel="stylesheet" href="/css/flaticon.css" />
+    <link rel="stylesheet" href="/css/slicknav.css" />
+    <link rel="stylesheet" href="/css/animate.min.css" />
+    <link rel="stylesheet" href="/css/magnific-popup.css" />
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/css/themify-icons.css" />
+    <link rel="stylesheet" href="/css/slick.css" />
+    <link rel="stylesheet" href="/css/nice-select.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/image.css" />
+  </head>
+
+  <body>
+    <%- include('./partials/header.ejs') %>
+    <main>
+      <!-- Whats New Start -->
+      <section class="whats-news-area pt-50 pb-20">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- post container -->
+              <div class="row">
+                <div class="col-12">
+                  <!-- Nav Card -->
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      <div id="whats-news-caption" class="whats-news-caption">
+                        <div class="row" id="posts-container">
+                          <% posts.forEach(post => { %>
+                          <div class="col-lg-6 col-md-6">
+                            <div class="single-what-news mb-100">
+                              <div class="what-img">
+                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="Mbappe vẫn mơ làm đồng đội của Ronaldo">
+                              </div>
+                                <div class="what-cap">
+                                  <% post.tags.forEach(tag => { %>
+                                  <span class="color1">
+                                    #<%= tag.tagName %>
+                                  </span>
+                                  <% }) %>
+                                  <h4>
+                                    <a href="/posts/<%= post._id %>">
+                                      <%= post.title %>
+                                    </a>
+                                  </h4>
+                                </div>
+                            </div>
+                          </div>
+                          <% }) %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <section class="col-lg-4 col-md-4">
+              <div class="row-lg-3 row-md-3">
+                <!-- Section Tittle -->
+                <div class="section-tittle mb-40">
+                  <h3>Follow Us</h3>
+                </div>
+                <!-- Flow Socail -->
+                <div class="single-follow mb-45">
+                  <div class="single-box">
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-fb.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-tw.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-ins.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                    <div class="follow-us d-flex align-items-center">
+                      <div class="follow-social">
+                        <a href="#"><img src="/img/news/icon-yo.png" alt="" /></a>
+                      </div>
+                      <div class="follow-count">
+                        <span>8,045</span>
+                        <p>Fans</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- New Poster -->
+                <div class="news-poster d-none d-lg-block">
+                  <img src="/img/news/news_card.jpg" alt="" />
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        </div>
+      </section>
+      <!-- End pagination  -->
+    </main>
+    <%- include('./partials/footer.ejs') %>
+
+    <!-- JS here -->
+
+    <!-- All JS Custom Plugins Link Here here -->
+    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <!-- Date Picker -->
+    <script src="/js/gijgo.min.js"></script>
+    <!-- One Page, Animated-HeadLin -->
+    <script src="/js/wow.min.js"></script>
+    <script src="/js/animated.headline.js"></script>
+    <script src="/js/jquery.magnific-popup.js"></script>
+
+    <!-- Breaking New Pluging -->
+    <script src="/js/jquery.ticker.js"></script>
+    <script src="/js/site.js"></script>
+
+    <!-- Scrollup, nice-select, sticky -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <script src="/js/jquery.nice-select.min.js"></script>
+    <script src="/js/jquery.sticky.js"></script>
+
+    <!-- contact js -->
+    <script src="/js/contact.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/mail-script.js"></script>
+    <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/head.js"></script>
+    <script src="/js/category_selections.js"></script>
+  </body>
+</html>

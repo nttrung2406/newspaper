@@ -9,12 +9,16 @@ import session from "express-session";
 import flash from "connect-flash";
 import MongoDBStore from "connect-mongodb-session";
 import { dirname } from "path";
+import tagRoutes from "./routes/tagRoutes.js";
 
 // Import db connection
 import connectMongoDB from "./db.js";
 
 // Import Middleware
-import { authorizeMembership, authorizeRole } from "./middlewares/authMiddleware.js";
+import {
+  authorizeMembership,
+  authorizeRole,
+} from "./middlewares/authMiddleware.js";
 
 //  Import Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -115,7 +119,11 @@ app.use((req, res, next) => {
 // routes
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use("/posts/membership", authorizeMembership(["membership"]), membershipRoutes);
+app.use(
+  "/posts/membership",
+  authorizeMembership(["membership"]),
+  membershipRoutes
+);
 app.use("/users", authorizeRole(["admin"]), userRoutes);
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
@@ -123,6 +131,7 @@ app.use("/writer", writerRoutes);
 app.use("/categori", categoryRoutes);
 app.use("/comments", commentRoutes);
 app.use("/", homeRoutes);
+app.use(tagRoutes);
 
 // Pages
 app.get("/about", (req, res) => res.render("about"));

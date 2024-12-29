@@ -9,10 +9,12 @@
               <div class="header-info-left">
                 <ul>
                   <li id="temperature">
-                    <img src="/img/icon/header_icon1.png" alt="" />Loading temperature...
+                    <img src="/img/icon/header_icon1.png" alt="" />Loading
+                    temperature...
                   </li>
                   <li id="datetime">
-                    <img src="/img/icon/header_icon1.png" alt="" />Loading date and time...
+                    <img src="/img/icon/header_icon1.png" alt="" />Loading date
+                    and time...
                   </li>
                 </ul>
               </div>
@@ -67,10 +69,10 @@
                     <li><a href="/about">About</a></li>
                     <li><a href="/latest_news">Latest News</a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <li><a href="#">Tags</a></li>
+                    <li><a href="/tags">Tags</a></li>
                     <% if (role && role === 'writer') { %>
-                      <li><a href="/writer">Compose</a></li>
-                      <% } %>                   
+                    <li><a href="/writer">Compose</a></li>
+                    <% } %>
                   </ul>
                 </nav>
               </div>
@@ -80,7 +82,12 @@
                 <i class="fas fa-search special-tag"></i>
                 <div class="search-box">
                   <form id="searchForm" action="/posts/search" method="GET">
-                    <input type="text" id="searchInput" name="query" placeholder="Search"/>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      name="query"
+                      placeholder="Search"
+                    />
                   </form>
                 </div>
                 <% if (isAuthenticated) { %>
