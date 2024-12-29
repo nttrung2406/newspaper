@@ -44,7 +44,7 @@
                           <div class="col-lg-6 col-md-6">
                             <div class="single-what-news mb-100">
                               <div class="what-img">
-                                <img style="height: 200px; object-fit: cover" src="<%= post.imageUrl || '/img/post/default-image.jpg' %>" alt="Mbappe vẫn mơ làm đồng đội của Ronaldo">
+                                <img style="height: 200px; object-fit: cover" src="<%= post.imageUrl || '/img/post/default-image.jpg' %>" alt="<%= post.abstract %>">
                               </div>
                                 <div class="what-cap">
                                   <% post.tags.forEach(tag => { %>

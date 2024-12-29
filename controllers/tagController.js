@@ -16,6 +16,7 @@ const tagController = {
         return {
           _id: post._id,
           title: post.title,
+          abstract: post.abstract,
           content: post.content,
           tags: post.tags,
           createdAt: post.createdAt,
