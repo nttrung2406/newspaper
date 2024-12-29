@@ -149,6 +149,50 @@
                   </div>
                 </div>
 
+                <!--Premium Confirmation Modal -->
+                <div class="modal fade" id="confirmationPremiumModal" tabindex="-1" role="dialog"
+                  aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="card text-left">
+                        <div class="card-body">
+                          <h4 class="card-title">Confirm Action</h4>
+
+                          <form action="" id="premiumForm" method="POST">
+                            <p>Bạn có chắc chắn muốn gán cho bài báo này premium?</p>
+                            <div class="d-flex justify-content-center">
+                              <button type="submit" class="btn btn-primary mr-3">Confirm</button>
+                              <button type="button" class="btn btn-dark" id="closePremiumModal">Cancel</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Publish Modal-->
+                <div class="modal fade" id="confirmationPublishModal" tabindex="-1" role="dialog"
+                  aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="card text-left">
+                        <div class="card-body">
+                          <h4 class="card-title">Confirm Action</h4>
+
+                          <form action="" id="publishForm" method="POST">
+                            <p>Bạn có chắc chắn xuất bản bài báo này không?</p>
+                            <div class="d-flex justify-content-center">
+                              <button type="submit" class="btn btn-primary mr-3">Confirm</button>
+                              <button type="button" class="btn btn-dark" id="closePublishModal">Cancel</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
                 <!--Script for fetching data rows when load, search and apply filter-->
                 <script>
@@ -219,27 +263,27 @@
                     }
 
                     postContentContainer.innerHTML = `
-                      <div class="card mb-4">
-                        <div class="card-body">
+                      <div class="card mb-4" style="background: 1px solid white">
+                        <div class="card-body" >
                           ${result.postContent.category
                         ? `
                               <p class="text-muted mb-1">
-                                <i class="fas fa-folder-open me-1"></i>
-                                <span class="fw-bold">${result.postContent.category.categoryName}</span>
+                                <i class="mdi mdi-folder-open me-1"></i>
+                                <span class="text-bold">${result.postContent.category.categoryName}</span>
                               </p>`
                         : `
                               <p class="text-muted mb-1">
-                                <i class="fas fa-folder-open me-1"></i>
-                                <span class="fw-bold">Uncategorized</span>
+                                <i class="mdi mdi-folder-open me-1"></i>
+                                <span class="text-bold">Uncategorized</span>
                               </p>`}
                             
                           <h2 class="card-title text-primary mb-3">${result.postContent.title}</h2>
                           <div class="d-flex justify-content-between text-muted mb-3">
-                            <small><i class="far fa-calendar-alt me-1"></i> ${new Date(result.postContent.createdAt).toLocaleDateString()}</small>
-                            <small><i class="far fa-user me-1"></i> ${result.postContent.writer.username}</small>
+                            <small><i class="mdi mdi-calendar me-1"></i> ${new Date(result.postContent.createdAt).toLocaleDateString()}</small>
+                            <small><i class="mdi mdi-account me-1"></i> ${result.postContent.writer.username}</small>
                           </div>
                         
-                          <p class="card-text">
+                          <p class="card-text>
                             ${result.postContent.content}
                           </p>
                         </div>
@@ -248,16 +292,136 @@
 
 
 
-                    $('#postDetailModal').modal({
-                      backdrop: 'static',
-                    }).modal('show');
+                    $('#postDetailModal').modal('show');
                   }
 
 
                 </script>
 
+                <!-- Script for turning post to premium -->
+                <script>
+                  document.getElementById('closePremiumModal').addEventListener('click', () => {
+                    $('#confirmationPremiumModal').modal('hide')
+                  })
+
+                  document.getElementById('premiumForm').addEventListener('submit', async (event) => {
+                    event.preventDefault(); // Prevent the form from submitting the default way
+
+                    const id = document.getElementById('confirmationPremiumModal').getAttribute('data-id'); // Correctly get the data-id attribute
+
+                    try {
+                      // Make the fetch request
+                      const response = await fetch('/admin/post/premium', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id }),
+                      });
+
+                      const result = await response.json();
+
+                      if (result.success) {
+                        $('#confirmationPremiumModal').modal('hide');
+                        alert("Gán premium thành công");
+                        fetchTableData(parseInt(document.getElementById("currentPage").innerText, 10))
+                      } else {
+                        $('#confirmationPremiumModal').modal('hide');
+                        alert(result.error || "Đã xảy ra lỗi");
+                      }
+                    } catch (error) {
+                      console.error("Error occurred:", error);
+                      $('#confirmationPremiumModal').modal('hide');
+                      alert("Đã xảy ra lỗi khi gửi yêu cầu");
+                    }
+                  });
+
+
+
+                  function setPremium(userID) {
+                    document.getElementById('confirmationPremiumModal').setAttribute("data-id", userID)
+                    $('#confirmationPremiumModal').modal({
+                      backdrop: 'static',
+                      keyboard: false
+                    }).modal('show')
+
+                  }
+                </script>
+
+                <!-- Script for publishing a post -->
+                <script>
+                  document.getElementById('closePublishModal').addEventListener('click', () => {
+                    $('#confirmationPublishModal').modal('hide');
+                  });
+
+                  function setPublish(postID) {
+                    document.getElementById('confirmationPublishModal').setAttribute('data-id', postID);
+                    $('#confirmationPublishModal').modal({
+                      backdrop: 'static',
+                      keyboard: false
+                    }).modal('show');
+                  }
+
+                  document.getElementById('publishForm').addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const modal = document.getElementById('confirmationPublishModal');
+                    const postID = modal.getAttribute('data-id');
+
+                    try {
+                      const response = await fetch('/admin/post/publish', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: postID })
+                      });
+
+                      const result = await response.json();
+
+                      if (result.success) {
+                        $('#confirmationPublishModal').modal('hide');
+                        alert('Post has been successfully published.');
+                        fetchTableData(parseInt(document.getElementById("currentPage").innerText, 10))
+                      } else {
+                        alert('Error: ' + (result.error || 'Failed to publish the post.'));
+                      }
+                    } catch (error) {
+                      alert('An unexpected error occurred: ' + error.message);
+                    }
+                  });
+                </script>
+
+
+
+
 
                 <style>
+                  p.description {
+                    background: #191c24 !important;
+                    color: white !important;
+                  }
+
+                  .fck_detail {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100% !important;
+                    padding: 5% !important;
+                    background: #191c24 !important;
+                    color: white !important;
+                  }
+
+                  figure {
+                    float: left;
+                    width: 100%;
+                    color: white !important;
+                  }
+
+                  figure::after {
+                    content: "";
+                    display: table;
+                    clear: both;
+                  }
+
                   .post-content img {
                     width: 100%;
                     height: auto;
@@ -295,6 +459,8 @@
                     text-align: center;
                   }
                 </style>
+
+
 
               </div>
               <!-- content-wrapper ends -->

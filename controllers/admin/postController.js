@@ -57,7 +57,7 @@ const getPostList = async (req, res) => {
                         path: "parentID",
                         select: "categoryName"
                     }
-                }).sort({ updatedAt: -1 }),
+                }).sort({ createdAt: -1 }),
             Post.countDocuments(query)
         ])
 
@@ -119,10 +119,10 @@ const getPostList = async (req, res) => {
                   <button class="btn btn-info btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết" onclick="openPostDetailModal('${element._id}')">
                     <i class="mdi mdi-eye"></i>
                   </button>
-                  <button class="btn btn-warning btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Premium">
+                  <button class="btn btn-warning btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Premium" ${element.premium ? 'disabled' : ''} onclick="setPremium('${element._id}')">
                     <i class="mdi mdi-star"></i>
                   </button>
-                  <button class="btn btn-primary btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Publish" ${element.status === "Published" ? 'disabled' : ''}>
+                  <button class="btn btn-primary btn-icon" data-id="${element._id}" data-toggle="tooltip" data-placement="bottom" title="Publish"  ${['Published', 'Rejected', 'Submitted'].includes(element.status) ? 'disabled' : ''} onclick="setPublish('${element._id}')">
                     <i class="mdi mdi-checkbox-marked-circle"></i>
                   </button>
                 </td>
@@ -138,7 +138,7 @@ const getPostList = async (req, res) => {
                 <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">&laquo;</a>
               </li>
               <li class="page-item active">
-                <span class="page-link">${currentPage}</span>
+                <span class="page-link" id="currentPage">${currentPage}</span>
               </li>
               <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
                 <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">&raquo;</a>
@@ -158,7 +158,7 @@ const viewPostContent = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.json(400).json({ success: false, error: "Invalid ID format." })
+            res.status(400).json({ success: false, error: "Invalid ID format." })
         }
         //console.log(id)
         const postContent = await Post.findById(id)
@@ -167,23 +167,88 @@ const viewPostContent = async (req, res) => {
 
         //console.log(postContent)
         if (!postContent) {
-            res.json({success: false, error: "Không tìm thấy bài báo"})
+            res.json({ success: false, error: "Không tìm thấy bài báo" })
         }
-        
-        const writerInfo = await UserInformation.findOne({accountID: postContent.writer._id})
+
+        const writerInfo = await UserInformation.findOne({ accountID: postContent.writer._id })
         //console.log(postContent.writer._id, writerInfo.penName)
 
 
-        
-        res.json({success: true, postContent, writerInfo})
+
+        res.json({ success: true, postContent, writerInfo })
     } catch (error) {
         res.status(500).json({ success: false, error: error })
         console.log("Error fetching post's content", error)
     }
 }
 
+const setPremium = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        // Validate ID format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: "Invalid ID format." });
+        }
+
+        // Find the post
+        const post = await Post.findById(id);
+
+        if (!post) {
+            return res.status(404).json({ success: false, error: "Post not found." });
+        }
+
+        // Update premium status
+        post.premium = true;
+        await post.save();
+
+        // Success response
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("Error updating premium: ", error);
+        return res.status(500).json({ success: false, error: "Internal server error." });
+    }
+};
+
+const setPublish = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        // Validate ID format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: "Invalid ID format." });
+        }
+
+        // Find the post
+        const post = await Post.findById(id);
+
+        if (!post) {
+            return res.status(404).json({ success: false, error: "Post not found." });
+        }
+
+        // Check if post status is either "Draft" or "Approved" before publishing
+        if (!["Draft", "Approved"].includes(post.status)) {
+            return res.status(400).json({ success: false, error: "Post cannot be published because it is not in 'Draft' or 'Approved' status." });
+        }
+
+        // Update the post status to 'Published'
+        post.status = 'Published';
+        await post.save();
+
+        // Success response
+        return res.status(200).json({ success: true, message: "Post successfully published." });
+    } catch (error) {
+        console.error("Error updating status: ", error);
+        return res.status(500).json({ success: false, error: "Internal server error." });
+    }
+};
+
+
+
 export default {
     renderPage,
     getPostList,
     viewPostContent,
+    setPremium,
+    setPublish
 };
