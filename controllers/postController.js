@@ -54,6 +54,21 @@ export const deletePost = async (req, res) => {
   }
 };
 
+// export const searchPostsByTitle = async (req, res) => {
+//   const { query } = req.query;
+
+//   if (!query || typeof query !== 'string') {
+//       return res.status(400).render('errorPage', { error: "Query parameter must be a valid string." });
+//   }
+
+//   try {
+//       const results = await Post.find({ title: { $regex: query, $options: 'i' } });
+//       res.render('searchResult', { query, results }); // Pass 'results' and 'query'
+//   } catch (error) {
+//       res.status(500).render('errorPage', { error: error.message });
+//   }
+// };
+
 export const searchPostsByTitle = async (req, res) => {
   const { query } = req.query;
 
@@ -62,8 +77,21 @@ export const searchPostsByTitle = async (req, res) => {
   }
 
   try {
-      const results = await Post.find({ title: { $regex: query, $options: 'i' } });
-      res.render('searchResult', { query, results }); // Pass 'results' and 'query'
+      const results = await Post.find({ title: { $regex: query, $options: 'i' } })
+        .populate('category'); // Populate category information
+      
+      // Extract the first image from each post content
+      const postsWithImages = results.map(post => {
+          const $ = cheerio.load(post.content);
+          const firstImage = $('img').first().attr('src'); // Get the first image's src
+          return {
+              ...post.toObject(),
+              firstImage: firstImage,
+              categoryName: post.category ? post.category.categoryName : 'Uncategorized'
+          };
+      });
+
+      res.render('searchResult', { query, results: postsWithImages }); 
   } catch (error) {
       res.status(500).render('errorPage', { error: error.message });
   }
