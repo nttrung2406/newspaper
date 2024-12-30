@@ -12,7 +12,11 @@ const tagController = {
       const posts = await Post.find({ tags: tagId }).populate("tags");
       const updatedPosts = posts.map((post) => {
         const match = post.content.match(/<img[^>]*src="([^"]+)"[^>]*>/);
-        const imageUrl = match ? match[1] : null;
+        let imageUrl = match ? match[1] : null;
+
+        if (imageUrl) {
+          imageUrl = imageUrl.replace(/&amp;/g, "&");
+        }
         return {
           _id: post._id,
           title: post.title,
