@@ -21,6 +21,15 @@ const userSchema = new mongoose.Schema(
     },
     writerPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     editorPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    category: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+      required: function () {
+        return this.role === "editor";
+      },
+      default: function () {
+        return this.role === "editor" ? [] : null;
+      },
+    },
     resetToken: { type: String }, // For storing reset token
     resetTokenExpiry: { type: Date }, // Token expiry timestamp
   },
