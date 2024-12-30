@@ -71,45 +71,49 @@ export const searchPostsByTitle = async (req, res) => {
 
 
 export const getPostById = async (req, res) => {
-    try {
-      const { id } = req.params;
-  
-      // Fetch the post and populate all fields of category and writer
-      const post = await Post.findById(id).populate("category").populate("writer");
-  
-      if (!post) {
-        console.log(`Post with id ${id} not found`);
-        return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
-      }
-  
-      // Use cheerio to extract the first image from the post's content
-      let imageUrl = null;
-      if (post.content) {
-        const $ = cheerio.load(post.content); // Load the post's content as HTML
-        const firstImg = $("img").first().attr("src"); // Extract the `src` attribute of the first <img>
-        imageUrl = firstImg || null; // Assign the URL or leave null if no <img> tag exists
-      }
-  
-      // Add the extracted image URL to the post object
-      const processedPost = {
-        ...post._doc, // Spread the existing post fields
-        imageUrl, // Include the extracted image URL
-      };
-  
-      // Fetch random posts from the same category
-      const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
-  
-      // Pass full details including category, writer, and random posts to the view
-      res.render("details", { 
-        post: processedPost, // Use the processed post with the image URL
-        category: post.category,
-        user: post.writer,
-        randomPosts,
-      });
-    } catch (error) {
-      res.status(500).render("errorPage", { error: error.message });
+  try {
+    const { id } = req.params;
+
+    // Fetch the post and populate category, writer, and tags
+    const post = await Post.findById(id)
+      .populate("category")  // Populate category
+      .populate("writer")    // Populate writer
+      .populate("tags");     // Populate tags
+
+    if (!post) {
+      console.log(`Post with id ${id} not found`);
+      return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
     }
-  };
+
+    // Use cheerio to extract the first image from the post's content
+    let imageUrl = null;
+    if (post.content) {
+      const $ = cheerio.load(post.content); // Load the post's content as HTML
+      const firstImg = $("img").first().attr("src"); // Extract the `src` attribute of the first <img>
+      imageUrl = firstImg || null; // Assign the URL or leave null if no <img> tag exists
+    }
+
+    // Add the extracted image URL to the post object
+    const processedPost = {
+      ...post._doc, // Spread the existing post fields
+      imageUrl,     // Include the extracted image URL
+    };
+
+    // Fetch random posts from the same category
+    const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
+
+    // Pass full details including category, writer, tags, and random posts to the view
+    res.render("details", { 
+      post: processedPost, // Use the processed post with the image URL
+      category: post.category,
+      user: post.writer,
+      tags: post.tags,      // Include tags in the view
+      randomPosts,
+    });
+  } catch (error) {
+    res.status(500).render("errorPage", { error: error.message });
+  }
+};
 
 
   const getPostByCategory = async (req, res) => {
