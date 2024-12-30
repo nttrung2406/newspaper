@@ -17,7 +17,11 @@ const postSchema = new mongoose.Schema({
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }, 
 
   tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
-
+  viewCount: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
   createdAt: { type: Date }, 
   updatedAt: { type: Date }, 
 }, 
