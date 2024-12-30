@@ -25,7 +25,7 @@
   <body>
     <%- include('./partials/header.ejs') %>
     <main>
-      <div class="container mt-4">
+      <!-- <div class="container mt-4">
         <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
         <ul class="list-group">
           <% if (results.length > 0) { %>
@@ -44,7 +44,48 @@
             </li>
           <% } %>
         </ul>
+      </div> -->
+      <div class="container mt-4">
+        <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
+        <div class="row d-flex g-4">
+          <% if (results.length > 0) { %>
+            <% results.forEach(post => { %>
+              <div class="col col-lg-4 col-md-6 col-sm-12 d-flex my-2">
+                <div class="card shadow-sm rounded flex-grow-1">
+                  <!-- Post Image -->
+                  <img src="<%- post.firstImage %>" class="card-img-top" alt="<%- post.title %>" style="height: 200px; object-fit: cover;">
+      
+                  <!-- Card Body -->
+                  <div class="card-body">
+                    <!-- Post Title -->
+                    <h5 class="card-title">
+                      <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
+                        <%- post.title %>
+                      </a>
+                    </h5>
+                    
+                    <!-- Category -->
+                    <p class="card-text text-muted"><strong>Category:</strong> <%- post.categoryName %></p>
+      
+                    <!-- View Count -->
+                    <p class="card-text text-muted">Lượt xem: <%- post.viewCount %></p>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-12">
+              <div class="card text-center shadow-sm rounded">
+                <div class="card-body">
+                  <p class="card-text mb-0 text-muted">No results found.</p>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
       </div>
+      
+      
     </main>
     <%- include('./partials/footer.ejs') %>
 

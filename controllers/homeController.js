@@ -5,7 +5,7 @@ import * as cheerio from "cheerio"; // Import cheerio for HTML parsing
 export const renderHomePage = async (req, res) => {
   try {
     // Fetch all posts from the database
-    const posts = await Post.find();
+    const posts = await Post.find().populate('category').populate('tags');
     const categories = await Category.find({ parentID: { $ne: null } });
 
     // Process the posts to extract images from content using cheerio

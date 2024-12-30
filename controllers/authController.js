@@ -6,6 +6,7 @@ import {
   validateResetToken,
 } from "../utils/authHelpers.js";
 import dotenv from "dotenv";
+import UserInformation from "../models/UserInformation.js";
 dotenv.config({ path: "./config/env/development.env" });
 
 
@@ -60,7 +61,7 @@ const authController = {
 
       const user = await User.findOne({ email });
       //console.log(user)
-      if (!user) {return res.redirect("/");}
+      if (!user) { return res.redirect("/"); }
       if ((await !bcrypt.compare(password, user.password))) {
         return res.status(400).send("Invalid credentials");
       }
@@ -71,13 +72,13 @@ const authController = {
 
       return req.session.save((err) => {
         console.log(err);
-        if ( req.session.user.role === 'admin'){
+        if (req.session.user.role === 'admin') {
           res.redirect('/admin');
         }
-        else if ( req.session.user.role === 'editor'){
+        else if (req.session.user.role === 'editor') {
           res.redirect('/editor');
         }
-        else {res.redirect("/index");}
+        else { res.redirect("/index"); }
       });
     } catch (error) {
       console.error("Error logging in:", error);
@@ -141,11 +142,46 @@ const authController = {
       res.status(500).json({ message: "Internal server error." });
     }
   },
-  getProfile: (req, res) => {
+  getProfile: async (req, res) => {
     if (!req.session.user) {
       return res.redirect("/auth");
     }
-    res.render("profile", { user: req.session.user });
+
+    const user = req.session.user;
+
+    const userInformation = await UserInformation.findOne({ accountID: user._id })
+
+    if (user.role === 'membership') {
+      // Calculate remaining time in the controller
+      const now = new Date();
+      const endDate = new Date(user.membership.endDate);
+      const startDate = new Date(user.membership.startDate);
+
+      let remainingTime = "Đã hết hạn";
+      let isExpired = false;
+
+      if (endDate >= now) {
+        isExpired = false;
+        const diffInMs = endDate - now;
+        const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+        remainingTime = `${days} ngày, ${hours} giờ, ${minutes} phút còn lại`;
+      } else {
+        isExpired = true;
+      }
+
+      // Prepare extra info to pass to the view
+      const extraInfo = {
+        isExpired,
+        remainingTime,
+        formattedStartDate: startDate.toLocaleString("vi-VN"),
+        formattedEndDate: endDate.toLocaleString("vi-VN")
+      };
+      return res.render("profile", { user: user, userInfo: userInformation, extraInfo: extraInfo });
+    }
+
+    res.render("profile", { user: user, userInfo: userInformation });
   },
   postLogout: (req, res) => {
     req.session.destroy((err) => {

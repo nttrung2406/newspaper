@@ -47,7 +47,7 @@
               </div>
             </div>
           </div>
-
+  
           <div class="row">
             <div class="col-lg-8">
               <!-- Trending Top -->
@@ -56,19 +56,29 @@
                 <div class="trend-top-img">
                   <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
                   <div class="trend-top-cap">
-                    <span><%= posts[0].category || 'Uncategorized' %></span>
+                    <span><%= posts[0].category.categoryName || 'Uncategorized' %></span>
                     <h2>
                       <a href="/posts/<%= posts[0]._id %>">
                         <%= posts[0].title %>
                       </a>
                     </h2>
+                    <!-- Add Tags here -->
+                    <div class="tags">
+                      <% if (posts[0].tags && posts[0].tags.length > 0) { %>
+                        <% posts[0].tags.forEach(tag => { %>
+                          <span class="tag"><%= tag.tagName%></span>
+                        <% }); %>
+                      <% } else { %>
+                        <span class="tag">No tags available.</span>
+                      <% } %>
+                    </div>
                   </div>
                 </div>
               </div>
               <% } else { %>
               <p>No posts available.</p>
               <% } %>
-
+  
               <!-- Trending Bottom -->
               <div class="trending-bottom">
                 <div class="row">
@@ -82,13 +92,23 @@
                       </div>
                       <div class="trend-bottom-cap">
                         <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
-                          <%= post.category || 'Uncategorized' %>
+                          <%= post.category.categoryName || 'Uncategorized' %>
                         </span>
                         <h4>
                           <a href="/posts/<%= post._id %>">
                             <%= post.title %>
                           </a>
                         </h4>
+                        <!-- Add Tags here -->
+                        <div class="tags">
+                          <% if (post.tags && post.tags.length > 0) { %>
+                            <% post.tags.forEach(tag => { %>
+                              <span class="tag"><%= tag.tagName%></span>
+                            <% }); %>
+                          <% } else { %>
+                            <span class="tag">No tags available.</span>
+                          <% } %>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -99,7 +119,7 @@
                 </div>
               </div>
             </div>
-
+  
             <!-- Right Content -->
             <div class="col-lg-4">
               <% if (posts && posts.length > 0) { %>
@@ -111,13 +131,23 @@
                 </div>
                 <div class="trand-right-cap">
                   <span class="color<%= Math.floor(Math.random() * 4) + 1 %>">
-                    <%= post.category || 'Uncategorized' %>
+                    <%= post.category.categoryName || 'Uncategorized' %>
                   </span>
                   <h4>
                     <a href="/posts/<%= post._id %>">
                       <%= post.title %>
                     </a>
                   </h4>
+                  <!-- Add Tags here -->
+                  <div class="tags">
+                    <% if (post.tags && post.tags.length > 0) { %>
+                      <% post.tags.forEach(tag => { %>
+                        <span class="tag"><%= tag.tagName%></span>
+                      <% }); %>
+                    <% } else { %>
+                      <span class="tag">No tags available.</span>
+                    <% } %>
+                  </div>
                 </div>
               </div>
               <% }); %>
@@ -129,354 +159,165 @@
         </div>
       </div>
     </div>
-
+  
     <!-- Trending Area End -->
     <!-- Whats New Start -->
     <section class="whats-news-area pt-50 pb-20">
       <div class="container">
         <div class="row">
-
-            <div class="row justify-content-between">
-              <div class="col-lg-8 col-md-8">
-                <div class="section-tittle mb-30">
-                  <h3>Whats New</h3>
-                </div>
-                <!-- Nav Button -->
-                <% if (categories && categories.length > 0) { %>
-                <div class="properties__button">
-                  <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
-                        All
-                      </a>
-                      <% categories.forEach(cat => { %>
-                      <a class="nav-item nav-link" id="nav-category-tab-<%= cat._id %>" data-toggle="tab" href="#nav-category-<%= cat._id %>" role="tab" aria-controls="nav-category-<%= cat._id %>" aria-selected="false" data-cat-id="<%= cat._id %>">
-                        <%= cat.categoryName %>
-                      </a>
-                      <% }); %>
-                    </div>
-                  </nav>
-                </div>
-                <% } else { %>
-                <p>No categories available.</p>
-                <% } %>
-                <!-- End Nav Button -->
-                <div class="col-12">
-                  <!-- Nav Card -->
-                  <div class="tab-content" id="nav-tabContent">
-                    <!-- Default tab for "All" -->
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                      <div class="whats-news-caption">
-                        <div class="row">
-                          <% if (posts.length > 0) { %>
-                          <div class="col-lg-6 col-md-6">
-                            <!-- First column -->
-                            <% posts.slice(0, 3).forEach(post => { %>
-                            <div class="single-news mb-4">
-                              <div class="news-img">
-                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                              </div>
-                              <div class="news-caption">
-                                <h4>
-                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                                </h4>
-                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
-                              </div>
-                            </div>
-                            <% }); %>
-                          </div>
-                          <div class="col-lg-6 col-md-6">
-                            <!-- Second column -->
-                            <% posts.slice(3, 6).forEach(post => { %>
-                            <div class="single-news mb-4">
-                              <div class="news-img">
-                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                              </div>
-                              <div class="caption">
-                                <h4>
-                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                                </h4>
-                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
-
-                              </div>
-                            </div>
-                            <% }); %>
-                          </div>
-                          <% } else { %>
-                          <p>No posts available.</p>
-                          <% } %>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Dynamic category tabs -->
+          <div class="row justify-content-between">
+            <div class="col-lg-8 col-md-8">
+              <div class="section-tittle mb-30">
+                <h3>Whats New</h3>
+              </div>
+              <!-- Nav Button -->
+              <% if (categories && categories.length > 0) { %>
+              <div class="properties__button">
+                <nav>
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                      All
+                    </a>
                     <% categories.forEach(cat => { %>
-                    <div class="tab-pane fade" id="nav-category-<%= cat._id %>" role="tabpanel" aria-labelledby="nav-category-tab-<%= cat._id %>">
-                      <div class="whats-news-caption">
-                        <div class="row">
-                          <div class="col-lg-6 col-md-6">
-                            <!-- First column -->
-                            <% posts.slice(0, 3).forEach(post => { %>
-                            <div class="single-news mb-4">
-                              <div class="news-img">
-                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                              </div>
-                              <div class="news-caption">
-                                <h4>
-                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                                </h4>
-                                <p><%= post.abstract || 'No description available.' %></p>
-                              </div>
-                            </div>
-                            <% }); %>
-                          </div>
-                          <div class="col-lg-6 col-md-6">
-                            <!-- Second column -->
-                            <% posts.slice(3, 6).forEach(post => { %>
-                            <div class="single-news mb-4">
-                              <div class="news-img">
-                                <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                              </div>
-                              <div class="news-caption">
-                                <h4>
-                                  <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                                </h4>
-                                <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
-                              </div>
-                            </div>
-                            <% }); %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <a class="nav-item nav-link" id="nav-category-tab-<%= cat._id %>" data-toggle="tab" href="#nav-category-<%= cat._id %>" role="tab" aria-controls="nav-category-<%= cat._id %>" aria-selected="false" data-cat-id="<%= cat._id %>">
+                      <%= cat.categoryName %>
+                    </a>
                     <% }); %>
                   </div>
-                </div>
+                </nav>
               </div>
-   
-              <div class="col-lg-4">
-                <!-- Section Tittle -->
-                <div class="section-tittle mb-40">
-                  <h3>Follow Us</h3>
-                </div>
-                <!-- Flow Socail -->
-                <div class="single-follow mb-45">
-                  <div class="single-box">
-                    <div class="follow-us d-flex align-items-center">
-                      <div class="follow-social">
-                        <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
-                      </div>
-                      <div class="follow-count">
-                        <span>News</span>
-                      </div>
-                    </div>
-                    <div class="follow-us d-flex align-items-center">
-                      <div class="follow-social">
-                        <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
-                      </div>
-                      <div class="follow-count">
-                        <span>News</span>
-                      </div>
-                    </div>
-                    <div class="follow-us d-flex align-items-center">
-                      <div class="follow-social">
-                        <a href="https://www.instagram.com/vnexpress.official/"><img src="/img/news/icon-ins.png" alt="" /></a>
-                      </div>
-                      <div class="follow-count">
-                        <span>News</span>
-                      </div>
-                    </div>
-                    <div class="follow-us d-flex align-items-center">
-                      <div class="follow-social">
-                        <a href="https://www.youtube.com/c/VnExpressOfficial"><img src="/img/news/icon-yo.png" alt="" /></a>
-                      </div>
-                      <div class="follow-count">
-                        <span>News</span>
+              <% } else { %>
+              <p>No categories available.</p>
+              <% } %>
+              <!-- End Nav Button -->
+              <div class="col-12">
+                <!-- Nav Card -->
+                <div class="tab-content" id="nav-tabContent">
+                  <!-- Default tab for "All" -->
+                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div class="whats-news-caption">
+                      <div class="row">
+                        <% if (posts.length > 0) { %>
+                        <div class="col-lg-6 col-md-6">
+                          <!-- First column -->
+                          <% posts.slice(0, 3).forEach(post => { %>
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                            </div>
+                            <div class="news-caption">
+                              <h4>
+                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                              </h4>
+                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                          <!-- Second column -->
+                          <% posts.slice(3, 6).forEach(post => { %>
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                            </div>
+                            <div class="caption">
+                              <h4>
+                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                              </h4>
+                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                        <% } else { %>
+                        <p>No posts available.</p>
+                        <% } %>
                       </div>
                     </div>
                   </div>
-                </div>
-                <!-- New Poster -->
-                <div class="news-poster d-none d-lg-block">
-                  <img src="/img/news/news_card.jpg" alt="" />
+                  <!-- Dynamic category tabs -->
+                  <% categories.forEach(cat => { %>
+                  <div class="tab-pane fade" id="nav-category-<%= cat._id %>" role="tabpanel" aria-labelledby="nav-category-tab-<%= cat._id %>">
+                    <div class="whats-news-caption">
+                      <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                          <!-- First column -->
+                          <% posts.slice(0, 3).forEach(post => { %>
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                            </div>
+                            <div class="news-caption">
+                              <h4>
+                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                              </h4>
+                              <p><%= post.abstract || 'No description available.' %></p>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                          <!-- Second column -->
+                          <% posts.slice(3, 6).forEach(post => { %>
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                            </div>
+                            <div class="news-caption">
+                              <h4>
+                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                              </h4>
+                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% }); %>
                 </div>
               </div>
             </div>
-            <!-- End Nav Card -->
+          </div>
+    
+          <div class="col-lg-4">
+            <!-- Section Tittle -->
+            <div class="section-tittle mb-40">
+              <h3>Follow Us</h3>
+            </div>
+            <!-- Flow Socail -->
+            <div class="single-follow mb-45">
+              <div class="single-box">
+                <div class="follow-us d-flex align-items-center">
+                  <div class="follow-social">
+                    <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
+                  </div>
+                  <div class="follow-count">
+                    <span>News</span>
+                  </div>
+                </div>
+                <div class="follow-us d-flex align-items-center">
+                  <div class="follow-social">
+                    <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
+                  </div>
+                  <div class="follow-count">
+                    <span>News</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- Whats New End -->
-    <!--   Weekly-News start -->
-    <div class="weekly2-news-area weekly2-pading gray-bg">
-      <div class="container">
-        <div class="weekly2-wrapper">
-          <!-- section Tittle -->
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="section-tittle mb-30">
-                <h3>Weekly Top News</h3>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="weekly2-news-active dot-style d-flex dot-style">
-                <% if (posts && posts.length > 0) { %>
-                  <% posts.slice(0, 5).forEach(post => { %>
-                    <div class="weekly2-single">
-                      <div class="weekly2-img">
-                        <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                      </div>
-                      <div class="weekly2-caption">
-                        <span class="color<%= Math.floor(Math.random() * 5) + 1 %>">
-                          <%= post.category || 'Uncategorized' %>
-                        </span>
-                        <h4>
-                          <a href="/posts/<%= post._id %>">
-                            <%= post.title %>
-                          </a>
-                        </h4>
-                      </div>
-                    </div>
-                  <% }); %>
-                <% } else { %>
-                  <p>No posts available.</p>
-                <% } %>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-    <!-- End Weekly-News -->
-    <!-- Start Youtube -->
-    <div class="youtube-area video-padding">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div class="video-items-active">
-              <div class="video-items text-center">
-                <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
-                  <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="Video Thumbnail" style="width: 100%; height: auto;">
-                </a>
-              </div>
-              <div class="video-items text-center">
-                <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
-                  <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="Video Thumbnail" style="width: 100%; height: auto;">
-                </a>
-              </div>
-              <div class="video-items text-center">
-                <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
-                  <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="Video Thumbnail" style="width: 100%; height: auto;">
-                </a>
-              </div>
-              <div class="video-items text-center">
-                <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                  <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="Video Thumbnail" style="width: 100%; height: auto;">
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="video-info">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="video-caption">
-                <div class="top-caption">
-                  <span class="color1">Politics</span>
-                </div>
-                <div class="bottom-caption">
-                  <h2>
-                    DxTalks | Season 3 | Episode 2: “Net Zero & The Great Green Transformation Journey of Vietnamese Agriculture”
-                  </h2>
-                  <p>
-                    DxTalks is a series of talk shows sharing real stories about Digital Transformation and Green Transformation from Vietnamese and International organizations and businesses. Experts focused on discussing the process of accessing comprehensive platforms to build a roadmap for Digital Transformation and Green Transformation towards Sustainable Development.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="testmonial-nav text-center">
-                <div class="single-video">
-                  <a href="https://www.youtube.com/watch?v=whVWBQghrZ0" target="_blank">
-                    <img src="https://img.youtube.com/vi/whVWBQghrZ0/hqdefault.jpg" alt="DxTalks">
-                  </a>
-                  <div class="video-intro">
-                    <h4>DxTalks</h4>
-                  </div>
-                </div>
-                <div class="single-video">
-                  <a href="https://www.youtube.com/watch?v=DpKdcPkdrUE" target="_blank">
-                    <img src="https://img.youtube.com/vi/DpKdcPkdrUE/hqdefault.jpg" alt="DxTalks">
-                  </a>
-                  <div class="video-intro">
-                    <h4>DxTalks</h4>
-                  </div>
-                </div>
-                <div class="single-video">
-                  <a href="https://www.youtube.com/watch?v=6sdYuIYlxyc" target="_blank">
-                    <img src="https://img.youtube.com/vi/6sdYuIYlxyc/hqdefault.jpg" alt="DxTalks">
-                  </a>
-                  <div class="video-intro">
-                    <h4>DxTalks</h4>
-                  </div>
-                </div>
-                <div class="single-video">
-                  <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                    <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
-                  </a>
-                  <div class="video-intro">
-                    <h4>DxTalks</h4>
-                  </div>
-                </div>
-                <div class="single-video">
-                  <a href="https://www.youtube.com/watch?v=pknlc60sbIM" target="_blank">
-                    <img src="https://img.youtube.com/vi/pknlc60sbIM/hqdefault.jpg" alt="DxTalks">
-                  </a>
-                  <div class="video-intro">
-                    <h4>DxTalks</h4>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Start youtube -->
-
-    <!--Start pagination -->
-    <div class="pagination-area pb-45 text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-12">
-            <div class="single-wrap d-flex justify-content-center">
-              <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                  <li class="page-item">
-                    <a class="page-link" href="#"><span class="flaticon-arrow roted"></span></a>
-                  </li>
-                  <li class="page-item active">
-                    <a class="page-link" href="/index">01</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="/index">02</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="/index">03</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="/index"><span class="flaticon-arrow right-arrow"></span></a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End pagination  -->
   </main>
+  
+
+  
+
 
   <%- include('./partials/footer.ejs') %>
 
