@@ -66,7 +66,7 @@
                     <div class="tags">
                       <% if (posts[0].tags && posts[0].tags.length > 0) { %>
                         <% posts[0].tags.forEach(tag => { %>
-                          <span class="tag"><%= tag.tagName%></span>
+                          <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName%></a></span>
                         <% }); %>
                       <% } else { %>
                         <span class="tag">No tags available.</span>
@@ -87,8 +87,8 @@
                   <!-- Take posts from index 1 to 3 -->
                   <div class="col-lg-4">
                     <div class="single-bottom mb-35">
-                      <div class="trend-bottom-img mb-30">
-                        <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                      <div class="trend-bottom-img mb-30" style="height: 150px; overflow: hidden;">
+                        <img style="width: 100%; height: 100%; object-fit: cover;" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
                       </div>
                       <div class="trend-bottom-cap">
                         <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
@@ -103,7 +103,7 @@
                         <div class="tags">
                           <% if (post.tags && post.tags.length > 0) { %>
                             <% post.tags.forEach(tag => { %>
-                              <span class="tag"><%= tag.tagName%></span>
+                              <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName%></a></span>
                             <% }); %>
                           <% } else { %>
                             <span class="tag">No tags available.</span>
@@ -142,7 +142,7 @@
                   <div class="tags">
                     <% if (post.tags && post.tags.length > 0) { %>
                       <% post.tags.forEach(tag => { %>
-                        <span class="tag"><%= tag.tagName%></span>
+                        <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName%></a></span>
                       <% }); %>
                     <% } else { %>
                       <span class="tag">No tags available.</span>
