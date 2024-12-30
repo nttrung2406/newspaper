@@ -30,7 +30,7 @@
 
     <main>
       <div class="container">
-        <div class="profile-info">
+        <!-- <div class="profile-info">
           <h2>Profile Information</h2>
           <ul>
             <li><strong>Username:</strong> <%= user.username %></li>
@@ -53,17 +53,106 @@
             </li>
             <% } %>
           </ul>
-        </div>
+        </div> -->
 
         <!-- Edit Profile Section -->
 
-        <!-- Logout -->
+        <!-- Logout
         <div class="logout">
           <form id="logout-form" action="/auth/logout" method="POST">
             <button type="submit" class="logout-button">Logout</button>
           </form>
         </div>
+      </div> -->
+
+      <div class="row justify-content-center my-4">
+        <div class="card w-75 text-left shadow-lg">
+          <div class="card-body">
+            <h4 class="card-title font-weight-bold mb-4">Thông tin cá nhân</h4>
+            <hr>
+      
+            <!-- User Information Rows -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="username" class="font-weight-semibold">Tên người dùng</label>
+                  <input type="text" class="form-control" id="username" readonly value="<%= user.username %>">
+                </div>
+              </div>
+      
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="email" class="font-weight-semibold">Email</label>
+                  <input type="text" class="form-control" id="email" readonly value="<%= user.email %>">
+                </div>
+              </div>
+            </div>
+      
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fullname" class="font-weight-semibold">Họ và tên</label>
+                  <input type="text" class="form-control" id="fullname" readonly value="<%= userInfo.fullname %>">
+                </div>
+              </div>
+      
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dob" class="font-weight-semibold">Ngày sinh</label>
+                  <input type="text" class="form-control" id="dob" readonly
+                    value="<%= new Date(userInfo.dateOfBirth).toLocaleDateString('vi-VN') %>">
+                </div>
+              </div>
+            </div>
+      
+            <!-- User Role -->
+            <div class="form-group mb-4">
+              <label for="role" class="font-weight-semibold">Vai trò</label>
+              <input type="text" class="form-control" id="role" readonly value="<%= user.role %>">
+            </div>
+      
+            <% if (user.role === "writer") { %>
+              <div class="form-group mb-4">
+                <label for="penName" class="font-weight-semibold">Bút danh</label>
+                <input type="text" class="form-control" id="penName" readonly value="<%= userInfo.penName %>">
+              </div>
+            <% } %>
+      
+            <% if (user.role === "membership") { %>
+              <!-- Membership Status -->
+              <div class="membership-status card shadow-sm p-4 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="mb-0 font-weight-bold">Trạng thái Thẻ Thành Viên</h5>
+                  <span class="badge <%= extraInfo.isExpired ? 'badge-danger' : 'badge-success' %> p-3">
+                    <%= extraInfo.isExpired ? "Hết hạn" : "Còn hiệu lực" %>
+                  </span>
+                </div>
+                <hr>
+      
+                <!-- Membership Dates -->
+                <div class="date-info mb-3">
+                  <p><strong>Ngày bắt đầu:</strong> <%= extraInfo.formattedStartDate %></p>
+                  <p><strong>Ngày kết thúc:</strong> <%= extraInfo.formattedEndDate %></p>
+                </div>
+      
+                <!-- Remaining Time -->
+                <div class="remaining-time text-center mt-4">
+                  <p class="lead font-weight-bold"><strong>Thời gian còn lại:</strong></p>
+                  <p class="display-4 text-primary"><%= extraInfo.remainingTime %></p>
+                </div>
+              </div>
+            <% } %>
+      
+            <!-- Logout Button -->
+            <div class="mt-4 text-center">
+              <form id="logout-form" action="/auth/logout" method="POST">
+                <button type="submit" class="btn btn-danger btn-lg">Đăng xuất</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
+      
     </main>
 
     <%- include('./partials/footer.ejs') %>
