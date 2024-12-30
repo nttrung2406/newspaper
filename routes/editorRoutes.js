@@ -19,6 +19,7 @@ router.get("/", (req, res) => {
 
 router.get("/articles", async (req, res) => {
   try {
+    console.log("Category can be managed: ", req.user.category);
     const drafts = await Post.find({ status: "Draft", category: req.user.category })
       .populate("writer", "username") 
       .lean(); 
@@ -32,6 +33,7 @@ router.get("/articles", async (req, res) => {
     res.status(500).send("Error fetching drafts");
   }
 });
+
 
 // Approve an article
 router.post("/articles/approve/:id", async (req, res) => {
