@@ -151,6 +151,9 @@ export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Lấy thông tin người dùng từ session
+    const user = req.session.user;
+
     // Fetch the post and populate category, writer, and tags
     const post = await Post.findById(id)
       .populate("category")  // Populate category
@@ -160,6 +163,11 @@ export const getPostById = async (req, res) => {
     if (!post) {
       console.log(`Post with id ${id} not found`);
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
+    }
+
+    // Kiểm tra nếu bài viết là premium và người dùng không phải là subscriber
+    if (post.premium && (!user || user.role !== 'subscriber')) {
+      return res.status(403).render("errorPage", { error: 'You must be a subscriber to view this content' });
     }
 
     post.viewCount += 1; // Increment the view count
@@ -189,11 +197,13 @@ export const getPostById = async (req, res) => {
       user: post.writer,
       tags: post.tags,      // Include tags in the view
       randomPosts,
+      currentUser: user,   // Pass current user to the view (for potential use)
     });
   } catch (error) {
     res.status(500).render("errorPage", { error: error.message });
   }
 };
+
 
 
   const getPostByCategory = async (req, res) => {
