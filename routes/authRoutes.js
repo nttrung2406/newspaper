@@ -15,6 +15,8 @@ router.post("/signup", authController.postSignup);
 // Login functionality
 router.post("/login", authController.postLogin);
 
+router.post('/profile/update', authController.postUpdateProfile);
+
 // Forgot password functionality
 router.post("/forgot-password", authController.postForgotPassword);
 

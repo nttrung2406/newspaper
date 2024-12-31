@@ -201,6 +201,55 @@ const authController = {
     const { token } = req.query;
     res.render("reset_password", { token });
   },
+  postUpdateProfile: async (req, res) => {
+    const userId = req.session.user._id; // Get user ID from session
+    const { username, email, fullname, dateOfBirth, penName } = req.body; // Extract updated fields from request body
+  
+    try {
+      // Input validation
+      if (!username || !email || !fullname || !dateOfBirth) {
+        return res.status(400).json({ message: "All fields are required." });
+      }
+  
+      // Check if email is being updated and if it's already in use
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== userId.toString()) {
+        return res.status(409).json({ message: "Email already in use by another account." });
+      }
+  
+      // Update User Information
+      const user = await User.findById(userId);
+      user.username = username;
+      user.email = email;
+      await user.save();
+  
+      // Update UserInformation if applicable
+      const userInfo = await UserInformation.findOne({ accountID: userId });
+      if (userInfo) {
+        userInfo.fullname = fullname;
+        userInfo.dateOfBirth = new Date(dateOfBirth);
+        if (penName) {
+          userInfo.penName = penName; // Only update penName if the user is a writer
+        }
+        await userInfo.save();
+      }
+  
+      // Update session with the new data
+      req.session.user = user;
+  
+      // Store success message in the session
+      req.session.successMessage = 'Profile updated successfully!';
+  
+      // Redirect back to profile page
+      res.redirect('/auth/profile');
+  
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  }
+  
+  
 };
 
 export default authController;
