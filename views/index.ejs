@@ -92,7 +92,8 @@
                       </div>
                       <div class="trend-bottom-cap">
                         <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
-                          <%= post.category.categoryName || 'Uncategorized' %>
+                          <a href="#"> <%= post.category.categoryName || 'Uncategorized' %></a>
+                         
                         </span>
                         <h4>
                           <a href="/posts/<%= post._id %>">
@@ -299,6 +300,75 @@
       </div>
     </section>
     <!-- Recent Posts End -->
+
+    <!-- Hottest categories start-->
+    <section class="recent-news-area pt-50 pb-20">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-8">
+            <div class="section-tittle mb-30">
+              <h3>Danh mục hot:</h3>
+            </div>
+            <div class="recent-news-caption">
+              <div class="row">
+                <% if (topCategoriesWithLatestPost.length > 0) { %>
+                <div class="col-12">
+                  <!-- Slideshow -->
+                  <div id="topCategoriesCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <% topCategoriesWithLatestPost.forEach(({ category, latestPost }, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= latestPost?.imageUrl || '/img/default-image.jpg' %>" 
+                                   alt="<%= latestPost?.title || 'No Title' %>" 
+                                   class="d-block w-100" />
+                            </div>
+                            <div class="news-caption">
+                              <span><%= category.categoryName || 'Uncategorized' %></span>
+                              <h4>
+                                <a href="/posts/<%= latestPost?._id || '#' %>" class="carousel-title">
+                                  <%= latestPost?.title || 'No Post Available' %>
+                                </a>
+                              </h4>
+                              <% if (latestPost) { %>
+                              <p class="post-date"><%= new Date(latestPost.createdAt).toLocaleDateString() %></p>
+                              <p>
+                                <%= latestPost.abstract
+                                  ? latestPost.abstract.split(' ').slice(0, 10).join(' ') + '...'
+                                  : 'No description available.' %>
+                              </p>
+                              <% } else { %>
+                              <p>No post available for this category.</p>
+                              <% } %>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                    <!-- Navigation Arrows -->
+                    <a class="carousel-control-prev" href="#topCategoriesCarousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#topCategoriesCarousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+                <% } else { %>
+                <p>No top categories available.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    
+    <!-- Hottest categories end-->
   </main>
   
 
