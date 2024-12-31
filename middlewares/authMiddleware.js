@@ -64,8 +64,7 @@ export const authorizeMembership = () => {
       return res.redirect('/auth'); 
     }
     // Check if user is admin
-    if (!req.session.user.membership) {
-      req.session.user.role = 'admin';
+    if (req.session.user.role === 'admin' || req.session.user.role === 'editor') {
       return next();
     };
 
