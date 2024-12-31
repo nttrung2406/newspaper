@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/editor/vendors/owl-carousel-2/owl.theme.default.min.css">
     <link rel="stylesheet" href="/editor/css/style.css">
     <link rel="stylesheet" href="/editor/css/articles.css">
+    <link rel="stylesheet" href="/editor/css/modal_show.css">
     <link rel="shortcut icon" href="/editor/images/favicon.png" />
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
   </head>
@@ -54,16 +55,15 @@
                         </div>
                         <div class="modal-body">
                           <!-- Display post content -->
-                          <p style="white-space: normal; word-wrap: break-word; color: grey; font-size: 14px; line-height: 1.6;">
-                            <%= draft.content.replace(/\[IMAGE: (.*?)\]/g, '') %>
-                          </p>
-                          
-                          <!-- Display post image -->
-                          <% const imageUrlMatch = draft.content.match(/\[IMAGE: (.*?)\]/); %>
-                          <% if (imageUrlMatch) { %>
-                            <img src="<%= imageUrlMatch[1] %>" alt="Post Image" style="width: 60%; height: auto; margin-top: 10px; border-radius: 8px;" />
-                          <% } %>
-                  
+                          <div class="modal_show">
+                            <p><b>Category:</b> <%= draft.category ? draft.category.categoryName : "No Category" %></p>
+                            <%- draft.content.replace(/\[IMAGE: (.*?)\]/g, '') %>
+                            <% const imageUrlMatch = draft.content.match(/\[IMAGE: (.*?)\]/); %>
+                            <% if (imageUrlMatch) { %>
+                              <img src="<%= imageUrlMatch[1] %>" alt="Post Image" style="width: 60%; height: auto; margin-top: 10px; border-radius: 8px;" />
+                            <% } %>
+                          </div>
+                                      
                           <!-- Approval and Rejection Forms -->
                           <div class="mt-4">
                             <!-- Approval Form -->
@@ -95,18 +95,20 @@
                                 <button type="submit" class="btn btn-success w-100">Approve</button>
                               </div>
                             </form>
-                  
+                        
                             <!-- Rejection Form -->
                             <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
                               <div class="col-md-10">
-                                <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required">
+                                <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required>
                               </div>
                               <div class="col-md-2">
                                 <button type="submit" class="btn btn-danger w-100">Reject</button>
                               </div>
                             </form>
                           </div>
-                      </div>
+                        </div>
+                        
+                        
                     </div>
                   </div>
                 </td>

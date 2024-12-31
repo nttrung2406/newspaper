@@ -23,93 +23,7 @@
   <link rel="stylesheet" href="/css/nice-select.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/image.css" />
-  <style>
-    .trend-bottom-img {
-      height: 150px;
-      overflow: hidden;
-    }
-    
-    .trend-bottom-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    @media (max-width: 992px) {
-      .trend-bottom-img {
-        height: 200px;
-      }
-    }
-        /* Customize the size of the carousel images */
-        .carousel-inner {
-          height: 500px; /* Adjust to your desired height */
-        }
-
-        .carousel-item {
-          height: 100%;
-          background-color: #f8f9fa; /* Optional, for visual clarity */
-        }
-
-        .carousel-item img {
-          object-fit: cover; /* Ensures the image covers the area without distorting */
-          height: 100%;
-          width: 100%;
-        }
-        main {
-          display: block;
-          overflow: visible; /* Đảm bảo nội dung không bị cắt */
-          padding-bottom: 50px; /* Tạo khoảng cách với footer nếu cần */
-          min-height: 100vh; /* Đảm bảo thẻ chính chiếm tối thiểu chiều cao màn hình */
-        }
-        .carousel {
-            position: relative;
-            z-index: 1; /* Đặt giá trị lớn hơn nếu bị footer che */
-        }
-
-        .carousel-title {
-            position: relative; /* Hoặc absolute nếu cần */
-            z-index: 2; /* Đặt giá trị lớn hơn ảnh */
-            color: white; /* Chọn màu phù hợp để dễ đọc */
-        }
-
-        .carousel-image {
-            position: relative; /* Hoặc absolute */
-            z-index: 1; /* Đặt giá trị nhỏ hơn tiêu đề */
-        }
-        .news-caption {
-            position: absolute; /* Đặt caption nằm trên ảnh */
-            bottom: 20px; /* Căn chỉnh theo vị trí mong muốn */
-            left: 20px;
-            z-index: 2; /* Đảm bảo tiêu đề nằm trên ảnh */
-            background: rgba(0, 0, 0, 0.5); /* Tạo nền mờ để tăng độ tương phản */
-            color: white; /* Màu chữ */
-            padding: 10px 15px;
-            border-radius: 5px;
-        }
-
-        .news-img {
-            position: relative;
-            z-index: 1; /* Đảm bảo ảnh nằm dưới tiêu đề */
-        }
-
-        .news-caption:hover {
-            background: rgba(0, 0, 0, 1); /* Làm nền đậm hơn khi di chuột */
-            transition: background 0.3s ease; /* Hiệu ứng chuyển đổi mượt */
-        }
-
-        .news-caption h4 a:hover {
-          color: #ffcc00; /* Đổi màu chữ khi di chuột vào tiêu đề */
-        }
-        
-        .post-date {
-          font-size: 12px;
-          color: white;
-          display: block;
-          margin-top: 5px;
-        }
-
-
-
-  </style>
+  <link rel="stylesheet" href="/css/slider.css" />
 </head>
 
 <body>
@@ -252,7 +166,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-8">
             <div class="section-tittle mb-30">
-              <h3>Những bài viết được xem nhiều nhất</h3>
+              <h3>Được xem nhiều nhất</h3>
             </div>
             <div class="whats-news-caption">
               <div class="row">
@@ -332,7 +246,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-8">
             <div class="section-tittle mb-30">
-              <h3>Những bài viết mới nhất</h3>
+              <h3>Bài viết mới nhất</h3>
             </div>
             <div class="recent-news-caption">
               <div class="row">
@@ -381,41 +295,12 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="section-tittle mb-40">
-              <h3>Follow Us</h3>
-            </div>
-            <div class="single-follow mb-45">
-              <div class="single-box">
-                <div class="follow-us d-flex align-items-center">
-                  <div class="follow-social">
-                    <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
-                  </div>
-                  <div class="follow-count">
-                    <span>News</span>
-                  </div>
-                </div>
-                <div class="follow-us d-flex align-items-center">
-                  <div class="follow-social">
-                    <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
-                  </div>
-                  <div class="follow-count">
-                    <span>News</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
     <!-- Recent Posts End -->
   </main>
   
-  
-  
-
-
 
   <%- include('./partials/footer.ejs') %>
 

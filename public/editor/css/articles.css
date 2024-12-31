@@ -37,7 +37,7 @@ body {
   color: rgb(255, 255, 255);
 }
 .modal-content p {
-  color: rgb(240, 226, 226); /* Change text color to grey */
+  color: rgb(0, 0, 0); /* Change text color to grey */
   font-size: 14px; /* Adjust font size for readability */
   line-height: 1.5; /* Improve line spacing */
 }
