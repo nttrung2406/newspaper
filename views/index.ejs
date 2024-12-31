@@ -175,7 +175,7 @@
                   <!-- Slideshow -->
                   <div id="topViewedPostsCarousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                      <% topViewedPosts.slice(0, 5).forEach((post, index) => { %>
+                      <% topViewedPosts.slice(0, 10).forEach((post, index) => { %>
                         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                           <div class="single-news mb-4">
                             <div class="news-img">
@@ -255,7 +255,7 @@
                   <!-- Slideshow -->
                   <div id="recentPostsCarousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                      <% recentPosts.slice(0, 5).forEach((post, index) => { %>
+                      <% recentPosts.slice(0, 10).forEach((post, index) => { %>
                         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                           <div class="single-news mb-4">
                             <div class="news-img">

@@ -28,7 +28,6 @@ const tagController = {
           imageUrl,
         };
       });
-      console.log(updatedPosts);
       res.render("tags", {
         pageTitle: "Post by Tag",
         posts: updatedPosts,

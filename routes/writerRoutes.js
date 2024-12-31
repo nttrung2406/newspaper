@@ -40,4 +40,6 @@ router.post(
   writerController.postSubmit
 );
 
+router.get('/posts/status/:status', checkRole('writer'), writerController.getPostsByStatus);
+
 export default router;

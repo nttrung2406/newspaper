@@ -94,7 +94,7 @@ export const searchPostsByTitle = async (req, res) => {
     } else {
       // Convert to array if single value
       const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
-      
+
       // Add conditions for each selected field
       searchFields.forEach(field => {
         if (['title', 'abstract', 'content'].includes(field)) {
@@ -109,12 +109,13 @@ export const searchPostsByTitle = async (req, res) => {
     // Get total count for pagination
     const totalResults = await Post.countDocuments(searchQuery);
 
-    // Execute search with pagination
+    // Execute search with pagination and sort posts with premium first
     const results = await Post.find(searchQuery)
       .populate('category')
       .populate('tags')
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({ premium: -1, createdAt: -1 }); // Sort by premium (desc) and then createdAt (desc)
 
     // Process posts to include first image and category name
     const postsWithImages = results.map(post => {
@@ -145,9 +146,13 @@ export const searchPostsByTitle = async (req, res) => {
 
 
 
+
 export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Lấy thông tin người dùng từ session
+    const user = req.session.user;
 
     // Fetch the post and populate category, writer, and tags
     const post = await Post.findById(id)
@@ -158,6 +163,11 @@ export const getPostById = async (req, res) => {
     if (!post) {
       console.log(`Post with id ${id} not found`);
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
+    }
+
+    // Kiểm tra nếu bài viết là premium và người dùng không phải là subscriber
+    if (post.premium && (!user || user.role !== 'subscriber')) {
+      return res.status(403).render("errorPage", { error: 'You must be a subscriber to view this content' });
     }
 
     post.viewCount += 1; // Increment the view count
@@ -187,11 +197,13 @@ export const getPostById = async (req, res) => {
       user: post.writer,
       tags: post.tags,      // Include tags in the view
       randomPosts,
+      currentUser: user,   // Pass current user to the view (for potential use)
     });
   } catch (error) {
     res.status(500).render("errorPage", { error: error.message });
   }
 };
+
 
 
   const getPostByCategory = async (req, res) => {

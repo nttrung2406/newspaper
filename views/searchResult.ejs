@@ -16,6 +16,14 @@
         background-color: #007bff;
         color: white;
       }
+      .premium-badge {
+        background-color: black;
+        color: yellow;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
       .pagination .page-item.active .page-link {
         background-color: #007bff;
         border-color: #007bff;
@@ -47,6 +55,11 @@
                     <!-- Post Details -->
                     <div class="col-md-9">
                       <div class="card-body">
+                        <!-- Premium Badge -->
+                        <% if (post.premium) { %>
+                          <span class="premium-badge">Premium</span>
+                        <% } %>
+                        
                         <!-- Post Title -->
                         <h5 class="card-title">
                           <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
