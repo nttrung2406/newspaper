@@ -200,7 +200,7 @@ const getPostByCategory = async (req, res) => {
       status: "Published",  // Only fetch published posts
       publishedDate: { $lte: new Date() }  // Ensure the published date is before now
     })
-      .sort({ createdAt: -1 })
+      .sort({premium: -1, createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("category", "categoryName")
