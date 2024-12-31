@@ -83,6 +83,10 @@
                               <a href="?role=membership<%= search? '&search='+search: '' %>"
                                 class="nav-link px-4 py-2 <%= role === 'membership' ? 'active' :'' %>">Membership</a>
                             </li>
+                            <li class="nav-item">
+                              <a href="?role=guest<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'guest' ? 'active' :'' %>">Guest</a>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -167,7 +171,7 @@
                                       user.role === 'editor' ? '-success' : 
                                       user.role === 'membership' ? '-warning' : 
                                       user.role === 'writer' ? '-info' : 
-                                      '' 
+                                      '-light' 
                                     %>">
                                                 <%= user.role %>
                                               </span></td>
@@ -186,9 +190,14 @@
                                                   data-placement="bottom" title="Cập nhật" data-id="<%= user._id %>">
                                                   <i class="mdi mdi-update"></i>
                                                 </button>
-                                                <!-- <button class="btn btn-danger btn-icon">
-                                          <i class="mdi mdi-delete"></i>
-                                        </button> -->
+
+                                                <% if (user.role==='guest' ){ %>
+                                                  <button class="btn btn-light btn-icon grant-membership"
+                                                    data-toggle="tooltip" data-placement="bottom" title="Cấp membership"
+                                                    data-id="<%= user._id %>">
+                                                    <i class="mdi mdi-account"></i>
+                                                  </button>
+                                                  <% } %>
                                               </div>
                                             </td>
                                           </tr>
@@ -467,6 +476,27 @@
                                             </table>
                                           </div>
                                         </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Modal for confirming to grant a membership-->
+                              <div class="modal fade" id="confirmMembershipModal" tabindex="-1" role="dialog" aria-labelledby="confirmMembershipLabelLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" style="width: 30%;" role="document">
+                                  <div class="modal-content">
+                                    <div class="card text-left">
+                                      <div class="card-body">
+                                        <h4 class="card-title">Confirmation</h4>
+                                        
+                                        <form id="confirmMembershipForm">
+                                          <p>Bạn có chắc chắn cấp người dùng này membership?</p>
+                                          <div class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-primary mr-3">Confirm</button>
+                                            <button type="button" class="btn btn-dark" data-dismiss="modal" id="closeMembershipBtn">Cancel</button>
+                                          </div>
+                                        </form>
                                       </div>
                                     </div>
                                   </div>
@@ -909,10 +939,58 @@
                                   }
                                 })
                               </script>
+
+                              <!-- Script for granting a guest membership-->
+                              <script>
+                                const confirmMembershipForm = document.getElementById('confirmMembershipForm')
+
+                                document.getElementById('closeMembershipBtn').addEventListener('click',()=>{
+                                  $('#confirmMembershipModal').modal('hide')
+                                })
+
+                                document.querySelectorAll('.grant-membership').forEach(button =>{
+                                  button.addEventListener('click', (event)=>{
+                                    $('#confirmMembershipModal').modal({
+                                      backdrop: 'static',
+                                      keyboard: false
+                                    }).modal('show')
+
+                                    const id = button.getAttribute('data-id')
+
+                                    confirmMembershipForm.setAttribute('data-id', id)
+                                  })
+                                })
+
+                                confirmMembershipForm.addEventListener('submit', async(event)=>{
+                                  event.preventDefault();
+                                  const userID = confirmMembershipForm.getAttribute('data-id')
+                                  const response = await fetch('/admin/user/membership',{
+                                    method: "POST",
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({id: userID})
+                                  })
+
+                                  const result = await response.json()
+
+                                  if (!result.success){
+                                    alert('Error: ',result.error)
+                                  }
+                                  else{
+                                    alert(result.message)
+                                  }
+
+                                  $('#confirmMembershipModal').modal('hide')
+                                  window.location.reload()
+                                })
+                              </script>
                     </div>
                   </div>
                 </div>
               </div>
+
+
 
               <style>
                 .select2-container {

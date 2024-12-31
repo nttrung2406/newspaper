@@ -215,7 +215,8 @@ const extendPremium = async (req, res) => {
         const newEndDate = new Date(extendDate);
         user.membership.startDate = user.membership.endDate < now? now :user.membership.startDate
         user.membership.endDate = newEndDate;
-
+        user.membership.status = "active"
+        user.membership.type = "premium"
         // Save the updated user
         await user.save();
 
@@ -323,6 +324,50 @@ const assignCategory = async (req, res) => {
     }
 };
 
+const grantMembership = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        // Check if ID is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: 'Invalid user ID.' });
+        }
+
+        // Find the user by ID
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found.' });
+        }
+
+        // Check if the user's role is 'guest'
+        if (user.role !== "guest") {
+            return res.status(400).json({ success: false, error: 'Only guests can be granted membership.' });
+        }
+
+        const now = new Date();
+
+        // Update membership details
+        user.membership = {
+            startDate: now,
+            endDate: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), // Add 7 days in milliseconds
+            status: 'active',
+            type: 'premium'
+        };
+
+        // Update user role to 'membership'
+        user.role = 'membership';
+
+        // Save the updated user document
+        await user.save();
+
+        res.json({ success: true, message: 'Membership granted successfully.' });
+    } catch (error) {
+        console.error("Error granting membership:", error.message);
+        res.status(500).json({ success: false, error: 'Server error: ' + error.message });
+    }
+};
+
 
 
 export default{
@@ -334,5 +379,6 @@ export default{
     extendPremium,
     getEditorList,
     getAssignCategory,
-    assignCategory
+    assignCategory,
+    grantMembership
 }

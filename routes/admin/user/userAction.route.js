@@ -26,4 +26,7 @@ router.route('/assign')
 router.route('/category-list')
 .post(upload.none(), userController.getAssignCategory)
 
+router.route('/membership')
+.post(upload.none(), userController.grantMembership)
+
 export default router;
