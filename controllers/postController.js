@@ -70,32 +70,79 @@ export const deletePost = async (req, res) => {
 // };
 
 export const searchPostsByTitle = async (req, res) => {
-  const { query } = req.query;
+  const { query, page = 1, searchBy = [] } = req.query;
+  const limit = 5;
+  const skip = (page - 1) * limit;
 
   if (!query || typeof query !== 'string') {
-      return res.status(400).render('errorPage', { error: "Query parameter must be a valid string." });
+    return res.status(400).render('errorPage', { error: "Query parameter must be a valid string." });
   }
 
   try {
-      const results = await Post.find({ title: { $regex: query, $options: 'i' } })
-        .populate('category'); // Populate category information
+    // Build search conditions based on selected checkboxes
+    let searchConditions = [];
+    
+    // If no checkboxes or all checkboxes selected, do full-text search
+    if (!searchBy.length || 
+        (Array.isArray(searchBy) && searchBy.length === 3) || 
+        searchBy === 'title,abstract,content') {
+      searchConditions = [
+        { title: { $regex: query, $options: 'i' } },
+        { abstract: { $regex: query, $options: 'i' } },
+        { content: { $regex: query, $options: 'i' } }
+      ];
+    } else {
+      // Convert to array if single value
+      const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
       
-      // Extract the first image from each post content
-      const postsWithImages = results.map(post => {
-          const $ = cheerio.load(post.content);
-          const firstImage = $('img').first().attr('src'); // Get the first image's src
-          return {
-              ...post.toObject(),
-              firstImage: firstImage,
-              categoryName: post.category ? post.category.categoryName : 'Uncategorized'
-          };
+      // Add conditions for each selected field
+      searchFields.forEach(field => {
+        if (['title', 'abstract', 'content'].includes(field)) {
+          searchConditions.push({ [field]: { $regex: query, $options: 'i' } });
+        }
       });
+    }
 
-      res.render('searchResult', { query, results: postsWithImages }); 
+    // Combine conditions with OR operator
+    const searchQuery = { $or: searchConditions };
+
+    // Get total count for pagination
+    const totalResults = await Post.countDocuments(searchQuery);
+
+    // Execute search with pagination
+    const results = await Post.find(searchQuery)
+      .populate('category')
+      .populate('tags')
+      .skip(skip)
+      .limit(limit);
+
+    // Process posts to include first image and category name
+    const postsWithImages = results.map(post => {
+      const $ = cheerio.load(post.content);
+      const firstImage = $('img').first().attr('src');
+      return {
+        ...post.toObject(),
+        firstImage: firstImage,
+        categoryName: post.category ? post.category.categoryName : 'Uncategorized'
+      };
+    });
+
+    const totalPages = Math.ceil(totalResults / limit);
+
+    res.render('searchResult', {
+      query,
+      results: postsWithImages,
+      currentPage: parseInt(page, 10),
+      totalPages,
+      searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean) // Ensure searchBy is always an array
+    });
+
   } catch (error) {
-      res.status(500).render('errorPage', { error: error.message });
+    console.error('Search error:', error);
+    res.status(500).render('errorPage', { error: "An error occurred while searching. Please try again." });
   }
 };
+
 
 
 export const getPostById = async (req, res) => {

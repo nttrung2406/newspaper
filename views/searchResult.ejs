@@ -10,69 +10,95 @@
 
     <!-- CSS here -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/ticker-style.css" />
-    <link rel="stylesheet" href="/css/flaticon.css" />
-    <link rel="stylesheet" href="/css/slicknav.css" />
-    <link rel="stylesheet" href="/css/animate.min.css" />
-    <link rel="stylesheet" href="/css/magnific-popup.css" />
-    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/css/themify-icons.css" />
-    <link rel="stylesheet" href="/css/slick.css" />
-    <link rel="stylesheet" href="/css/nice-select.css" />
     <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      .tag-badge {
+        background-color: #007bff;
+        color: white;
+      }
+      .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+      }
+      .pagination .page-link {
+        color: #007bff;
+      }
+    </style>
   </head>
   <body>
     <%- include('./partials/header.ejs') %>
     <main>
-      <!-- <div class="container mt-4">
-        <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
-        <ul class="list-group">
-          <% if (results.length > 0) { %>
-            <% results.forEach(post => { %>
-              <li class="list-group-item mb-3 p-4 shadow-sm rounded">
-                <h2 class="h5 text-primary">
-                  <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
-                    <%- post.title %>
-                  </a>
-                </h2>
-              </li>
-            <% }); %>
-          <% } else { %>
-            <li class="list-group-item p-4 text-center shadow-sm rounded">
-              <p class="mb-0 text-muted">No results found.</p>
-            </li>
-          <% } %>
-        </ul>
-      </div> -->
       <div class="container mt-4">
         <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
-        <div class="row d-flex g-4">
+        <div class="row">
           <% if (results.length > 0) { %>
             <% results.forEach(post => { %>
-              <div class="col col-lg-4 col-md-6 col-sm-12 d-flex my-2">
-                <div class="card shadow-sm rounded flex-grow-1">
-                  <!-- Post Image -->
-                  <img src="<%- post.firstImage %>" class="card-img-top" alt="<%- post.title %>" style="height: 200px; object-fit: cover;">
-      
-                  <!-- Card Body -->
-                  <div class="card-body">
-                    <!-- Post Title -->
-                    <h5 class="card-title">
-                      <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
-                        <%- post.title %>
-                      </a>
-                    </h5>
-                    
-                    <!-- Category -->
-                    <p class="card-text text-muted"><strong>Category:</strong> <%- post.categoryName %></p>
-      
-                    <!-- View Count -->
-                    <p class="card-text text-muted">Lượt xem: <%- post.viewCount %></p>
+              <div class="col-12 d-flex my-3">
+                <div class="card w-100 shadow-sm rounded">
+                  <div class="row g-0">
+                    <!-- Post Image -->
+                    <div class="col-md-3">
+                      <img src="<%- post.firstImage || '/img/default-image.jpg' %>" 
+                           class="img-fluid rounded-start" 
+                           alt="<%- post.title %>" 
+                           style="height: 200px; object-fit: cover;">
+                    </div>
+                    <!-- Post Details -->
+                    <div class="col-md-9">
+                      <div class="card-body">
+                        <!-- Post Title -->
+                        <h5 class="card-title">
+                          <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
+                            <%- post.title %>
+                          </a>
+                        </h5>
+                        <!-- Category -->
+                        <p class="card-text text-muted">
+                          <strong>Category:</strong> <%- post.categoryName || 'Uncategorized' %>
+                        </p>
+                        <!-- Tags -->
+                        <p class="card-text">
+                          <strong>Tags:</strong>
+                          <% if (post.tags && post.tags.length > 0) { %>
+                            <% post.tags.forEach(tag => { %>
+                              <a href="/tags/<%- tag._id %>" class="badge tag-badge text-decoration-none">
+                                <%- tag.tagName %>
+                              </a>
+                            <% }); %>
+                          <% } else { %>
+                            <span class="text-muted">No tags</span>
+                          <% } %>
+                        </p>
+                        <!-- Publish Date -->
+                        <p class="card-text text-muted">
+                          <strong>Published:</strong> <%- new Date(post.createdAt).toLocaleDateString() %>
+                        </p>
+                        <!-- Abstract -->
+                        <p class="card-text">
+                          <strong>Abstract:</strong> 
+                          <%- post.abstract.length > 10 ? post.abstract.split(' ').slice(0, 10).join(' ') + '...' : post.abstract %>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             <% }); %>
+
+            <!-- Pagination -->
+            <div class="col-12 mt-4 d-flex justify-content-center">
+              <nav>
+                <ul class="pagination">
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                      <a class="page-link" href="?query=<%- query %>&page=<%- i %>"><%- i %></a>
+                    </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+
           <% } else { %>
             <div class="col-12">
               <div class="card text-center shadow-sm rounded">
@@ -84,35 +110,12 @@
           <% } %>
         </div>
       </div>
-      
-      
     </main>
     <%- include('./partials/footer.ejs') %>
 
     <!-- JS here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.slicknav.min.js"></script>
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <script src="/js/gijgo.min.js"></script>
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
-    <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/head.js"></script>
   </body>
 </html>

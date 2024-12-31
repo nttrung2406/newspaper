@@ -28,6 +28,6 @@ const postSchema = new mongoose.Schema({
 {
   timestamps: true // Automatically adds createdAt and updatedAt fields
 });
-
+postSchema.index({ title: 'text', abstract: 'text', content: 'text' });
 const Post = mongoose.model('Post', postSchema);
 export default Post;
