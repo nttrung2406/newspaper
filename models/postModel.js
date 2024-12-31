@@ -15,7 +15,7 @@ const postSchema = new mongoose.Schema({
   editor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, 
   rejectionReason: { type: String }, 
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }, 
-
+  publishedDate: {type: Date},
   tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   viewCount: {
     type: Number,
