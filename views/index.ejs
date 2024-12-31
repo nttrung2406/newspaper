@@ -27,7 +27,7 @@
   <style>
     .premium-badge {
       background-color: rgb(42, 41, 28);
-      color: rgb(251, 251, 0);
+      color: rgb(251, 251, 0) !important;
       font-weight: bold;
       padding: 3px 10px;
       border-radius: 5px;
@@ -39,17 +39,17 @@
 
     @keyframes blinkColor {
       0% {
-        background-color: #ff5733;
+        background-color: #480d00;
         /* Màu đầu tiên */
       }
 
       50% {
-        background-color: #33ff57;
+        background-color: #008819;
         /* Màu thứ hai */
       }
 
       100% {
-        background-color: #ff5733;
+        background-color: #480d00;
         /* Quay lại màu đầu tiên */
       }
     }
@@ -183,7 +183,9 @@
                         <span class="color<%= Math.floor(Math.random() * 4) + 1 %>">
                           <%= post.category.categoryName || 'Uncategorized' %>
                         </span>
-
+                        <% if (post.premium) { %>
+                          <span class="premium-badge">💎💎Premium💎💎</span>
+                          <% } %>
                         <h4>
                           <a href="/posts/<%= post._id %>">
                             <%= post.title %>

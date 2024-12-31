@@ -30,12 +30,32 @@
     }
 
     .premium-badge {
-      background-color: rgb(42, 21, 21);
-      color: yellow;
+      background-color: rgb(42, 41, 28);
+      color: rgb(251, 251, 0) !important;
       font-weight: bold;
       padding: 3px 10px;
       border-radius: 5px;
       margin-bottom: 10px;
+      font-size: 15px;
+      animation: blinkColor 1s infinite;
+      /* Hiệu ứng nhấp nháy giữa 2 màu */
+    }
+
+    @keyframes blinkColor {
+      0% {
+        background-color: #480d00;
+        /* Màu đầu tiên */
+      }
+
+      50% {
+        background-color: #008819;
+        /* Màu thứ hai */
+      }
+
+      100% {
+        background-color: #480d00;
+        /* Quay lại màu đầu tiên */
+      }
     }
   </style>
 </head>
