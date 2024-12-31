@@ -24,398 +24,481 @@
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/image.css" />
   <link rel="stylesheet" href="/css/slider.css" />
+  <style>
+    .premium-badge {
+      background-color: rgb(42, 41, 28);
+      color: rgb(251, 251, 0);
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      animation: blinkColor 1s infinite;
+      /* Hiệu ứng nhấp nháy giữa 2 màu */
+    }
+
+    @keyframes blinkColor {
+      0% {
+        background-color: #ff5733;
+        /* Màu đầu tiên */
+      }
+
+      50% {
+        background-color: #33ff57;
+        /* Màu thứ hai */
+      }
+
+      100% {
+        background-color: #ff5733;
+        /* Quay lại màu đầu tiên */
+      }
+    }
+  </style>
 </head>
 
 <body>
   <%- include('./partials/header.ejs') %>
-  <main>
-    <!-- Trending Area Start -->
-    <div class="trending-area fix">
-      <div class="container">
-        <div class="trending-main">
-          <!-- Trending Title -->
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="trending-tittle">
-                <strong>Những bài viết nổi bật trong tuần</strong>
-                <div class="trending-animated">
-                  <ul id="js-news" class="js-hidden">
-                    <li class="news-item">Cháy máy bay ở Hàn Quốc ...</li>
-                    <li class="news-item">Những dấu hỏi xoay quanh thảm kịch máy bay Hàn Quốc.</li>
-                    <li class="news-item">90 phút cảm xúc của CĐV trận Việt Nam - Singapore.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-      
-          <div class="row">
-            <div class="col-lg-8">
-              <!-- Trending Top -->
-              <% if (topPostsThisWeek && topPostsThisWeek.length > 0) { %>
-              <div class="trending-top mb-30">
-                <div class="trend-top-img">
-                  <img src="<%= topPostsThisWeek[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= topPostsThisWeek[0].title %>" />
-                  <div class="trend-top-cap">
-                    <span><%= topPostsThisWeek[0].category.categoryName || 'Uncategorized' %></span>
-                    <h2>
-                      <a href="/posts/<%= topPostsThisWeek[0]._id %>">
-                        <%= topPostsThisWeek[0].title %>
-                      </a>
-                    </h2>
-                    <p class="post-date"><%= new Date(topPostsThisWeek[0].createdAt).toLocaleDateString() %></p>
-                    <div class="tags">
-                      <% if (topPostsThisWeek[0].tags && topPostsThisWeek[0].tags.length > 0) { %>
-                        <% topPostsThisWeek[0].tags.forEach(tag => { %>
-                          <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
-                        <% }); %>
-                      <% } else { %>
-                        <span class="tag">No tags available.</span>
-                      <% } %>
-                    </div>
+    <main>
+      <!-- Trending Area Start -->
+      <div class="trending-area fix">
+        <div class="container">
+          <div class="trending-main">
+            <!-- Trending Title -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="trending-tittle">
+                  <strong>Những bài viết nổi bật trong tuần</strong>
+                  <div class="trending-animated">
+                    <ul id="js-news" class="js-hidden">
+                      <li class="news-item">Cháy máy bay ở Hàn Quốc ...</li>
+                      <li class="news-item">Những dấu hỏi xoay quanh thảm kịch máy bay Hàn Quốc.</li>
+                      <li class="news-item">90 phút cảm xúc của CĐV trận Việt Nam - Singapore.</li>
+                    </ul>
                   </div>
                 </div>
               </div>
-              <% } else { %>
-              <p>No posts available this week.</p>
-              <% } %>
-      
-              <!-- Trending Bottom -->
-              <div class="trending-bottom">
-                <div class="row">
-                  <% if (topPostsThisWeek && topPostsThisWeek.length > 1) { %>
-                  <% topPostsThisWeek.slice(1, 4).forEach(post => { %>
-                  <div class="col-lg-4">
-                    <div class="single-bottom mb-35">
-                      <div class="trend-bottom-img mb-30">
-                        <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8">
+                <!-- Trending Top -->
+                <% if (topPostsThisWeek && topPostsThisWeek.length> 0) { %>
+                  <% topPostsThisWeek.forEach(post=> { %>
+                    <% }); %>
+                      <div class="trending-top mb-30">
+                        <div class="trend-top-img">
+                          <img src="<%= topPostsThisWeek[0].imageUrl || '/img/default-image.jpg' %>"
+                            alt="<%= topPostsThisWeek[0].title %>" />
+                          <div class="trend-top-cap">
+                            <span>
+                              <%= topPostsThisWeek[0].category.categoryName || 'Uncategorized' %>
+                            </span>
+                            <% if (topPostsThisWeek[0].premium) { %>
+                              <span class="premium-badge">💎💎Premium💎💎</span>
+                              <% } %>
+                                <h2>
+                                  <a href="/posts/<%= topPostsThisWeek[0]._id %>">
+                                    <%= topPostsThisWeek[0].title %>
+                                  </a>
+                                </h2>
+                                <p class="post-date">
+                                  <%= new Date(topPostsThisWeek[0].createdAt).toLocaleDateString() %>
+                                </p>
+                                <div class="tags">
+                                  <% if (topPostsThisWeek[0].tags && topPostsThisWeek[0].tags.length> 0) { %>
+                                    <% topPostsThisWeek[0].tags.forEach(tag=> { %>
+                                      <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%=
+                                            tag.tagName %></a></span>
+                                      <% }); %>
+                                        <% } else { %>
+                                          <span class="tag">No tags available.</span>
+                                          <% } %>
+                                </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="trend-bottom-cap">
-                        <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
-                          <a href="#"> <%= post.category.categoryName || 'Uncategorized' %></a>
-                         
+                      <% } else { %>
+                        <p>No posts available this week.</p>
+                        <% } %>
+
+                          <!-- Trending Bottom -->
+                          <div class="trending-bottom">
+                            <div class="row">
+                              <% if (topPostsThisWeek && topPostsThisWeek.length> 1) { %>
+                                <% topPostsThisWeek.slice(1, 4).forEach(post=> { %>
+                                  <div class="col-lg-4">
+                                    <div class="single-bottom mb-35">
+                                      <div class="trend-bottom-img mb-30">
+                                        <img src="<%= post.imageUrl || '/img/default-image.jpg' %>"
+                                          alt="<%= post.title %>" />
+                                      </div>
+                                      <div class="trend-bottom-cap">
+                                        <span class="color<%= Math.floor(Math.random() * 3) + 1 %>">
+                                          <a href="#">
+                                            <%= post.category.categoryName || 'Uncategorized' %>
+                                          </a>
+                                        </span>
+                                        <% if (post.premium) { %>
+                                          <span class="premium-badge">💎💎Premium💎💎</span>
+                                          <% } %>
+                                            <h4>
+                                              <a href="/posts/<%= post._id %>">
+                                                <%= post.title %>
+                                              </a>
+                                            </h4>
+                                            <p class="post-date">
+                                              <%= new Date(post.createdAt).toLocaleDateString() %>
+                                            </p>
+                                            <div class="tags">
+                                              <% if (post.tags && post.tags.length> 0) { %>
+                                                <% post.tags.forEach(tag=> { %>
+                                                  <span class="tag color1"><a class="text-dark"
+                                                      href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
+                                                  <% }); %>
+                                                    <% } else { %>
+                                                      <span class="tag">No tags available.</span>
+                                                      <% } %>
+                                            </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <% }); %>
+                                    <% } else { %>
+                                      <p>No additional posts available this week.</p>
+                                      <% } %>
+                            </div>
+                          </div>
+              </div>
+
+              <!-- Right Content -->
+              <div class="col-lg-4">
+                <% if (topPostsThisWeek && topPostsThisWeek.length> 0) { %>
+                  <% topPostsThisWeek.slice(0, 4).forEach(post=> { %>
+                    <div class="trand-right-single d-flex">
+                      <div class="trand-right-img">
+                        <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>"
+                          alt="<%= post.title %>" />
+                      </div>
+                      <div class="trand-right-cap">
+                        <span class="color<%= Math.floor(Math.random() * 4) + 1 %>">
+                          <%= post.category.categoryName || 'Uncategorized' %>
                         </span>
+
                         <h4>
                           <a href="/posts/<%= post._id %>">
                             <%= post.title %>
                           </a>
                         </h4>
-                        <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
+                        <p class="post-date">
+                          <%= new Date(post.createdAt).toLocaleDateString() %>
+                        </p>
                         <div class="tags">
-                          <% if (post.tags && post.tags.length > 0) { %>
-                            <% post.tags.forEach(tag => { %>
-                              <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
-                            <% }); %>
-                          <% } else { %>
-                            <span class="tag">No tags available.</span>
-                          <% } %>
+                          <% if (post.tags && post.tags.length> 0) { %>
+                            <% post.tags.forEach(tag=> { %>
+                              <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName
+                                    %></a></span>
+                              <% }); %>
+                                <% } else { %>
+                                  <span class="tag">No tags available.</span>
+                                  <% } %>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <% }); %>
-                  <% } else { %>
-                  <p>No additional posts available this week.</p>
-                  <% } %>
-                </div>
+                    <% }); %>
+                      <% } else { %>
+                        <p>No trending posts available this week.</p>
+                        <% } %>
               </div>
             </div>
-      
-            <!-- Right Content -->
-            <div class="col-lg-4">
-              <% if (topPostsThisWeek && topPostsThisWeek.length > 0) { %>
-              <% topPostsThisWeek.slice(0, 4).forEach(post => { %>
-              <div class="trand-right-single d-flex">
-                <div class="trand-right-img">
-                  <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                </div>
-                <div class="trand-right-cap">
-                  <span class="color<%= Math.floor(Math.random() * 4) + 1 %>">
-                    <%= post.category.categoryName || 'Uncategorized' %>
-                  </span>
-                  <h4>
-                    <a href="/posts/<%= post._id %>">
-                      <%= post.title %>
-                    </a>
-                  </h4>
-                  <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
-                  <div class="tags">
-                    <% if (post.tags && post.tags.length > 0) { %>
-                      <% post.tags.forEach(tag => { %>
-                        <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
-                      <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Whats New Start -->
+      <section class="whats-news-area pt-50 pb-20">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-md-8">
+              <div class="section-tittle mb-30">
+                <h3>Được xem nhiều nhất</h3>
+              </div>
+              <div class="whats-news-caption">
+                <div class="row">
+                  <% if (topViewedPosts.length> 0) { %>
+                    <div class="col-12">
+                      <!-- Slideshow -->
+                      <div id="topViewedPostsCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <% topViewedPosts.slice(0, 10).forEach((post, index)=> { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                              <div class="single-news mb-4">
+                                <div class="news-img">
+                                  <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>"
+                                    class="d-block w-100" />
+                                </div>
+                                <div class="news-caption">
+                                  <span>
+                                    <%= post.category.categoryName || 'Uncategorized' %>
+                                  </span>
+                                  <% if (post.premium) { %>
+                                    <span class="premium-badge">💎💎Premium💎💎</span>
+                                    <% } %>
+                                      <h4>
+                                        <a href="/posts/<%= post._id %>" class="carousel-title">
+                                          <%= post.title %>
+                                        </a>
+                                      </h4>
+                                      <p class="post-date">
+                                        <%= new Date(post.createdAt).toLocaleDateString() %>
+                                      </p>
+                                      <p>
+                                        <%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + ' ...'
+                                          : 'No description available.' %>
+                                      </p>
+                                </div>
+                              </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                        <!-- Navigation Arrows -->
+                        <a class="carousel-control-prev" href="#topViewedPostsCarousel" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#topViewedPostsCarousel" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                    </div>
                     <% } else { %>
-                      <span class="tag">No tags available.</span>
-                    <% } %>
-                  </div>
+                      <p>No posts available.</p>
+                      <% } %>
                 </div>
               </div>
-              <% }); %>
-              <% } else { %>
-              <p>No trending posts available this week.</p>
-              <% } %>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Trending Area End -->
-  
-    <!-- Whats New Start -->
-    <section class="whats-news-area pt-50 pb-20">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-8">
-            <div class="section-tittle mb-30">
-              <h3>Được xem nhiều nhất</h3>
-            </div>
-            <div class="whats-news-caption">
-              <div class="row">
-                <% if (topViewedPosts.length > 0) { %>
-                <div class="col-12">
-                  <!-- Slideshow -->
-                  <div id="topViewedPostsCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                      <% topViewedPosts.slice(0, 10).forEach((post, index) => { %>
-                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" class="d-block w-100" />
-                            </div>
-                            <div class="news-caption">
-                              <span><%= post.category.categoryName || 'Uncategorized' %></span>
-                              <h4>
-                                <a href="/posts/<%= post._id %>" class="carousel-title"><%= post.title %></a>
-                              </h4>
-                              <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
-                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + '...' : 'No description available.' %></p>
-                            </div>
-                          </div>
-                        </div>
-                      <% }); %>
+            <div class="col-lg-4">
+              <div class="section-tittle mb-40">
+                <h3>Follow Us</h3>
+              </div>
+              <div class="single-follow mb-45">
+                <div class="single-box">
+                  <div class="follow-us d-flex align-items-center">
+                    <div class="follow-social">
+                      <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img
+                          src="/img/news/icon-fb.png" alt="" /></a>
                     </div>
-                    <!-- Navigation Arrows -->
-                    <a class="carousel-control-prev" href="#topViewedPostsCarousel" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#topViewedPostsCarousel" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Next</span>
-                    </a>
-                  </div>
-                </div>
-                <% } else { %>
-                <p>No posts available.</p>
-                <% } %>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="section-tittle mb-40">
-              <h3>Follow Us</h3>
-            </div>
-            <div class="single-follow mb-45">
-              <div class="single-box">
-                <div class="follow-us d-flex align-items-center">
-                  <div class="follow-social">
-                    <a href="https://www.facebook.com/congdongvnexpress/?locale=vi_VN"><img src="/img/news/icon-fb.png" alt="" /></a>
-                  </div>
-                  <div class="follow-count">
-                    <span>News</span>
-                  </div>
-                </div>
-                <div class="follow-us d-flex align-items-center">
-                  <div class="follow-social">
-                    <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img src="/img/news/icon-tw.png" alt="" /></a>
-                  </div>
-                  <div class="follow-count">
-                    <span>News</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Whats New End -->
-  
-    <!-- Recent Posts Start -->
-    <section class="recent-news-area pt-50 pb-20">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-8">
-            <div class="section-tittle mb-30">
-              <h3>Bài viết mới nhất</h3>
-            </div>
-            <div class="recent-news-caption">
-              <div class="row">
-                <% if (recentPosts.length > 0) { %>
-                <div class="col-12">
-                  <!-- Slideshow -->
-                  <div id="recentPostsCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                      <% recentPosts.slice(0, 10).forEach((post, index) => { %>
-                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" class="d-block w-100" />
-                            </div>
-                            <div class="news-caption">
-                              <span><%= post.category.categoryName || 'Uncategorized' %></span>
-                              <h4>
-                                <a href="/posts/<%= post._id %>" class="carousel-title"><%= post.title %></a>
-
-                              </h4>
-                              <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
-                              <p>
-                                <%= post.abstract
-                                  ? post.abstract.split(' ').slice(0, 10).join(' ') + '...'
-                                  : 'No description available.' %>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      <% }); %>
+                    <div class="follow-count">
+                      <span>News</span>
                     </div>
-                    <!-- Navigation Arrows -->
-                    <a class="carousel-control-prev" href="#recentPostsCarousel" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#recentPostsCarousel" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Next</span>
-                    </a>
                   </div>
-                </div>
-                <% } else { %>
-                <p>No recent posts available.</p>
-                <% } %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Recent Posts End -->
-
-    <!-- Hottest categories start-->
-    <section class="recent-news-area pt-50 pb-20">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-8">
-            <div class="section-tittle mb-30">
-              <h3>Danh mục hot:</h3>
-            </div>
-            <div class="recent-news-caption">
-              <div class="row">
-                <% if (topCategoriesWithLatestPost.length > 0) { %>
-                <div class="col-12">
-                  <!-- Slideshow -->
-                  <div id="topCategoriesCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                      <% topCategoriesWithLatestPost.forEach(({ category, latestPost }, index) => { %>
-                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= latestPost?.imageUrl || '/img/default-image.jpg' %>" 
-                                   alt="<%= latestPost?.title || 'No Title' %>" 
-                                   class="d-block w-100" />
-                            </div>
-                            <div class="news-caption">
-                              <span><%= category.categoryName || 'Uncategorized' %></span>
-                              <h4>
-                                <a href="/posts/<%= latestPost?._id || '#' %>" class="carousel-title">
-                                  <%= latestPost?.title || 'No Post Available' %>
-                                </a>
-                              </h4>
-                              <% if (latestPost) { %>
-                              <p class="post-date"><%= new Date(latestPost.createdAt).toLocaleDateString() %></p>
-                              <p>
-                                <%= latestPost.abstract
-                                  ? latestPost.abstract.split(' ').slice(0, 10).join(' ') + '...'
-                                  : 'No description available.' %>
-                              </p>
-                              <% } else { %>
-                              <p>No post available for this category.</p>
-                              <% } %>
-                            </div>
-                          </div>
-                        </div>
-                      <% }); %>
+                  <div class="follow-us d-flex align-items-center">
+                    <div class="follow-social">
+                      <a href="https://x.com/vietnamenglish?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><img
+                          src="/img/news/icon-tw.png" alt="" /></a>
                     </div>
-                    <!-- Navigation Arrows -->
-                    <a class="carousel-control-prev" href="#topCategoriesCarousel" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#topCategoriesCarousel" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Next</span>
-                    </a>
+                    <div class="follow-count">
+                      <span>News</span>
+                    </div>
                   </div>
                 </div>
-                <% } else { %>
-                <p>No top categories available.</p>
-                <% } %>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    
-    
-    <!-- Hottest categories end-->
-  </main>
-  
+      </section>
+      <!-- Whats New End -->
 
-  <%- include('./partials/footer.ejs') %>
+      <!-- Recent Posts Start -->
+      <section class="recent-news-area pt-50 pb-20">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-md-8">
+              <div class="section-tittle mb-30">
+                <h3>Bài viết mới nhất</h3>
+              </div>
+              <div class="recent-news-caption">
+                <div class="row">
+                  <% if (recentPosts.length> 0) { %>
+                    <div class="col-12">
+                      <!-- Slideshow -->
+                      <div id="recentPostsCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <% recentPosts.slice(0, 10).forEach((post, index)=> { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                              <div class="single-news mb-4">
+                                <div class="news-img">
+                                  <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>"
+                                    class="d-block w-100" />
+                                </div>
+                                <div class="news-caption">
+                                  <span>
+                                    <%= post.category.categoryName || 'Uncategorized' %>
+                                  </span>
+                                  <% if (post.premium) { %>
+                                    <span class="premium-badge">💎💎Premium💎💎</span>
+                                    <% } %>
+                                      <h4>
+                                        <a href="/posts/<%= post._id %>" class="carousel-title">
+                                          <%= post.title %>
+                                        </a>
 
-  <!-- JS here -->
+                                      </h4>
+                                      <p class="post-date">
+                                        <%= new Date(post.createdAt).toLocaleDateString() %>
+                                      </p>
+                                      <p>
+                                        <%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + ' ...'
+                                          : 'No description available.' %>
+                                      </p>
+                                </div>
+                              </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                        <!-- Navigation Arrows -->
+                        <a class="carousel-control-prev" href="#recentPostsCarousel" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#recentPostsCarousel" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                    </div>
+                    <% } else { %>
+                      <p>No recent posts available.</p>
+                      <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Recent Posts End -->
 
-  <!-- All JS Custom Plugins Link Here here -->
-  <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-  <!-- Jquery, Popper, Bootstrap -->
-  <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-  <script src="/js/popper.min.js"></script>
-  <script src="/js/bootstrap.min.js"></script>
-  <!-- Jquery Mobile Menu -->
-  <script src="/js/jquery.slicknav.min.js"></script>
+      <!-- Hottest categories start-->
+      <section class="recent-news-area pt-50 pb-20">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-md-8">
+              <div class="section-tittle mb-30">
+                <h3>Danh mục hot:</h3>
+              </div>
+              <div class="recent-news-caption">
+                <div class="row">
+                  <% if (topCategoriesWithLatestPost.length> 0) { %>
+                    <div class="col-12">
+                      <!-- Slideshow -->
+                      <div id="topCategoriesCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <% topCategoriesWithLatestPost.forEach(({ category, latestPost }, index)=> { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                              <div class="single-news mb-4">
+                                <div class="news-img">
+                                  <img src="<%= latestPost?.imageUrl || '/img/default-image.jpg' %>"
+                                    alt="<%= latestPost?.title || 'No Title' %>" class="d-block w-100" />
+                                </div>
+                                <div class="news-caption">
+                                  <span>
+                                    <%= category.categoryName || 'Uncategorized' %>
+                                  </span>
+                                  <% if (latestPost && latestPost.premium) { %>
+                                    <span class="premium-badge">💎💎Premium💎💎</span>
+                                    <% } %>
+                                      <h4>
+                                        <a href="/posts/<%= latestPost?._id || '#' %>" class="carousel-title">
+                                          <%= latestPost?.title || 'No Post Available' %>
+                                        </a>
+                                      </h4>
+                                      <% if (latestPost) { %>
+                                        <p class="post-date">
+                                          <%= new Date(latestPost.createdAt).toLocaleDateString() %>
+                                        </p>
+                                        <p>
+                                          <%= latestPost.abstract ?
+                                            latestPost.abstract.split(' ').slice(0, 10).join(' ') + ' ...'
+                                            : 'No description available.' %>
+                                        </p>
+                                        <% } else { %>
+                                          <p>No post available for this category.</p>
+                                          <% } %>
+                                </div>
+                              </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                        <!-- Navigation Arrows -->
+                        <a class="carousel-control-prev" href="#topCategoriesCarousel" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#topCategoriesCarousel" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                    </div>
+                    <% } else { %>
+                      <p>No top categories available.</p>
+                      <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <!-- Jquery Slick , Owl-Carousel Plugins -->
-  <script src="/js/owl.carousel.min.js"></script>
-  <script src="/js/slick.min.js"></script>
-  <!-- Date Picker -->
-  <script src="/js/gijgo.min.js"></script>
-  <!-- One Page, Animated-HeadLin -->
-  <script src="/js/wow.min.js"></script>
-  <script src="/js/animated.headline.js"></script>
-  <script src="/js/jquery.magnific-popup.js"></script>
 
-  <!-- Breaking New Pluging -->
-  <script src="/js/jquery.ticker.js"></script>
-  <script src="/js/site.js"></script>
+      <!-- Hottest categories end-->
+    </main>
 
-  <!-- Scrollup, nice-select, sticky -->
-  <script src="/js/jquery.scrollUp.min.js"></script>
-  <script src="/js/jquery.nice-select.min.js"></script>
-  <script src="/js/jquery.sticky.js"></script>
 
-  <!-- contact js -->
-  <script src="/js/contact.js"></script>
-  <script src="/js/jquery.form.js"></script>
-  <script src="/js/jquery.validate.min.js"></script>
-  <script src="/js/mail-script.js"></script>
-  <script src="/js/jquery.ajaxchimp.min.js"></script>
+    <%- include('./partials/footer.ejs') %>
 
-  <!-- Jquery Plugins, main Jquery -->
-  <script src="/js/plugins.js"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/head.js"></script>
-  <script src="/js/category_selections.js"></script>
+      <!-- JS here -->
+
+      <!-- All JS Custom Plugins Link Here here -->
+      <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+      <!-- Jquery, Popper, Bootstrap -->
+      <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+      <!-- Jquery Mobile Menu -->
+      <script src="/js/jquery.slicknav.min.js"></script>
+
+      <!-- Jquery Slick , Owl-Carousel Plugins -->
+      <script src="/js/owl.carousel.min.js"></script>
+      <script src="/js/slick.min.js"></script>
+      <!-- Date Picker -->
+      <script src="/js/gijgo.min.js"></script>
+      <!-- One Page, Animated-HeadLin -->
+      <script src="/js/wow.min.js"></script>
+      <script src="/js/animated.headline.js"></script>
+      <script src="/js/jquery.magnific-popup.js"></script>
+
+      <!-- Breaking New Pluging -->
+      <script src="/js/jquery.ticker.js"></script>
+      <script src="/js/site.js"></script>
+
+      <!-- Scrollup, nice-select, sticky -->
+      <script src="/js/jquery.scrollUp.min.js"></script>
+      <script src="/js/jquery.nice-select.min.js"></script>
+      <script src="/js/jquery.sticky.js"></script>
+
+      <!-- contact js -->
+      <script src="/js/contact.js"></script>
+      <script src="/js/jquery.form.js"></script>
+      <script src="/js/jquery.validate.min.js"></script>
+      <script src="/js/mail-script.js"></script>
+      <script src="/js/jquery.ajaxchimp.min.js"></script>
+
+      <!-- Jquery Plugins, main Jquery -->
+      <script src="/js/plugins.js"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/head.js"></script>
+      <script src="/js/category_selections.js"></script>
 </body>
 
 </html>
