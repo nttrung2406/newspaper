@@ -13,11 +13,7 @@ const __dirname = dirname(__filename);
 
 router.use(express.static(path.join(__dirname, "../public/editor")));
 
-router.get("/", (req, res) => {
-  res.render("editor/dashboard");
-});
-
-router.get("/articles", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     console.log("Category can be managed: ", req.user.category);
     const drafts = await Post.find({ status: "Draft", category: req.user.category })
