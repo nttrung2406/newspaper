@@ -209,7 +209,9 @@ const getPostByCategory = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate("category", "categoryName")
+      .populate("tags", "tagName");
 
     const processedPosts = posts.map((post) => {
       let imageUrl = null;
@@ -219,10 +221,16 @@ const getPostByCategory = async (req, res) => {
         const firstImg = $("img").first().attr("src");
         imageUrl = firstImg || null;
       }
-
+      console.log(post.tags.map(tag => tag.tagName));
+      const tagNames = post.tags && post.tags.length > 0
+        ? post.tags.map(tag => tag.tagName).join(', ')
+        : 'Không có thẻ';
       return {
         ...post._doc,
         imageUrl,
+        categoryId: post.category._id,  // Include category ID
+        categoryName: post.category.categoryName,  // Include category name
+        tagNames   // Include tag names
       };
     });
 
@@ -237,6 +245,7 @@ const getPostByCategory = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch posts' });
   }
 };
+
 
 export default getPostByCategory;
 
