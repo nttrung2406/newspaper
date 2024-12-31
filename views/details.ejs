@@ -119,19 +119,17 @@
                   </h2>
                   <div class="d-flex justify-content-between text-muted mb-3">
                     <small><i class="far fa-calendar-alt me-1"></i> <%- new Date(post.createdAt).toLocaleDateString() %></small>
-                    <small><i class="far fa-user me-1"></i> <%- user.username %></small>
+                    <small><i class="far fa-user me-1"></i> <%= penName %></small>
                   </div>
                   <p class="card-text"><%- post.content %></p>
-
-
                 </div>
                 <% if (post.tags?.length > 0) { %>
-                  <div class="tags-container">
-                  <p class="text-muted">
-                    Tags: <% post.tags.forEach(tag => { %>
-                    <a href="/tags/<%= tag._id %>" class="badge bg-warning text-white"><%- tag.tagName %></a>
-                    <% }); %>
-                  </p>
+                  <div class="tags-container ml-3">
+                    <p class="text-muted">
+                      Tags: <% post.tags.forEach(tag => { %>
+                      <a href="/tags/<%= tag._id %>" class="badge bg-warning text-white"><%- tag.tagName %></a>
+                      <% }); %>
+                    </p>
                   </div>
                   <% } %>
               </div>
@@ -170,7 +168,7 @@
                   <div class="col-lg-12">
                     <div class="single-what-news">
                       <div class="what-img">
-                        <img src="<%= post.imageUrl || '/img/news/whatNews1.jpg' %>" alt="<%- post.title %>" />
+                        <img src="<%= post.imageUrl || '/img/post/default-image.jpg' %>" alt="<%- post.title %>" />
                       </div>
                       <div class="what-cap">
                         <span class="color1"><%- category.categoryName || 'Uncategorized' %></span>

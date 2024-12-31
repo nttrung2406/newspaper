@@ -1,4 +1,5 @@
 import Post from '../models/postModel.js';
+import UserInformation from '../models/UserInformation.js';
 import Membership from '../models/Membership.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
@@ -158,6 +159,10 @@ export const getPostById = async (req, res) => {
       .populate("category")
       .populate("writer")
       .populate("tags");
+    
+    const writerId = post.writer._id;
+    const userInfo = await UserInformation.findOne({ accountID: writerId });
+    const penName = userInfo.penName;
 
     if (!post) {
       console.log(`Post with id ${id} not found`);
@@ -167,24 +172,12 @@ export const getPostById = async (req, res) => {
     post.viewCount += 1;
     await Post.findByIdAndUpdate(id, { $inc: { viewCount: 1 } });
 
-    let imageUrl = null;
-    if (post.content) {
-      const $ = cheerio.load(post.content);
-      const firstImg = $("img").first().attr("src");
-      imageUrl = firstImg || null;
-    }
-
-    const processedPost = {
-      ...post._doc,
-      imageUrl,
-    };
-
     const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
 
     res.render("details", { 
-      post: processedPost,
+      post: post,
       category: post.category,
-      user: post.writer,
+      penName: penName,
       tags: post.tags,
       randomPosts,
       currentUser: user,
