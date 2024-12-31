@@ -94,7 +94,7 @@ export const searchPostsByTitle = async (req, res) => {
     } else {
       // Convert to array if single value
       const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
-      
+
       // Add conditions for each selected field
       searchFields.forEach(field => {
         if (['title', 'abstract', 'content'].includes(field)) {
@@ -109,12 +109,13 @@ export const searchPostsByTitle = async (req, res) => {
     // Get total count for pagination
     const totalResults = await Post.countDocuments(searchQuery);
 
-    // Execute search with pagination
+    // Execute search with pagination and sort posts with premium first
     const results = await Post.find(searchQuery)
       .populate('category')
       .populate('tags')
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({ premium: -1, createdAt: -1 }); // Sort by premium (desc) and then createdAt (desc)
 
     // Process posts to include first image and category name
     const postsWithImages = results.map(post => {
@@ -142,6 +143,7 @@ export const searchPostsByTitle = async (req, res) => {
     res.status(500).render('errorPage', { error: "An error occurred while searching. Please try again." });
   }
 };
+
 
 
 
