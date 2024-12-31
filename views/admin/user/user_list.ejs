@@ -1,817 +1,1049 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="/admin/vendors/jvectormap/jquery-jvectormap.css">
-    <link rel="stylesheet" href="/admin/vendors/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.carousel.min.css">
-    <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.theme.default.min.css">
-    <!-- End plugin css for this page -->
 
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="/admin/css/style.css">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" href="/admin/images/favicon.png" />
-  </head>
-  <body>
-    <div class="container-scroller">
-      <!-- partial:partials/_sidebar.html -->
-      <%- include('../partials/_sidebar') %>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Dashboard</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/admin/vendors/jvectormap/jquery-jvectormap.css">
+  <link rel="stylesheet" href="/admin/vendors/flag-icon-css/css/flag-icon.min.css">
+  <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.carousel.min.css">
+  <link rel="stylesheet" href="/admin/vendors/owl-carousel-2/owl.theme.default.min.css">
+  <link rel="stylesheet" href="/admin/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="/admin/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- End plugin css for this page -->
+
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="/admin/css/style.css">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="/admin/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_sidebar.html -->
+    <%- include('../partials/_sidebar') %>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_navbar.html -->
         <%- include('../partials/_navbar') %>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
 
-            <div class="page-header">
-              <h3 class="page-tittle">Quản lý người dùng</h3>
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <a href="/admin">Trang chủ</a>
-                  </li>
+              <div class="page-header">
+                <h3 class="page-tittle">Quản lý người dùng</h3>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="/admin">Trang chủ</a>
+                    </li>
 
-                  
 
-                  <li class="breadcrumb-item active" aria-current="page">Quản lý người dùng</li>
-                </ol>
-              </nav>
-            </div>
 
-            <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-                <div class="card text-left">
-                  <div class="card-body">
-                    <!-- Role Filters -->
-                    <div class="row mb-3">
-                      <div class="col-12">
-                        <ul class="nav nav-pills justify-content-start">
-                          <li class="nav-item">
-                            <a href="?role=all<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'all' ? 'active' :'' %>">All</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="?role=admin<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'admin' ? 'active' :'' %>">Administrator</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="?role=writer<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'writer' ? 'active' :'' %>">Writer</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="?role=editor<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'editor' ? 'active' :'' %>">Editor</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="?role=membership<%= search? '&search='+search: '' %>" class="nav-link px-4 py-2 <%= role === 'membership' ? 'active' :'' %>">Membership</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <!-- Search Bar -->
-                    <div class="row align-items-center">
+                    <li class="breadcrumb-item active" aria-current="page">Quản lý người dùng</li>
+                  </ol>
+                </nav>
+              </div>
 
-                      <div class="col-8">
-                        <form method="GET" action="/admin/users" class="input-group">
-                          <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Nhập username" 
-                            class="form-control"
-                            value="<%= search || '' %>"
-                          />
-                          <input type="text" name="role" value="<%= role %>" hidden>
-                          <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                              <i class="mdi mdi-magnify"></i>
-                              Search
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-            
-                      <!-- Add User Button -->
-                      <div class="col-12 col-md-4 text-center text-md-right mb-3 mb-md-0">
-                        <div class="d-flex justify-content-center justify-content-md-end">
-                          <button type="button" class="btn btn-warning mr-2" id="toggleExetendPremium">
-                            <i class="mdi mdi-clock"></i> Gia hạn premium
-                          </button>
-                          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUser">
-                            <i class="mdi mdi-plus"></i> Thêm tài khoản
-                          </button>
+              <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                  <div class="card text-left">
+                    <div class="card-body">
+                      <!-- Role Filters -->
+                      <div class="row mb-3">
+                        <div class="col-12">
+                          <ul class="nav nav-pills justify-content-start">
+                            <li class="nav-item">
+                              <a href="?role=all<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'all' ? 'active' :'' %>">All</a>
+                            </li>
+                            <li class="nav-item">
+                              <a href="?role=admin<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'admin' ? 'active' :'' %>">Administrator</a>
+                            </li>
+                            <li class="nav-item">
+                              <a href="?role=writer<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'writer' ? 'active' :'' %>">Writer</a>
+                            </li>
+                            <li class="nav-item">
+                              <a href="?role=editor<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'editor' ? 'active' :'' %>">Editor</a>
+                            </li>
+                            <li class="nav-item">
+                              <a href="?role=membership<%= search? '&search='+search: '' %>"
+                                class="nav-link px-4 py-2 <%= role === 'membership' ? 'active' :'' %>">Membership</a>
+                            </li>
+                          </ul>
                         </div>
                       </div>
-                    </div>
-                    
-                    <!-- Alert-->
-                    <% if (typeof successMessage !== 'undefined' && successMessage.length >0) {%>
-                      <div class="alert alert-success alert-dismissible my-3" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                          <span class="sr-only">Close</span>
-                        </button>
-                        <%= successMessage %>
-                      </div>
-                    <% }%>
 
-                    <!-- Table -->
-                    <div class="row mt-4">
-                      <div class="col-12">
-                        <div class="table-responsive">
-                          <table class="table table-dark table-hover custom-table">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th style="width: 20%;">Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Ngày tạo</th>
-                                <th style="width: 13%;">Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <!-- Dynamic Content Goes Here -->
-                              <% if (!userList || userList.length === 0) {%>
-                                <td colspan="5" class="text-center">Không có người dùng nào.</td>
-                              <% } else{ %>
-                                <% userList.forEach(user => { %>
-                                  <tr>
-                                    <td><%= user.username %></td>
-                                    <td><%= user.email %></td>
-                                    <td><span class="badge badge-outline<%= 
+                      <!-- Search Bar -->
+                      <div class="row align-items-center">
+
+                        <div class="col-12 col-lg-6 my-2 my-lg-0">
+                          <form method="GET" action="/admin/users" class="input-group">
+                            <input type="text" name="search" placeholder="Nhập username" class="form-control"
+                              value="<%= search || '' %>" />
+                            <input type="text" name="role" value="<%= role %>" hidden>
+                            <div class="input-group-append">
+                              <button type="submit" class="btn btn-primary">
+                                <i class="mdi mdi-magnify"></i>
+                                Search
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+
+                        <!-- Add User Button -->
+                        <div class="col-12 col-lg-6 text-center text-md-right mb-3 mb-md-0">
+                          <div class="d-flex justify-content-center justify-content-md-end flex-column flex-lg-row">
+                            <button type="button" class="btn btn-info mb-2 mb-lg-0 mr-lg-2 flex-grow-1"
+                              data-toggle="modal" data-target="#assignCategoryModal" id="toggleAsgginModal">
+                              <i class="mdi mdi-clipboard-edit"></i> Phân công
+                            </button>
+                            <button type="button" class="btn btn-warning mb-2 mb-lg-0 mr-lg-2 flex-grow-1"
+                              id="toggleExetendPremium">
+                              <i class="mdi mdi-clock"></i> Gia hạn
+                            </button>
+                            <button type="button" class="btn btn-success flex-grow-1" data-toggle="modal"
+                              data-target="#addUser">
+                              <i class="mdi mdi-plus"></i> Thêm tài khoản
+                            </button>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Alert-->
+                      <% if (typeof successMessage !=='undefined' && successMessage.length>0) {%>
+                        <div class="alert alert-success alert-dismissible my-3" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                          </button>
+                          <%= successMessage %>
+                        </div>
+                        <% }%>
+
+                          <!-- Table -->
+                          <div class="row mt-4">
+                            <div class="col-12">
+                              <div class="table-responsive">
+                                <table class="table table-dark table-hover custom-table">
+                                  <thead class="thead-dark">
+                                    <tr>
+                                      <th style="width: 20%;">Username</th>
+                                      <th>Email</th>
+                                      <th>Role</th>
+                                      <th>Ngày tạo</th>
+                                      <th style="width: 13%;">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <!-- Dynamic Content Goes Here -->
+                                    <% if (!userList || userList.length===0) {%>
+                                      <td colspan="5" class="text-center">Không có người dùng nào.</td>
+                                      <% } else{ %>
+                                        <% userList.forEach(user=> { %>
+                                          <tr>
+                                            <td>
+                                              <%= user.username %>
+                                            </td>
+                                            <td>
+                                              <%= user.email %>
+                                            </td>
+                                            <td><span class="badge badge-outline<%= 
                                       user.role === 'admin' ? '-primary' : 
                                       user.role === 'editor' ? '-success' : 
                                       user.role === 'membership' ? '-warning' : 
                                       user.role === 'writer' ? '-info' : 
                                       '' 
                                     %>">
-                                      <%= user.role %>
-                                    </span></td>
-                                    <td><%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'}) %></td>
-                                    <td>
-                                      <div class="btn-group">
-                                        <button class="btn btn-info btn-icon view-user"  data-toggle="tooltip" data-placement="bottom" title="Xem chi tiết" data-id="<%= user._id %>">
-                                          <i class="mdi mdi-information-slab-circle-outline"></i>
-                                        </button>
-                                        <button class="btn btn-primary btn-icon edit-user" data-toggle="tooltip" data-placement="bottom" title="Cập nhật" data-id="<%= user._id %>">
-                                          <i class="mdi mdi-update"></i>
-                                        </button>
-                                        <!-- <button class="btn btn-danger btn-icon">
+                                                <%= user.role %>
+                                              </span></td>
+                                            <td>
+                                              <%= new Date(user.createdAt).toLocaleDateString('vi-VN', {day: 'numeric' ,
+                                                month: 'long' , year: 'numeric' }) %>
+                                            </td>
+                                            <td>
+                                              <div class="btn-group">
+                                                <button class="btn btn-info btn-icon view-user" data-toggle="tooltip"
+                                                  data-placement="bottom" title="Xem chi tiết"
+                                                  data-id="<%= user._id %>">
+                                                  <i class="mdi mdi-information-slab-circle-outline"></i>
+                                                </button>
+                                                <button class="btn btn-primary btn-icon edit-user" data-toggle="tooltip"
+                                                  data-placement="bottom" title="Cập nhật" data-id="<%= user._id %>">
+                                                  <i class="mdi mdi-update"></i>
+                                                </button>
+                                                <!-- <button class="btn btn-danger btn-icon">
                                           <i class="mdi mdi-delete"></i>
                                         </button> -->
-                                      </div>
-                                    </td>
-                                  </tr>
-                                <%}); %>
-                              <% } %>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                          <%}); %>
+                                            <% } %>
 
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-            
-                    <!-- Pagination -->
-                    <% if (totalPages > 1) { %>
-                      <div class="row mt-3">
-                        <div class="col-12 d-flex justify-content-center">
-                          <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                              <!-- Previous Page -->
-                              <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
-                                <a class="page-link" 
-                                  href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page - 1 %>" 
-                                  tabindex="-1">&laquo;</a>
-                              </li>
-                              
-                              <!-- Current Page -->
-                              <li class="page-item active"><a class="page-link" href="#"><%= page %></a></li>
-                              
-                              <!-- Next Page -->
-                              <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
-                                <a class="page-link" 
-                                  href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page + 1 %>">&raquo;</a>
-                              </li>
-                            </ul>
-                          </nav>
-                        </div>
-                      </div>
-                    <% } %>
-                    
-                    
-                    <!-- Modal for adding a User -->
-                    <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                        <div class="modal-content">
-                          <div class="modal-body p-0">
-                            <div class="card text-left">
-                              <div class="card-body">
-                                <h4 class="card-title">Thêm người dùng</h4>
-                                <hr>
-
-                                <form action="/admin/user/add" method="post" class="form-sample" id="addUserForm">
-                                  <div class="form-group">
-                                    <label for="usernameadd">Username</label>
-                                    <input type="text"
-                                      class="form-control" name="usernameadd" id="usernameadd" aria-describedby="helpId" placeholder="Nhập tên người dùng" required
-                                    value="">
-                                    
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="emailadd">Email</label>
-                                    <input type="emailadd" class="form-control" name="emailadd" id="emailadd" aria-describedby="emailHelpId" placeholder="Nhập Email" required
-                                    value="">
-                                    <div class="invalid-feedback" id="email-error"></div>
-                                  </div>
-
-                                  <div class="form-group">
-                                    <label for="fullnameadd">Fullname</label>
-                                    <input type="text"
-                                      class="form-control" name="fullnameadd" id="fullnameadd" aria-describedby="helpId" placeholder="Nhập họ và tên" required
-                                      value="">
-                                  </div>
-
-                                  <div class="form-group">
-                                    <label for="dobadd">Date Of Birth</label>
-                                    <input type="date" name="dobadd" id="dobadd" class="form-control" aria-describedby="helpId" required
-                                    value="">
-                                  </div>
-
-                                  <div class="form-group">
-                                    <label for="roleadd">Role</label>
-                                    <select class="form-control" name="roleadd" id="roleadd">
-                                      <option value="writer" >Writer</option>
-                                      <option value="editor"  >Editor</option>
-                                      <option value="membership" >Membership</option>                                   
-                                    </select>
-                                  </div>
-
-                                  <div class="form-group">
-                                    <label for="pennameadd">Pen Name</label>
-                                    <input type="text"
-                                      class="form-control" name="pennameadd" id="pennameadd" aria-describedby="helpId" placeholder="Nhập bút danh"
-                                      value="">
-                                  </div>
-
-                                  
-
-                                  <button type="submit" class="btn btn-primary">Submit</button>
-                                  <button type="button" class="btn btn-dark" data-dismiss="modal" onclick="resetForm()">Cancel</button>
-                                  
-                                </form>
-
+                                  </tbody>
+                                </table>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    <!-- Modal for viewing a User-->
-                    <div class="modal fade" id="viewUser" tabindex="-1" role="dialog" aria-labelledby="viewUserModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable view-user-modal" role="document">
-                        <div class="modal-content">
-                          <div class="modal-body p-0">
-                            <div class="card text-left">
-                              <div class="card-body">
-                                <h4 class="card-title" id="viewUserModalTitle">User Details</h4>
-                                <hr>
-                                <div id="viewUserModalBody">
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="usernameview">Username</label>
-                                        <input type="text" id="usernameview" class="form-control" readonly>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="emailview">Email</label>
-                                        <input type="text" id="emailview" class="form-control" readonly>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="fullnameview">Fullname</label>
-                                        <input type="text" id="fullnameview" class="form-control" readonly>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="dobview">Date Of Birth</label>
-                                        <input type="text" id="dobview" class="form-control" readonly>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="form-group d-flex align-items-center">
-                                    <label for="roleview" class="mr-2">Role</label>
-                                    <span id="roleview" class="badge badge-outline align-middle"></span>
-                                  </div>
+                          <!-- Pagination -->
+                          <% if (totalPages> 1) { %>
+                            <div class="row mt-3">
+                              <div class="col-12 d-flex justify-content-center">
+                                <nav aria-label="Page navigation">
+                                  <ul class="pagination">
+                                    <!-- Previous Page -->
+                                    <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                                      <a class="page-link"
+                                        href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page - 1 %>"
+                                        tabindex="-1">&laquo;</a>
+                                    </li>
 
-                                  <div class="form-group">
-                                    <label for="pennameview">Pen Name</label>
-                                    <input type="text" id="pennameview" class="form-control" readonly>
-                                  </div>
+                                    <!-- Current Page -->
+                                    <li class="page-item active"><a class="page-link" href="#">
+                                        <%= page %>
+                                      </a></li>
 
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="createdDateView">Created Date</label>
-                                        <input type="text" id="createdDateView" class="form-control" readonly>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group">
-                                        <label for="updatedDateView">Updated Date</label>
-                                        <input type="text" id="updatedDateView" class="form-control" readonly>
+                                    <!-- Next Page -->
+                                    <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                                      <a class="page-link"
+                                        href="?<%= role ? 'role=' + role + '&' : '' %><%= search ? 'search=' + search + '&' : '' %>page=<%= page + 1 %>">&raquo;</a>
+                                    </li>
+                                  </ul>
+                                </nav>
+                              </div>
+                            </div>
+                            <% } %>
+
+
+                              <!-- Modal for adding a User -->
+                              <div class="modal fade" id="addUser" tabindex="-1" role="dialog"
+                                aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static"
+                                data-keyboard="false">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card text-left">
+                                        <div class="card-body">
+                                          <h4 class="card-title">Thêm người dùng</h4>
+                                          <hr>
+
+                                          <form action="/admin/user/add" method="post" class="form-sample"
+                                            id="addUserForm">
+                                            <div class="form-group">
+                                              <label for="usernameadd">Username</label>
+                                              <input type="text" class="form-control" name="usernameadd"
+                                                id="usernameadd" aria-describedby="helpId"
+                                                placeholder="Nhập tên người dùng" required value="">
+
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="emailadd">Email</label>
+                                              <input type="emailadd" class="form-control" name="emailadd" id="emailadd"
+                                                aria-describedby="emailHelpId" placeholder="Nhập Email" required
+                                                value="">
+                                              <div class="invalid-feedback" id="email-error"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="fullnameadd">Fullname</label>
+                                              <input type="text" class="form-control" name="fullnameadd"
+                                                id="fullnameadd" aria-describedby="helpId" placeholder="Nhập họ và tên"
+                                                required value="">
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="dobadd">Date Of Birth</label>
+                                              <input type="date" name="dobadd" id="dobadd" class="form-control"
+                                                aria-describedby="helpId" required value="">
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="roleadd">Role</label>
+                                              <select class="form-control" name="roleadd" id="roleadd">
+                                                <option value="writer">Writer</option>
+                                                <option value="editor">Editor</option>
+                                                <option value="membership">Membership</option>
+                                              </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                              <label for="pennameadd">Pen Name</label>
+                                              <input type="text" class="form-control" name="pennameadd" id="pennameadd"
+                                                aria-describedby="helpId" placeholder="Nhập bút danh" value="">
+                                            </div>
+
+
+
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="button" class="btn btn-dark" data-dismiss="modal"
+                                              onclick="resetForm()">Cancel</button>
+
+                                          </form>
+
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                <button type="button" class="btn btn-dark" id="viewModalDismiss" data-dismiss="modal">Close</button>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    <!-- Modal for updating a User -->
-                    <div class="modal fade" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="updateUserModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                        <div class="modal-content">
-                          <div class="modal-body p-0">
-                            <div class="card text-left">
-                              <div class="card-body">
-                                <h4 class="card-title" id="updateUserModalTitle">Cập nhật người dùng</h4>
-                                <hr>
-                                <form action="/admin/user/update" method="post" class="form-sample" id="updateUserForm">
-                                  <input type="hidden" name="userId" id="userIdUpdate">
-                                  <div class="form-group">
-                                    <label for="usernameUpdate">Tên người dùng</label>
-                                    <input type="text" class="form-control" name="usernameUpdate" id="usernameUpdate" aria-describedby="helpId" placeholder="Nhập tên người dùng" required>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="fullnameUpdate">Họ và tên</label>
-                                    <input type="text" class="form-control" name="fullnameUpdate" id="fullnameUpdate" aria-describedby="helpId" placeholder="Nhập họ và tên" required>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="dobUpdate">Ngày sinh</label>
-                                    <input type="date" name="dobUpdate" id="dobUpdate" class="form-control" aria-describedby="helpId" required>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="pennameUpdate">Bút danh</label>
-                                    <input type="text" class="form-control" name="pennameUpdate" id="pennameUpdate" aria-describedby="helpId" placeholder="Nhập bút danh">
-                                  </div>
-                                  <button type="submit" class="btn btn-primary">Submit</button>
-                                  <button type="button" class="btn btn-dark" onclick="resetUpdateForm()">Cancel</button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                              <!-- Modal for viewing a User-->
+                              <div class="modal fade" id="viewUser" tabindex="-1" role="dialog"
+                                aria-labelledby="viewUserModalTitle" aria-hidden="true" data-backdrop="static"
+                                data-keyboard="false">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable view-user-modal"
+                                  role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card text-left">
+                                        <div class="card-body">
+                                          <h4 class="card-title" id="viewUserModalTitle">User Details</h4>
+                                          <hr>
+                                          <div id="viewUserModalBody">
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="usernameview">Username</label>
+                                                  <input type="text" id="usernameview" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="emailview">Email</label>
+                                                  <input type="text" id="emailview" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="fullnameview">Fullname</label>
+                                                  <input type="text" id="fullnameview" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="dobview">Date Of Birth</label>
+                                                  <input type="text" id="dobview" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="form-group d-flex align-items-center">
+                                              <label for="roleview" class="mr-2">Role</label>
+                                              <span id="roleview" class="badge badge-outline align-middle"></span>
+                                            </div>
 
-                    <!-- Modal for extending premium-->
-                    <div class="modal fade" id="extendPremium" tabindex="-1" role="dialog" aria-labelledby="extendPremiumModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-body">
-                            <div class="card text-left">
-                              <div class="card-body">
-                                  <div class="row">
-                                    <div class="col">
-                                      <h3>Gia hạn tài khoản premium</h3>
+                                            <div class="form-group">
+                                              <label for="pennameview">Pen Name</label>
+                                              <input type="text" id="pennameview" class="form-control" readonly>
+                                            </div>
+
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="createdDateView">Created Date</label>
+                                                  <input type="text" id="createdDateView" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                  <label for="updatedDateView">Updated Date</label>
+                                                  <input type="text" id="updatedDateView" class="form-control" readonly>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <button type="button" class="btn btn-dark" id="viewModalDismiss"
+                                            data-dismiss="modal">Close</button>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div class="col text-right">
-                                      <button class="btn btn-danger" id="closeExtendBtn"><i class="mdi mdi-close"></i>Close</button>
-                                    </div>
-
                                   </div>
-
-                                  <hr>
-
-                                  <div class="table-responsive">
-                                    <table class="table table-dark table-hover custom-table">
-                                      <thead class="thead-dark">
-                                        <tr>
-                                          <th>Username</th>
-                                          <th style="width: 25%;">Email</th>
-                                          <th style="width: 10%;">Status</th>
-                                          <th style="width: 15%;">Time Remaining</th>
-                                          <th style="width: 15%;">Extend (Days)</th>
-                                          <th style="width: 10%;">Action</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody id="premiumUserTable">
-                                        <!-- Rows will be dynamically inserted here -->
-                                      </tbody>
-                                    </table>
-                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+
+                              <!-- Modal for updating a User -->
+                              <div class="modal fade" id="updateUser" tabindex="-1" role="dialog"
+                                aria-labelledby="updateUserModalTitle" aria-hidden="true" data-backdrop="static"
+                                data-keyboard="false">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card text-left">
+                                        <div class="card-body">
+                                          <h4 class="card-title" id="updateUserModalTitle">Cập nhật người dùng</h4>
+                                          <hr>
+                                          <form action="/admin/user/update" method="post" class="form-sample"
+                                            id="updateUserForm">
+                                            <input type="hidden" name="userId" id="userIdUpdate">
+                                            <div class="form-group">
+                                              <label for="usernameUpdate">Tên người dùng</label>
+                                              <input type="text" class="form-control" name="usernameUpdate"
+                                                id="usernameUpdate" aria-describedby="helpId"
+                                                placeholder="Nhập tên người dùng" required>
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="fullnameUpdate">Họ và tên</label>
+                                              <input type="text" class="form-control" name="fullnameUpdate"
+                                                id="fullnameUpdate" aria-describedby="helpId"
+                                                placeholder="Nhập họ và tên" required>
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="dobUpdate">Ngày sinh</label>
+                                              <input type="date" name="dobUpdate" id="dobUpdate" class="form-control"
+                                                aria-describedby="helpId" required>
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="pennameUpdate">Bút danh</label>
+                                              <input type="text" class="form-control" name="pennameUpdate"
+                                                id="pennameUpdate" aria-describedby="helpId"
+                                                placeholder="Nhập bút danh">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="button" class="btn btn-dark"
+                                              onclick="resetUpdateForm()">Cancel</button>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                              <!-- Modal for extending premium-->
+                              <div class="modal fade" id="extendPremium" tabindex="-1" role="dialog"
+                                aria-labelledby="extendPremiumModalTitle" aria-hidden="true" data-backdrop="static"
+                                data-keyboard="false">
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card text-left">
+                                        <div class="card-body">
+                                          <div class="row">
+                                            <div class="col">
+                                              <h3>Gia hạn tài khoản premium</h3>
+                                            </div>
+                                            <div class="col text-right">
+                                              <button class="btn btn-danger" id="closeExtendBtn"><i
+                                                  class="mdi mdi-close"></i>Close</button>
+                                            </div>
+
+                                          </div>
+
+                                          <hr>
+
+                                          <div class="table-responsive">
+                                            <table class="table table-dark table-hover custom-table">
+                                              <thead class="thead-dark">
+                                                <tr>
+                                                  <th>Username</th>
+                                                  <th style="width: 25%;">Email</th>
+                                                  <th style="width: 10%;">Status</th>
+                                                  <th style="width: 15%;">Time Remaining</th>
+                                                  <th style="width: 15%;">Extend (Days)</th>
+                                                  <th style="width: 10%;">Action</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody id="premiumUserTable">
+                                                <!-- Rows will be dynamically inserted here -->
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+                              <!-- Assign Category Modal-->
+                              <div class="modal fade" id="assignCategoryModal" tabindex="-1" role="dialog"
+                                aria-labelledby="assignCategoryModalTitle" aria-hidden="true" data-backdrop="static"
+                                data-keyboard="false" style="overflow: visible;">
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card text-left">
+                                        <div class="card-body">
+                                          <div class="row">
+                                            <div class="col">
+                                              <h3>Phân công chuyên mục</h3>
+                                            </div>
+                                            <div class="col text-right">
+                                              <button class="btn btn-danger" id="closeAssignBtn" data-dismiss="modal"><i
+                                                  class="mdi mdi-close"></i>Close</button>
+                                            </div>
+
+                                          </div>
+
+                                          <hr>
+
+                                          <!--Page 1-->
+                                          <div class="row" id="page-1">
+                                            <div class="table-responsive">
+                                              <table class="table table-dark table-hover custom-table">
+                                                <thead class="thead-dark">
+                                                  <tr>
+                                                    <th>Username</th>
+                                                    <th style="width: 25%;">Email</th>
+                                                    <th>Full Name</th>
+                                                    <th style="width: 10%;">Action</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="editorTable">
+                                                  <!-- Rows will be dynamically inserted here -->
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </div>
+
+                                          <!-- Page 2 -->
+                                          <div class="row d-none" id="page-2">
+                                            <div class="col-12">
+                                              <form id="categoryAssignForm">
+                                                <div class="form-group">
+                                                  <label for="editorCategoryDropDown">Select Categories</label>
+                                                  <select class="js-example-basic-multiple form-control"
+                                                    id="editorCategoryDropDown" multiple="multiple" style="width:100%"
+                                                    name="categoryIDList">
+                                                    <!-- Dynamic content will be inserted here -->
+                                                  </select>
+
+                                                </div>
+
+                                                <div class="form-group mt-4">
+                                                  <!-- Submit Button and Cancel Button in a row with space between them -->
+                                                  <div class="d-flex justify-content-center">
+                                                    <button type="submit" class="btn btn-primary mr-3">Submit</button>
+                                                    <button type="button" class="btn btn-dark"
+                                                      onclick="gotoPage1()">Cancel</button>
+                                                  </div>
+                                                </div>
+                                              </form>
+                                            </div>
+                                          </div>
+
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <script>
+                                function resetExtendForm() {
+                                  document.getElementById('extendPremiumForm').reset();
+                                }
+                              </script>
+
+                              <!-- Script for assigning categories to the editor-->
+                              <script>
+                                const assignModal = document.getElementById('toggleAsgginModal')
+                                const page1 = document.getElementById('page-1')
+                                const page2 = document.getElementById('page-2')
+                                const assignForm = document.getElementById('categoryAssignForm')
+                                const editorTable = document.getElementById('editorTable')
+
+                                const editorCategoryDropDown = document.getElementById('editorCategoryDropDown')
+
+                                function gotoPage1() {
+                                  page1.classList.remove('d-none')
+                                  page2.classList.add('d-none')
+                                }
+
+                                function gotoPage2() {
+                                  page1.classList.add('d-none')
+                                  page2.classList.remove('d-none')
+                                }
+
+                                document.getElementById('closeAssignBtn').addEventListener('click', () => { gotoPage1() })
+
+                                assignModal.addEventListener('click', async (event) => {
+                                  const response = await fetch('/admin/user/assign')
+                                  const result = await response.json()
+                                  if (!result.success) {
+                                    alert(result.error)
+                                  }
+                                  editorTable.innerHTML = result.rows
+                                })
+
+                                assignForm.addEventListener('submit', async (event) => {
+                                  event.preventDefault;
+                                })
+
+                                async function assignCategory(editorID) {
+                                  gotoPage2()
+                                  const response = await fetch('/admin/user/category-list', {
+                                    method: 'POST',
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ id: editorID }),
+                                  });
+
+                                  const result = await response.json()
+
+                                  if (!result.success) {
+                                    alert(result.error)
+                                    gotoPage1()
+                                    return
+                                  }
+
+                                  editorCategoryDropDown.innerHTML = result.categories
+                                  assignForm.setAttribute('data-id', editorID)
+
+                                }
+
+                                assignForm.addEventListener('submit', async (event) => {
+                                  event.preventDefault(); // Prevent form submission
+
+                                  const id = assignForm.getAttribute('data-id'); // Get the editor ID
+                                  const selectedCategories = Array.from(editorCategoryDropDown.selectedOptions).map(option => option.value); // Get selected category IDs
+
+                                  try {
+                                    const response = await fetch('/admin/user/assign', {
+                                      method: "POST",
+                                      headers: {
+                                        'Content-Type': 'application/json' // Specify JSON content type
+                                      },
+                                      body: JSON.stringify({
+                                        id: id,
+                                        categoryIDList: selectedCategories
+                                      })
+                                    });
+
+                                    const result = await response.json(); // Parse the response as JSON
+
+                                    if (!result.success) {
+                                      alert(`Error: ${result.error}`);
+                                      return;
+                                    }
+
+                                    alert('Categories successfully assigned!');
+                                    gotoPage1()
+                                  } catch (error) {
+                                    console.error('Error assigning categories:', error);
+                                    alert('An error occurred while assigning categories.');
+                                  }
+                                });
+
+
+
+                              </script>
+
+
+                              <!-- Script clearing the form-->
+                              <script>
+                                function resetForm() {
+                                  document.getElementById('addUserForm').reset();
+                                  document.getElementById('emailadd').classList.remove('is-invalid');
+                                }
+
+                                function resetUpdateForm() {
+                                  document.getElementById('updateUserForm').reset();
+                                  $('#updateUser').modal('hide');
+                                }
+
+
+                              </script>
+
+                              <!-- Script for viewing a user-->
+                              <script>
+                                const closeBtn = document.getElementById('viewModalDismiss');
+                                const usernameView = document.getElementById('usernameview');
+                                const emailView = document.getElementById('emailview');
+                                const roleView = document.getElementById('roleview');
+                                const fullnameView = document.getElementById('fullnameview');
+                                const dobView = document.getElementById('dobview');
+                                const penNameView = document.getElementById('pennameview');
+                                const createdDateView = document.getElementById('createdDateView');
+                                const updatedDateView = document.getElementById('updatedDateView');
+
+                                document.querySelectorAll('.view-user').forEach(button => {
+                                  button.addEventListener('click', async () => {
+                                    // Set modal options and show the modal
+                                    $('#viewUser').modal({
+                                      backdrop: 'static',
+                                      keyboard: false
+                                    }).modal('show');
+                                    const userID = button.getAttribute('data-id');
+
+                                    const response = await fetch(`/admin/user/info/${userID}`);
+
+                                    const result = await response.json();
+                                    //console.log(result);
+
+                                    usernameView.value = result.accountID.username;
+                                    emailView.value = result.accountID.email;
+                                    roleView.className = 'badge badge-outline' + (
+                                      result.accountID.role === 'admin' ? '-primary' :
+                                        result.accountID.role === 'editor' ? '-success' :
+                                          result.accountID.role === 'membership' ? '-warning' :
+                                            result.accountID.role === 'writer' ? '-info' : ''
+                                    );
+                                    roleView.textContent = result.accountID.role;
+                                    fullnameView.value = result.fullname;
+                                    dobView.value = new Date(result.dateOfBirth).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' });
+                                    penNameView.value = result.penName ? result.penName : 'N/A';
+
+                                    createdDateView.value = `${new Date(result.accountID.createdAt).toLocaleTimeString('vi-VN', { hour: "2-digit", minute: "2-digit", second: "2-digit" })} ${new Date(result.accountID.createdAt).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+                                    updatedDateView.value = `${new Date(result.accountID.updatedAt).toLocaleTimeString('vi-VN', { hour: "2-digit", minute: "2-digit", second: "2-digit" })} ${new Date(result.accountID.updatedAt).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+
+                                  });
+                                });
+
+                                closeBtn.addEventListener('click', () => {
+                                  $('#viewUser').modal('hide');
+                                })
+                              </script>
+
+                              <!-- Script for creating a user-->
+                              <script>
+                                const addForm = document.getElementById('addUserForm');
+                                const addModal = document.getElementById('addUser');
+
+                                const email_input = document.getElementById('emailadd')
+                                const email_error = document.getElementById('email-error')
+
+                                addForm.addEventListener('submit', async function (event) {
+                                  event.preventDefault();
+                                  const formData = new FormData(addForm)
+
+                                  const response = await fetch('/admin/user/add', {
+                                    method: "POST",
+                                    body: formData,
+                                  })
+
+
+                                  const result = await response.json()
+
+                                  if (!result.success) {
+                                    email_input.classList.add('is-invalid')
+                                    email_error.textContent = result.error;
+                                    return;
+                                  }
+
+                                  email_input.classList.remove('is-invalid');
+                                  email_error.textContent = '';
+                                  window.location.reload();
+                                })
+
+                              </script>
+
+                              <!-- script for validating the date of birth-->
+                              <script>
+                                const today = new Date();
+                                const currentYear = today.getFullYear();
+                                const currentMonth = String(today.getMonth() + 1).padStart(2, '0');  // Month is 0-indexed
+                                const currentDay = String(today.getDate()).padStart(2, '0');
+
+
+                                const todayFormatted = `${currentYear}-${currentMonth}-${currentDay}`;
+
+                                const hundredYearsAgo = `${currentYear - 120}-${currentMonth}-${currentDay}`;
+
+                                document.getElementById('dobadd').setAttribute('min', hundredYearsAgo);
+                                document.getElementById('dobadd').setAttribute('max', todayFormatted);
+                              </script>
+
+                              <!-- Script for extending premium-->
+                              <script>
+
+                                const tableBody = document.getElementById('premiumUserTable')
+                                document.getElementById('toggleExetendPremium').addEventListener('click', async () => {
+                                  //console.log(result.tableRows)
+                                  $('#extendPremium').modal({
+                                    backdrop: 'static',
+                                    keyboard: false,
+                                  }).modal('show')
+                                  tableBody.innerHTML = ''
+                                  const response = await fetch('/admin/user/list')
+                                  const result = await response.json()
+
+                                  tableBody.innerHTML = result.tableRows
+
+                                })
+
+                                document.getElementById('closeExtendBtn').addEventListener('click', () => {
+                                  $('#extendPremium').modal('hide')
+                                })
+
+                                async function submitExtension(userID) {
+
+                                  const extendDateInput = document.getElementById(`extendDate-${userID}`);
+                                  const extendDate = extendDateInput.value;
+
+                                  if (!extendDate) {
+                                    alert('Please enter a valid date and time.');
+                                    return;
+                                  }
+
+                                  const response = await fetch('/admin/user/extend',
+                                    {
+                                      method: "POST",
+                                      headers: {
+                                        'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                        id: userID,
+                                        extendDate: extendDate,
+                                      })
+                                    }
+                                  )
+
+                                  const result = await response.json()
+
+                                  if (!result.success) {
+                                    alert(result.error)
+                                  }
+                                  else {
+                                    alert("Gia hạn thành công")
+                                  }
+
+                                  const updatedResponse = await fetch('/admin/user/list');
+                                  const updatedResult = await updatedResponse.json();
+
+                                  tableBody.innerHTML = updatedResult.tableRows;
+                                }
+
+                              </script>
+
+
+
+                              <!-- Script for disabling pen name input when role is not writer-->
+                              <script>
+                                const roleSelect = document.getElementById('roleadd');
+                                const penName = document.getElementById('pennameadd');
+
+                                roleSelect.addEventListener('change', function () {
+                                  if (roleSelect.value !== 'writer') {
+                                    penName.value = ''
+                                    penName.disabled = true;
+                                  }
+                                  else {
+                                    penName.disabled = false;
+                                  }
+                                })
+
+
+                              </script>
+
+                              <!-- Script for editing a user-->
+                              <script>
+                                const updateForm = document.getElementById('updateUserForm');
+                                document.querySelectorAll('.edit-user').forEach(button => {
+                                  button.addEventListener('click', async () => {
+                                    $('#updateUser').modal({
+                                      backdrop: 'static',
+                                      keyboard: false
+                                    }).modal('show');
+                                    const userID = button.getAttribute('data-id');
+                                    const response = await fetch(`/admin/user/info/${userID}`);
+                                    const result = await response.json();
+
+                                    document.getElementById('userIdUpdate').value = result.accountID._id;
+                                    document.getElementById('usernameUpdate').value = result.accountID.username;
+                                    document.getElementById('fullnameUpdate').value = result.fullname;
+                                    document.getElementById('dobUpdate').value = new Date(result.dateOfBirth).toISOString().split('T')[0];
+                                    document.getElementById('pennameUpdate').value = result.penName || '';
+
+                                    if (result.accountID.role !== 'writer') {
+                                      document.getElementById('pennameUpdate').disabled = true;
+                                      document.getElementById('pennameUpdate').parentElement.style.display = 'none';
+                                    } else {
+                                      document.getElementById('pennameUpdate').disabled = false;
+                                      document.getElementById('pennameUpdate').parentElement.style.display = 'block';
+                                    }
+
+                                    updateForm.setAttribute('data-id', userID);
+
+
+                                  })
+
+                                })
+
+
+                                updateForm.addEventListener('submit', async function (event) {
+                                  event.preventDefault();
+                                  const formData = new FormData(updateForm);
+
+                                  const userId = updateForm.getAttribute('data-id');
+
+                                  try {
+                                    const response = await fetch(`/admin/user/update/${userId}`, {
+                                      method: "POST",
+                                      body: formData,
+                                    })
+
+
+
+                                    if (!response.ok) {
+                                      const result = await response.json();
+                                      console.error('Error updating user:', result.message || 'Unknown error');
+                                    }
+                                    else {
+                                      window.location.reload();
+                                    }
+                                  } catch (error) {
+                                    consosle.error('Error updating user:', error);
+                                  }
+                                })
+                              </script>
                     </div>
-
-                    <script>
-                      function resetExtendForm() {
-                        document.getElementById('extendPremiumForm').reset();
-                      }
-                    </script>
-
-
-
-                    <!-- Script clearing the form-->
-                    <script>
-                      function resetForm() {
-                        document.getElementById('addUserForm').reset();
-                        document.getElementById('emailadd').classList.remove('is-invalid');            
-                      }
-
-                      function resetUpdateForm() {
-                        document.getElementById('updateUserForm').reset(); 
-                        $('#updateUser').modal('hide');                    
-                      }
-
-                      
-                    </script>
-
-                    <!-- Script for viewing a user-->
-                    <script>
-                      const closeBtn = document.getElementById('viewModalDismiss');
-                      const usernameView = document.getElementById('usernameview');
-                      const emailView = document.getElementById('emailview');
-                      const roleView = document.getElementById('roleview');
-                      const fullnameView = document.getElementById('fullnameview');
-                      const dobView = document.getElementById('dobview');
-                      const penNameView = document.getElementById('pennameview');
-                      const createdDateView = document.getElementById('createdDateView');
-                      const updatedDateView = document.getElementById('updatedDateView');
-
-                      document.querySelectorAll('.view-user').forEach(button => {
-                        button.addEventListener('click', async () => {
-                          const userID = button.getAttribute('data-id');
-
-                          const response = await fetch(`/admin/user/info/${userID}`);
-                          
-                          const result = await response.json();
-                          //console.log(result);
-
-                          usernameView.value = result.accountID.username;
-                          emailView.value = result.accountID.email;
-                          roleView.className = 'badge badge-outline' + (
-                            result.accountID.role === 'admin' ? '-primary' :
-                            result.accountID.role === 'editor' ? '-success' :
-                            result.accountID.role === 'membership' ? '-warning' :
-                            result.accountID.role === 'writer' ? '-info' : ''
-                          );
-                          roleView.textContent = result.accountID.role;
-                          fullnameView.value = result.fullname;
-                          dobView.value = new Date(result.dateOfBirth).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'});
-                          penNameView.value = result.penName ? result.penName : 'N/A';
-
-                          createdDateView.value = `${new Date(result.accountID.createdAt).toLocaleTimeString('vi-VN',{hour:"2-digit", minute:"2-digit" ,second:"2-digit" })} ${new Date(result.accountID.createdAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'})}`;
-                          updatedDateView.value = `${new Date(result.accountID.updatedAt).toLocaleTimeString('vi-VN',{hour:"2-digit", minute:"2-digit" ,second:"2-digit" })} ${new Date(result.accountID.updatedAt).toLocaleDateString('vi-VN', {day: 'numeric', month: 'long', year: 'numeric'})}`;
-                          // Set modal options and show the modal
-                          $('#viewUser').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                          }).modal('show');
-                        });
-                      });
-
-                      closeBtn.addEventListener('click',()=>{
-                        $('#viewUser').modal('hide');
-                      })
-                    </script>
-
-                    <!-- Script for creating a user-->
-                    <script>
-                      const addForm = document.getElementById('addUserForm');
-                      const addModal = document.getElementById('addUser');
-
-                      const email_input = document.getElementById('emailadd')
-                      const email_error = document.getElementById('email-error')
-
-                      addForm.addEventListener('submit', async function (event) {
-                        event.preventDefault();
-                        const formData = new FormData(addForm)
-
-                        const response = await fetch('/admin/user/add', {
-                          method: "POST",
-                          body: formData,
-                        })
-                        
-
-                        const result = await response.json()
-
-                        if (!result.success)
-                        {
-                          email_input.classList.add('is-invalid')
-                          email_error.textContent = result.error;
-                          return;
-                        }
-                      
-                        email_input.classList.remove('is-invalid');
-                        email_error.textContent = '';
-                        window.location.reload();
-                      })
-
-                    </script>
-
-                    <!-- script for validating the date of birth-->
-                    <script>
-                      const today = new Date();
-                      const currentYear = today.getFullYear();
-                      const currentMonth = String(today.getMonth() + 1).padStart(2, '0');  // Month is 0-indexed
-                      const currentDay = String(today.getDate()).padStart(2, '0');
-
-                      
-                      const todayFormatted = `${currentYear}-${currentMonth}-${currentDay}`;
-                    
-                      const hundredYearsAgo = `${currentYear-120}-${currentMonth}-${currentDay}`;
-                     
-                      document.getElementById('dobadd').setAttribute('min', hundredYearsAgo);
-                      document.getElementById('dobadd').setAttribute('max', todayFormatted);
-                    </script>
-
-                    <!-- Script for extending premium-->
-                    <script>
-                      
-                      const tableBody =document.getElementById('premiumUserTable')
-                      document.getElementById('toggleExetendPremium').addEventListener('click', async ()=>{
-                        tableBody.innerHTML = ''
-                        const response = await fetch('/admin/user/list')
-                        const result = await response.json()
-
-                        tableBody.innerHTML = result.tableRows
-                        //console.log(result.tableRows)
-                        $('#extendPremium').modal({
-                          backdrop: 'static',
-                          keyboard: false,
-                        }).modal('show')
-                      })
-
-                      document.getElementById('closeExtendBtn').addEventListener('click', ()=>{
-                        $('#extendPremium').modal('hide')
-                      })
-
-                      async function submitExtension(userID){
-                        
-                        const extendDateInput = document.getElementById(`extendDate-${userID}`);
-                        const extendDate = extendDateInput.value;
-
-                        if (!extendDate) {
-                            alert('Please enter a valid date and time.');
-                            return;
-                        }
-
-                        const response = await fetch('/admin/user/extend',
-                          {
-                            method: "POST",
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                              id: userID,
-                              extendDate: extendDate,
-                            })
-                          }
-                        )
-
-                        const result =await response.json()
-
-                        if (!result.success){
-                          alert(result.error)
-                        }
-                        else{
-                          alert("Gia hạn thành công")
-                        }
-
-                        const updatedResponse = await fetch('/admin/user/list');
-                        const updatedResult = await updatedResponse.json();
-
-                        tableBody.innerHTML = updatedResult.tableRows;
-                      }
-
-                    </script>
-
-
-
-                    <!-- Script for disabling pen name input when role is not writer-->
-                    <script>
-                      const roleSelect = document.getElementById('roleadd');
-                      const penName = document.getElementById('pennameadd');
-
-                      roleSelect.addEventListener('change', function(){
-                        if (roleSelect.value !== 'writer'){
-                          penName.value = ''
-                          penName.disabled = true;
-                        }
-                        else{
-                          penName.disabled = false;
-                        }
-                      })
-                      
-
-                    </script>
-
-                    <!-- Script for editing a user-->
-                    <script>
-                      const updateForm = document.getElementById('updateUserForm');
-                      document.querySelectorAll('.edit-user').forEach(button =>{
-                        button.addEventListener('click', async()=> {
-                          const userID = button.getAttribute('data-id');
-                          const response = await fetch(`/admin/user/info/${userID}`);
-                          const result = await response.json();
-                          
-                          document.getElementById('userIdUpdate').value = result.accountID._id;
-                          document.getElementById('usernameUpdate').value = result.accountID.username;
-                          document.getElementById('fullnameUpdate').value = result.fullname;
-                          document.getElementById('dobUpdate').value = new Date(result.dateOfBirth).toISOString().split('T')[0];
-                          document.getElementById('pennameUpdate').value = result.penName || '';
-
-                          if (result.accountID.role !== 'writer') {
-                            document.getElementById('pennameUpdate').disabled = true;
-                            document.getElementById('pennameUpdate').parentElement.style.display = 'none';
-                          } else {
-                            document.getElementById('pennameUpdate').disabled = false;
-                            document.getElementById('pennameUpdate').parentElement.style.display = 'block';
-                          }
-
-                          updateForm.setAttribute('data-id', userID);
-
-                          $('#updateUser').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                          }).modal('show');
-                        })
-
-                      })
-
-
-                      updateForm.addEventListener('submit', async function(event){
-                        event.preventDefault();
-                        const formData = new FormData(updateForm);
-                        
-                        const userId = updateForm.getAttribute('data-id');
-
-                        try {
-                          const response = await fetch(`/admin/user/update/${userId}`, {
-                          method: "POST",
-                          body: formData,
-                        })
-
-                        
-
-                        if (!response.ok) {
-                          const result = await response.json();
-                          console.error('Error updating user:', result.message || 'Unknown error');
-                        }
-                        else{
-                          window.location.reload();
-                        }
-                      } catch (error) {
-                          consosle.error('Error updating user:', error);
-                      }
-                      })
-                    </script>
                   </div>
                 </div>
               </div>
-            </div> 
-            
-            <style>
-             
-              .nav-pills .nav-link {
-                font-size: 14px;
-                text-align: center;
-                border-radius: 4px;
-                transition: background-color 0.3s ease;
-              }
-            
-              .nav-pills .nav-link.active {
-                background-color: #007bff;
-                color: #fff;
-              }
-            
-              .nav-pills .nav-link:hover {
-                background-color: #0056b3;
-                color: #fff;
-              }
-            
-              .custom-table {
-                border-collapse: collapse;
-                width: 100%;
-              }
 
-              .custom-table th, .custom-table td {
-                border: 1px solid #dee2e620;
-                padding: 8px;
-              }
-
-              .custom-table th {
-                background-color: #343a40;
-                color: white;
-              }
-
-              .custom-table tr:nth-child(even) {
-                background-color: #f2f2f2;
-              }
-
-              .custom-table tr:hover {
-                background-color: #f1f1f1;
-              }
-
-              .custom-table th, .custom-table td {
-                text-align: center;
-              }
-
-
-            
-              .pagination .page-item.active .page-link {
-                background-color: #007bff;
-                border-color: #007bff;
-              }
-            
-              .pagination .page-link {
-                color: #007bff;
-              }
-            
-              .pagination .page-link:hover {
-                color: #0056b3;
-              }
-            
-              /* Responsive Adjustments */
-              @media (max-width: 768px) {
-                .nav-pills {
-                  flex-wrap: wrap;
+              <style>
+                .select2-container {
+                  z-index: 10000 !important;
                 }
-            
-                .nav-pills .nav-item {
-                  flex: 1 0 50%;
-                  margin-bottom: 5px;
+
+                .nav-pills .nav-link {
+                  font-size: 14px;
+                  text-align: center;
+                  border-radius: 4px;
+                  transition: background-color 0.3s ease;
                 }
-              }
-            
-              
 
-              input:read-only{
-                background-color: #2A3038 !important;
-              }
+                .nav-pills .nav-link.active {
+                  background-color: #007bff;
+                  color: #fff;
+                }
 
-              .modal-dialog.view-user-modal {
-                max-width: 50%;
-              }
-            </style>
-            
-            
+                .nav-pills .nav-link:hover {
+                  background-color: #0056b3;
+                  color: #fff;
+                }
+
+                .custom-table {
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+
+                .custom-table th,
+                .custom-table td {
+                  border: 1px solid #dee2e620;
+                  padding: 8px;
+                }
+
+                .custom-table th {
+                  background-color: #343a40;
+                  color: white;
+                }
+
+                .custom-table tr:nth-child(even) {
+                  background-color: #f2f2f2;
+                }
+
+                .custom-table tr:hover {
+                  background-color: #f1f1f1;
+                }
+
+                .custom-table th,
+                .custom-table td {
+                  text-align: center;
+                }
+
+
+
+                .pagination .page-item.active .page-link {
+                  background-color: #007bff;
+                  border-color: #007bff;
+                }
+
+                .pagination .page-link {
+                  color: #007bff;
+                }
+
+                .pagination .page-link:hover {
+                  color: #0056b3;
+                }
+
+                /* Responsive Adjustments */
+                @media (max-width: 768px) {
+                  .nav-pills {
+                    flex-wrap: wrap;
+                  }
+
+                  .nav-pills .nav-item {
+                    flex: 1 0 50%;
+                    margin-bottom: 5px;
+                  }
+                }
+
+
+
+                input:read-only {
+                  background-color: #2A3038 !important;
+                }
+
+                .modal-dialog.view-user-modal {
+                  max-width: 50%;
+                }
+              </style>
+
+
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:partials/_footer.html -->
+            <%- include('../partials/_footer') %>
+              <!-- partial -->
           </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-          <%- include('../partials/_footer') %>
-          <!-- partial -->
-        </div>
-        <!-- main-panel ends -->
+          <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->
-    </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-    <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/admin/vendors/chart.js/Chart.min.js"></script>
-    <script src="/admin/vendors/progressbar.js/progressbar.min.js"></script>
-    <script src="/admin/vendors/jvectormap/jquery-jvectormap.min.js"></script>
-    <script src="/admin/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="/admin/vendors/owl-carousel-2/owl.carousel.min.js"></script>
-    <script src="/admin/js/jquery.cookie.js" type="text/javascript"></script>
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="/admin/js/off-canvas.js"></script>
-    <script src="/admin/js/hoverable-collapse.js"></script>
-    <script src="/admin/js/misc.js"></script>
-    <script src="/admin/js/settings.js"></script>
-    <script src="/admin/js/todolist.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="/admin/js/dashboard.js"></script>
-    <!-- End custom js for this page -->
-  </body>
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="/admin/vendors/chart.js/Chart.min.js"></script>
+  <script src="/admin/vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="/admin/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+  <script src="/admin/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+  <script src="/admin/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+  <script src="/admin/js/jquery.cookie.js" type="text/javascript"></script>
+  <script src="/admin/vendors/select2/select2.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="/admin/js/off-canvas.js"></script>
+  <script src="/admin/js/hoverable-collapse.js"></script>
+  <script src="/admin/js/misc.js"></script>
+  <script src="/admin/js/settings.js"></script>
+  <script src="/admin/js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <script src="/admin/js/dashboard.js"></script>
+  <script src="/admin/js/select2.js"></script>
+  <!-- End custom js for this page -->
+</body>
+
 </html>

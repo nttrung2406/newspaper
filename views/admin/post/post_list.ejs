@@ -254,14 +254,15 @@
                   const postContentContainer = document.getElementById('postDetailsContent')
 
                   async function openPostDetailModal(postId) {
-
+                    postContentContainer.innerHTML =''
+                    $('#postDetailModal').modal('show');
                     const response = await fetch(`/admin/post/detail/${postId}`)
                     const result = await response.json()
 
                     if (!result.success) {
                       return alert(result.error)
                     }
-
+                    
                     postContentContainer.innerHTML = `
                       <div class="card mb-4" style="background: 1px solid white">
                         <div class="card-body" >
@@ -292,7 +293,7 @@
 
 
 
-                    $('#postDetailModal').modal('show');
+                    
                   }
 
 

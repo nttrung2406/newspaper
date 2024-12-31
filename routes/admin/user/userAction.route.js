@@ -19,4 +19,11 @@ router.route('/list')
 router.route('/extend')
 .post(upload.none(), userController.extendPremium)
 
+router.route('/assign')
+.get(userController.getEditorList)
+.post(upload.none(), userController.assignCategory)
+
+router.route('/category-list')
+.post(upload.none(), userController.getAssignCategory)
+
 export default router;

@@ -2,6 +2,7 @@ import  User from '../../models/User.js'
 import UserInformation from '../../models/UserInformation.js'
 import mongoose from 'mongoose'
 import bcrypt from "bcryptjs";
+import Category from '../../models/Category.js';
 
 const getUserList = async(req, res) => {
     try {
@@ -227,6 +228,102 @@ const extendPremium = async (req, res) => {
     }
 };
 
+const getEditorList = async (req, res) => {
+    try {
+        // Fetch the list of editors with their associated categories
+        const editorList = await User.find({ role: 'editor' })
+
+        for (let item of editorList){
+            const ret = await UserInformation.findOne({accountID: item.id})
+            item['fullname'] = ret ? ret.fullname: ""
+        }
+
+        // Generate table rows dynamically for each editor
+        const tableRows = editorList.map((editor) => {
+            return `
+            <tr>
+                <td>${editor.username}</td>
+                <td>${editor.email}</td>
+                <td>${editor.fullname}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="assignCategory('${editor._id}')">Assign</button>
+                </td>
+            </tr>
+            `;
+        }).join(''); // Join all rows into a single string
+        //console.log(tableRows)
+        // Respond with the HTML for table rows
+        res.json({ success: true, rows: tableRows });
+    } catch (error) {
+        console.error("Error fetching Editor's data: ", error.message);
+        res.status(500).json({ success: false, error: 'Server error: ' + error.message });
+    }
+}
+
+
+const getAssignCategory = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        // Validate the provided ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: 'Invalid editor ID.' });
+        }
+
+        // Find the editor by ID
+        const editor = await User.findById(id);
+
+        if (!editor) {
+            return res.status(404).json({ success: false, error: 'Editor not found.' });
+        }
+
+        // Fetch all categories with a parentID (child categories)
+        const categories = await Category.find({ parentID: { $ne: null } });
+
+        // Generate the <option> elements for the dropdown
+        const categoriesURL = categories.map((item) => {
+            return `
+            <option value="${item._id}" ${editor.category.includes(item._id) ? 'selected' : ''}>
+                ${item.categoryName}
+            </option>`;
+        }).join('');
+        //console.log(categoriesURL)
+        // Respond with t   he generated dropdown
+        res.status(200).json({ success: true, categories: categoriesURL });
+    } catch (error) {
+        console.error("Error fetching editor's categories: ", error.message);
+        res.status(500).json({ success: false, error: 'Server error: ' + error.message });
+    }
+};
+
+const assignCategory = async (req, res) => {
+    try {
+        const { id, categoryIDList } = req.body;
+
+        // Validate the editor ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: 'Invalid editor ID.' });
+        }
+
+        // Find the editor by ID
+        const editor = await User.findById(id);
+
+        if (!editor) {
+            return res.status(404).json({ success: false, error: 'Editor not found.' });
+        }
+
+        // Update the editor's categories
+        editor.category = categoryIDList; // Overwrite categories with the new list
+        await editor.save(); // Save changes to the database
+
+        res.status(200).json({ success: true, message: 'Categories successfully assigned.' });
+    } catch (error) {
+        console.error("Error assigning categories:", error.message);
+        res.status(500).json({ success: false, error: 'Server error: ' + error.message });
+    }
+};
+
+
 
 export default{
     getUserList,
@@ -234,5 +331,8 @@ export default{
     viewUserDetail,
     updateUser,
     getPremiumUSer,
-    extendPremium
+    extendPremium,
+    getEditorList,
+    getAssignCategory,
+    assignCategory
 }
