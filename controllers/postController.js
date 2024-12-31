@@ -1,4 +1,5 @@
 import Post from '../models/postModel.js';
+import UserInformation from '../models/UserInformation.js';
 import Membership from '../models/Membership.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
@@ -28,6 +29,8 @@ export const getPosts = async (req, res) => {
   try {
       const posts = await Post.find().populate('category');
     //   res.status(200).json(posts);
+    console.log("run")
+    console.log(posts);
       res.render('index', { posts });
   } catch (error) {
       res.status(500).json({ error: error.message });
@@ -148,7 +151,6 @@ export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = req.session.user;
-
     const post = await Post.findOne({
       _id: id,
       status: "Published",  // Ensure the post is published
@@ -157,37 +159,25 @@ export const getPostById = async (req, res) => {
       .populate("category")
       .populate("writer")
       .populate("tags");
+    
+    const writerId = post.writer._id;
+    const userInfo = await UserInformation.findOne({ accountID: writerId });
+    const penName = userInfo.penName;
 
     if (!post) {
       console.log(`Post with id ${id} not found`);
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
     }
 
-    if (post.premium && (!user || user.role !== 'subscriber')) {
-      return res.status(403).render("errorPage", { error: 'You must be a subscriber to view this content' });
-    }
-
     post.viewCount += 1;
     await Post.findByIdAndUpdate(id, { $inc: { viewCount: 1 } });
-
-    let imageUrl = null;
-    if (post.content) {
-      const $ = cheerio.load(post.content);
-      const firstImg = $("img").first().attr("src");
-      imageUrl = firstImg || null;
-    }
-
-    const processedPost = {
-      ...post._doc,
-      imageUrl,
-    };
 
     const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
 
     res.render("details", { 
-      post: processedPost,
+      post: post,
       category: post.category,
-      user: post.writer,
+      penName: penName,
       tags: post.tags,
       randomPosts,
       currentUser: user,
@@ -202,7 +192,7 @@ const getPostByCategory = async (req, res) => {
   try {
     const { category, page } = req.query;
     const currentPage = parseInt(page) || 1;
-    const limit = 10;
+    const limit = 6;
     const skip = (currentPage - 1) * limit;
 
     const posts = await Post.find({
@@ -212,7 +202,9 @@ const getPostByCategory = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate("category", "categoryName")
+      .populate("tags", "tagName");
 
     const processedPosts = posts.map((post) => {
       let imageUrl = null;
@@ -222,10 +214,16 @@ const getPostByCategory = async (req, res) => {
         const firstImg = $("img").first().attr("src");
         imageUrl = firstImg || null;
       }
-
+      console.log(post.tags.map(tag => tag.tagName));
+      const tagNames = post.tags && post.tags.length > 0
+        ? post.tags.map(tag => tag.tagName).join(', ')
+        : 'Không có thẻ';
       return {
         ...post._doc,
         imageUrl,
+        categoryId: post.category._id,  // Include category ID
+        categoryName: post.category.categoryName,  // Include category name
+        tagNames   // Include tag names
       };
     });
 
@@ -240,6 +238,7 @@ const getPostByCategory = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch posts' });
   }
 };
+
 
 export default getPostByCategory;
 
