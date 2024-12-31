@@ -28,6 +28,8 @@ export const getPosts = async (req, res) => {
   try {
       const posts = await Post.find().populate('category');
     //   res.status(200).json(posts);
+    console.log("run")
+    console.log(posts);
       res.render('index', { posts });
   } catch (error) {
       res.status(500).json({ error: error.message });
@@ -148,7 +150,6 @@ export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = req.session.user;
-
     const post = await Post.findOne({
       _id: id,
       status: "Published",  // Ensure the post is published
@@ -161,10 +162,6 @@ export const getPostById = async (req, res) => {
     if (!post) {
       console.log(`Post with id ${id} not found`);
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
-    }
-
-    if (post.premium && (!user || user.role !== 'subscriber')) {
-      return res.status(403).render("errorPage", { error: 'You must be a subscriber to view this content' });
     }
 
     post.viewCount += 1;

@@ -15,10 +15,7 @@ import tagRoutes from "./routes/tagRoutes.js";
 import connectMongoDB from "./db.js";
 
 // Import Middleware
-import {
-  authorizeMembership,
-  authorizeRole,
-} from "./middlewares/authMiddleware.js";
+import {authorizeRole} from "./middlewares/authMiddleware.js";
 
 //  Import Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -119,11 +116,6 @@ app.use((req, res, next) => {
 // routes
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use(
-  "/posts/membership",
-  authorizeMembership(["membership"]),
-  membershipRoutes
-);
 app.use("/users", authorizeRole(["admin"]), userRoutes);
 app.use("/admin", authorizeRole(["admin"]), adminRoutes);
 app.use("/editor", authorizeRole(["editor"]), editorRoutes);
