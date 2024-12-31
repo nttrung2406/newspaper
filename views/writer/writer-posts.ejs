@@ -56,12 +56,12 @@
             <div class="card-header d-flex align-items-center justify-content-between" style="font-size: 1.5rem">
               <div class="lead">List of posts</div>
               <div>
-                <a href="/writer/posts/status/all" class="badge badge-secondary">All</a>
-                <a href="/writer/posts/status/Draft" class="badge badge-primary">Draft</a>
-                <a href="/writer/posts/status/Approved" class="badge badge-info">Approved</a>
-                <a href="/writer/posts/status/Rejected" class="badge badge-danger">Rejected</a>
-                <a href="/writer/posts/status/Submitted" class="badge badge-warning">Submitted</a>
-                <a href="/writer/posts/status/Published" class="badge badge-success">Published</a>
+                <a href="/writer/posts/status/all" class="badge badge-<%= status === null ? 'primary' : 'secondary' %>">All</a>
+                <a href="/writer/posts/status/Draft" class="badge badge-<%= status === 'Draft' ? 'primary' : 'secondary' %>">Draft</a>
+                <a href="/writer/posts/status/Approved" class="badge badge-<%= status === 'Approved' ? 'primary' : 'secondary' %>">Approved</a>
+                <a href="/writer/posts/status/Rejected" class="badge badge-<%= status === 'Rejected' ? 'primary' : 'secondary' %>">Rejected</a>
+                <a href="/writer/posts/status/Submitted" class="badge badge-<%= status === 'Submitted' ? 'primary' : 'secondary' %>">Submitted</a>
+                <a href="/writer/posts/status/Published" class="badge badge-<%= status === 'Published' ? 'primary' : 'secondary' %>">Published</a>
               </div>
             </div>
             <% if (posts && posts.length > 0) { %>

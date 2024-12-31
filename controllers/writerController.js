@@ -40,6 +40,7 @@ const getFilteredPosts = async (req, res, next, status = null) => {
     res.render("writer/writer-posts", {
       pageTitle: "Posts",
       path: "/writer/posts",
+      status: status,
       posts: posts,
       errorMessage: errorMessage,
       successMessage: successMessage,
