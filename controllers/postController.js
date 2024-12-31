@@ -199,7 +199,7 @@ const getPostByCategory = async (req, res) => {
   try {
     const { category, page } = req.query;
     const currentPage = parseInt(page) || 1;
-    const limit = 10;
+    const limit = 6;
     const skip = (currentPage - 1) * limit;
 
     const posts = await Post.find({

@@ -23,6 +23,21 @@
   <link rel="stylesheet" href="/css/slick.css" />
   <link rel="stylesheet" href="/css/nice-select.css" />
   <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .tag-badge {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .premium-badge {
+      background-color: black;
+      color: yellow;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -40,36 +55,34 @@
                     <h3>Whats New</h3>
                   </div>
                 </div>
-
-
-
-
                 <div class="col-lg-10 col-md-10 pt-10 pb-30">
                   <div class="properties__button">
                     <!-- Nav Button -->
                     <nav>
                       <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <% categories.forEach(function(category) { %>
-                          <div class="nav-item dropdown" onmouseover="$(this).addClass('show').find('.dropdown-menu').addClass('show')"
-                               onmouseout="$(this).removeClass('show').find('.dropdown-menu').removeClass('show')">
-                            <a class="nav-link dropdown-toggle text-danger" id="nav-<%= category._id %>" href="#" role="button"
-                              aria-haspopup="true" aria-expanded="false" data-category="<%= category._id %>">
+                          <div class="nav-item dropdown"
+                            onmouseover="$(this).addClass('show').find('.dropdown-menu').addClass('show')"
+                            onmouseout="$(this).removeClass('show').find('.dropdown-menu').removeClass('show')">
+                            <a class="nav-link dropdown-toggle text-danger" id="nav-<%= category._id %>" href="#"
+                              role="button" aria-haspopup="true" aria-expanded="false"
+                              data-category="<%= category._id %>">
                               <%= category.categoryName %>
                             </a>
-                            <% if (category.children && category.children.length > 0) { %>
+                            <% if (category.children && category.children.length> 0) { %>
                               <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="nav-<%= category._id %>">
                                 <% category.children.forEach(function(child) { %>
                                   <a class="dropdown-item" href="#" data-category="<%= child._id %>">
                                     <%= child.categoryName %>
                                   </a>
-                                <% }); %>
+                                  <% }); %>
                               </div>
-                            <% } %>
+                              <% } %>
                           </div>
-                        <% }); %>
+                          <% }); %>
                       </div>
                     </nav>
-                    
+
 
 
                     <!-- End Nav Button -->
@@ -86,22 +99,15 @@
                       <% }); %>
                   </div>
                 </div>
-
-
-
               </div>
               <!-- post container -->
               <div class="row">
                 <div class="col-12">
                   <!-- Nav Card -->
                   <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                      <div id="whats-news-caption" class="whats-news-caption">
-                        <div class="row" id="posts-container">
-                          <!-- Loop through posts and group in pairs  -->
-                        </div>
-                      </div>
-
+                    <div class="tab-pane fade show active" id="posts-container" role="tabpanel"
+                      aria-labelledby="nav-home-tab">
+                      <!-- Nội dung từng posts -->
                     </div>
                   </div>
                 </div>
@@ -109,26 +115,12 @@
             </div>
             <section class="col-lg-4 col-md-4">
               <div class="section-tittle mb-30 pl-3 pt-15">
-                <h3>💎Premium Only💎</h3>
               </div>
               <div class="row-lg-9 row-md-9">
                 <div class="properties__button">
                   <!--Nav Button  -->
                   <nav>
-                    <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-                      <% memberships.forEach(function(membership) { %>
-                        <div class="what-cap" style="margin-top: 20px;">
-                          <span class="color1">
-                            <%= membership.category %>
-                          </span>
-                          <h4>
-                            <a href="/posts/membership/<%= membership._id%>">
-                              <%= membership.title %>
-                            </a>
-                          </h4>
-                        </div>
-                        <% }); %>
-                    </div>
+
                   </nav>
                 </div>
                 <!-- follow us -->
@@ -282,7 +274,7 @@
             document.addEventListener('DOMContentLoaded', () => {
               let currentCategory = '676e10c487f7c39a0137b44a'; // Thay bằng category mặc định
               let currentPage = 1;
-              let postsPerPage = 10;
+              const postsPerPage = 6;
               const postsContainer = document.getElementById('posts-container');
               // const prevBtn = document.getElementById('prev-btn');
               // const nextBtn = document.getElementById('next-btn');
@@ -293,28 +285,52 @@
                   const response = await fetch(`/api/posts?category=${category}&page=${page}`);
                   const data = await response.json();
                   postsContainer.innerHTML = '';
+                  console.log('data:', data);
 
                   data.posts.forEach((post, index) => {
                     let postHTML = '';
                     postHTML += `
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                                <div class="what-img">
-                                    <!-- Use the image URL from the post data -->
-                                    <img style="height: 200px; object-fit: cover" src="${post.imageUrl || '/img/post/default-image.jpg'}" alt="${post.title}" />
-                                </div>
-                                <div class="what-cap">
-                                    <span class="color1">
-                                        ${post.category}
-                                    </span>
-                                    <h4>
-                                        <a href="/posts/${post._id}">
-                                            ${post.title}
-                                        </a>
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>`;
+                      <div class="card w-100 shadow-sm rounded mb-4">
+                    <div class="row g-0">
+          <div class="col-md-3">
+            <img src="${post.imageUrl || '/img/default-image.jpg'}" 
+           class="img-fluid w-100 rounded-start" 
+           alt="${post.title}" 
+           style="object-fit: cover; height: 100%;">
+          </div>
+          <div class="col-md-9">
+            <div class="card-body">
+              ${post.premium ? `<span class="premium-badge">Premium</span>` : ''}
+              <h5 class="card-title">
+                <a href="/posts/${post._id}" class="text-decoration-none text-primary">
+                  ${post.title}
+                </a>
+              </h5>
+              <p class="card-text text-muted">
+                <strong>Danh mục:</strong> ${post.categoryName || 'Chưa phân loại'}
+              </p>
+              <p class="card-text">
+                <strong>Thẻ:</strong> 
+                ${post.tags && post.tags.length > 0
+                        ? post.tags.map(tag =>
+                          `<a href="/tags/${tag._id}" class="badge tag-badge text-decoration-none">${tag.tagName}</a>`
+                        ).join(' ')
+                        : '<span class="text-muted">Không có thẻ</span>'}
+              </p>
+              <p class="card-text text-muted">
+                <strong>Ngày đăng:</strong> ${new Date(post.createdAt).toLocaleDateString()}
+              </p>
+              <p class="card-text">
+                <strong>Tóm tắt:</strong> 
+                ${post.abstract.length > 10
+                        ? post.abstract.split(' ').slice(0, 10).join(' ') + '...'
+                        : post.abstract}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+`;
 
                     // Insert the generated post HTML into the posts container
                     postsContainer.insertAdjacentHTML('beforeend', postHTML);
@@ -328,7 +344,7 @@
 
               const updatePagination = (totalPosts, currentPage) => {
                 const totalPages = Math.ceil(totalPosts / postsPerPage);
-                pagination.innerHTML = ''; 
+                pagination.innerHTML = '';
 
                 for (let i = 1; i <= totalPages; i++) {
                   const pageItem = document.createElement('li');
@@ -349,7 +365,7 @@
                 item.addEventListener('click', (e) => {
                   e.preventDefault();
                   currentCategory = e.target.dataset.category;
-                  currentPage = 1; 
+                  currentPage = 1;
                   loadPosts(currentCategory, currentPage);
                 });
               });
