@@ -113,6 +113,9 @@ export const getPostById = async (req, res) => {
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
     }
 
+    post.viewCount += 1; // Increment the view count
+    await Post.findByIdAndUpdate(id, { $inc: { viewCount: 1 } });
+
     // Use cheerio to extract the first image from the post's content
     let imageUrl = null;
     if (post.content) {

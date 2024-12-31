@@ -268,10 +268,10 @@
       <script src="/js/main.js"></script>
       <script src="/js/head.js"></script>
       <!-- alert -->
-      <% if (messages.error && messages.error.length> 0) { %>
+      <% if (messages.membership_error && messages.membership_error.length> 0) { %>
         <script type="text/javascript">
           window.onload = function () {
-            const userResponse = confirm("<%= messages.error %> \n\nDo you want to upgrade to premium?");
+            const userResponse = confirm("<%= messages.membership_error %> \n\nDo you want to upgrade to premium?");
             if (userResponse) {
               window.location.href = '/premium-signup';
             }

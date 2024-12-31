@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="/css/nice-select.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/image.css" />
+  <link rel="stylesheet" href="/css/slider.css" />
 </head>
 
 <body>
@@ -36,7 +37,7 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="trending-tittle">
-                <strong>Trending now</strong>
+                <strong>Những bài viết nổi bật trong tuần</strong>
                 <div class="trending-animated">
                   <ul id="js-news" class="js-hidden">
                     <li class="news-item">Cháy máy bay ở Hàn Quốc ...</li>
@@ -47,26 +48,26 @@
               </div>
             </div>
           </div>
-  
+      
           <div class="row">
             <div class="col-lg-8">
               <!-- Trending Top -->
-              <% if (posts && posts.length > 0) { %>
+              <% if (topPostsThisWeek && topPostsThisWeek.length > 0) { %>
               <div class="trending-top mb-30">
                 <div class="trend-top-img">
-                  <img src="<%= posts[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= posts[0].title %>" />
+                  <img src="<%= topPostsThisWeek[0].imageUrl || '/img/default-image.jpg' %>" alt="<%= topPostsThisWeek[0].title %>" />
                   <div class="trend-top-cap">
-                    <span><%= posts[0].category.categoryName || 'Uncategorized' %></span>
+                    <span><%= topPostsThisWeek[0].category.categoryName || 'Uncategorized' %></span>
                     <h2>
-                      <a href="/posts/<%= posts[0]._id %>">
-                        <%= posts[0].title %>
+                      <a href="/posts/<%= topPostsThisWeek[0]._id %>">
+                        <%= topPostsThisWeek[0].title %>
                       </a>
                     </h2>
-                    <!-- Add Tags here -->
+                    <p class="post-date"><%= new Date(topPostsThisWeek[0].createdAt).toLocaleDateString() %></p>
                     <div class="tags">
-                      <% if (posts[0].tags && posts[0].tags.length > 0) { %>
-                        <% posts[0].tags.forEach(tag => { %>
-                          <span class="tag"><%= tag.tagName%></span>
+                      <% if (topPostsThisWeek[0].tags && topPostsThisWeek[0].tags.length > 0) { %>
+                        <% topPostsThisWeek[0].tags.forEach(tag => { %>
+                          <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
                         <% }); %>
                       <% } else { %>
                         <span class="tag">No tags available.</span>
@@ -76,15 +77,14 @@
                 </div>
               </div>
               <% } else { %>
-              <p>No posts available.</p>
+              <p>No posts available this week.</p>
               <% } %>
-  
+      
               <!-- Trending Bottom -->
               <div class="trending-bottom">
                 <div class="row">
-                  <% if (posts && posts.length > 1) { %>
-                  <% posts.slice(1, 4).forEach(post => { %>
-                  <!-- Take posts from index 1 to 3 -->
+                  <% if (topPostsThisWeek && topPostsThisWeek.length > 1) { %>
+                  <% topPostsThisWeek.slice(1, 4).forEach(post => { %>
                   <div class="col-lg-4">
                     <div class="single-bottom mb-35">
                       <div class="trend-bottom-img mb-30">
@@ -99,11 +99,11 @@
                             <%= post.title %>
                           </a>
                         </h4>
-                        <!-- Add Tags here -->
+                        <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
                         <div class="tags">
                           <% if (post.tags && post.tags.length > 0) { %>
                             <% post.tags.forEach(tag => { %>
-                              <span class="tag"><%= tag.tagName%></span>
+                              <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
                             <% }); %>
                           <% } else { %>
                             <span class="tag">No tags available.</span>
@@ -114,17 +114,16 @@
                   </div>
                   <% }); %>
                   <% } else { %>
-                  <p>No additional posts to display.</p>
+                  <p>No additional posts available this week.</p>
                   <% } %>
                 </div>
               </div>
             </div>
-  
+      
             <!-- Right Content -->
             <div class="col-lg-4">
-              <% if (posts && posts.length > 0) { %>
-              <% posts.slice(0, 4).forEach(post => { %>
-              <!-- Take only the first 4 posts -->
+              <% if (topPostsThisWeek && topPostsThisWeek.length > 0) { %>
+              <% topPostsThisWeek.slice(0, 4).forEach(post => { %>
               <div class="trand-right-single d-flex">
                 <div class="trand-right-img">
                   <img class="resize-img" src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
@@ -138,11 +137,11 @@
                       <%= post.title %>
                     </a>
                   </h4>
-                  <!-- Add Tags here -->
+                  <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
                   <div class="tags">
                     <% if (post.tags && post.tags.length > 0) { %>
                       <% post.tags.forEach(tag => { %>
-                        <span class="tag"><%= tag.tagName%></span>
+                        <span class="tag color1"><a class="text-dark" href="/tags/<%= tag._id %>">#<%= tag.tagName %></a></span>
                       <% }); %>
                     <% } else { %>
                       <span class="tag">No tags available.</span>
@@ -152,142 +151,69 @@
               </div>
               <% }); %>
               <% } else { %>
-              <p>No trending posts available.</p>
+              <p>No trending posts available this week.</p>
               <% } %>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
     <!-- Trending Area End -->
+  
     <!-- Whats New Start -->
     <section class="whats-news-area pt-50 pb-20">
       <div class="container">
         <div class="row">
-          <div class="row justify-content-between">
-            <div class="col-lg-8 col-md-8">
-              <div class="section-tittle mb-30">
-                <h3>Whats New</h3>
-              </div>
-              <!-- Nav Button -->
-              <% if (categories && categories.length > 0) { %>
-              <div class="properties__button">
-                <nav>
-                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
-                      All
-                    </a>
-                    <% categories.forEach(cat => { %>
-                    <a class="nav-item nav-link" id="nav-category-tab-<%= cat._id %>" data-toggle="tab" href="#nav-category-<%= cat._id %>" role="tab" aria-controls="nav-category-<%= cat._id %>" aria-selected="false" data-cat-id="<%= cat._id %>">
-                      <%= cat.categoryName %>
-                    </a>
-                    <% }); %>
-                  </div>
-                </nav>
-              </div>
-              <% } else { %>
-              <p>No categories available.</p>
-              <% } %>
-              <!-- End Nav Button -->
-              <div class="col-12">
-                <!-- Nav Card -->
-                <div class="tab-content" id="nav-tabContent">
-                  <!-- Default tab for "All" -->
-                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <div class="whats-news-caption">
-                      <div class="row">
-                        <% if (posts.length > 0) { %>
-                        <div class="col-lg-6 col-md-6">
-                          <!-- First column -->
-                          <% posts.slice(0, 3).forEach(post => { %>
+          <div class="col-lg-8 col-md-8">
+            <div class="section-tittle mb-30">
+              <h3>Được xem nhiều nhất</h3>
+            </div>
+            <div class="whats-news-caption">
+              <div class="row">
+                <% if (topViewedPosts.length > 0) { %>
+                <div class="col-12">
+                  <!-- Slideshow -->
+                  <div id="topViewedPostsCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <% topViewedPosts.slice(0, 5).forEach((post, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                           <div class="single-news mb-4">
                             <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" class="d-block w-100" />
                             </div>
                             <div class="news-caption">
+                              <span><%= post.category.categoryName || 'Uncategorized' %></span>
                               <h4>
-                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                                <a href="/posts/<%= post._id %>" class="carousel-title"><%= post.title %></a>
                               </h4>
-                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
+                              <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
+                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + '...' : 'No description available.' %></p>
                             </div>
                           </div>
-                          <% }); %>
                         </div>
-                        <div class="col-lg-6 col-md-6">
-                          <!-- Second column -->
-                          <% posts.slice(3, 6).forEach(post => { %>
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                            </div>
-                            <div class="caption">
-                              <h4>
-                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                              </h4>
-                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
-                            </div>
-                          </div>
-                          <% }); %>
-                        </div>
-                        <% } else { %>
-                        <p>No posts available.</p>
-                        <% } %>
-                      </div>
+                      <% }); %>
                     </div>
+                    <!-- Navigation Arrows -->
+                    <a class="carousel-control-prev" href="#topViewedPostsCarousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#topViewedPostsCarousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
                   </div>
-                  <!-- Dynamic category tabs -->
-                  <% categories.forEach(cat => { %>
-                  <div class="tab-pane fade" id="nav-category-<%= cat._id %>" role="tabpanel" aria-labelledby="nav-category-tab-<%= cat._id %>">
-                    <div class="whats-news-caption">
-                      <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                          <!-- First column -->
-                          <% posts.slice(0, 3).forEach(post => { %>
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                            </div>
-                            <div class="news-caption">
-                              <h4>
-                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                              </h4>
-                              <p><%= post.abstract || 'No description available.' %></p>
-                            </div>
-                          </div>
-                          <% }); %>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <!-- Second column -->
-                          <% posts.slice(3, 6).forEach(post => { %>
-                          <div class="single-news mb-4">
-                            <div class="news-img">
-                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" />
-                            </div>
-                            <div class="news-caption">
-                              <h4>
-                                <a href="/posts/<%= post._id %>"><%= post.title %></a>
-                              </h4>
-                              <p><%= post.abstract ? post.abstract.split(' ').slice(0, 10).join(' ') + (post.abstract.split(' ').length > 10 ? '...' : '') : 'No description available.' %></p>
-                            </div>
-                          </div>
-                          <% }); %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <% }); %>
                 </div>
+                <% } else { %>
+                <p>No posts available.</p>
+                <% } %>
               </div>
             </div>
           </div>
-    
           <div class="col-lg-4">
-            <!-- Section Tittle -->
             <div class="section-tittle mb-40">
               <h3>Follow Us</h3>
             </div>
-            <!-- Flow Socail -->
             <div class="single-follow mb-45">
               <div class="single-box">
                 <div class="follow-us d-flex align-items-center">
@@ -313,11 +239,68 @@
       </div>
     </section>
     <!-- Whats New End -->
+  
+    <!-- Recent Posts Start -->
+    <section class="recent-news-area pt-50 pb-20">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-8">
+            <div class="section-tittle mb-30">
+              <h3>Bài viết mới nhất</h3>
+            </div>
+            <div class="recent-news-caption">
+              <div class="row">
+                <% if (recentPosts.length > 0) { %>
+                <div class="col-12">
+                  <!-- Slideshow -->
+                  <div id="recentPostsCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <% recentPosts.slice(0, 5).forEach((post, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                          <div class="single-news mb-4">
+                            <div class="news-img">
+                              <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" alt="<%= post.title %>" class="d-block w-100" />
+                            </div>
+                            <div class="news-caption">
+                              <span><%= post.category.categoryName || 'Uncategorized' %></span>
+                              <h4>
+                                <a href="/posts/<%= post._id %>" class="carousel-title"><%= post.title %></a>
+
+                              </h4>
+                              <p class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></p>
+                              <p>
+                                <%= post.abstract
+                                  ? post.abstract.split(' ').slice(0, 10).join(' ') + '...'
+                                  : 'No description available.' %>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                    <!-- Navigation Arrows -->
+                    <a class="carousel-control-prev" href="#recentPostsCarousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#recentPostsCarousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+                <% } else { %>
+                <p>No recent posts available.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Recent Posts End -->
   </main>
   
-
-  
-
 
   <%- include('./partials/footer.ejs') %>
 
