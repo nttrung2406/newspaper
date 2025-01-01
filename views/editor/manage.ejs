@@ -86,12 +86,11 @@
                               
                               <div class="col-md-4">
                                 <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
-                                <select name="tags" id="tags-<%= draft._id %>" class="form-select" multiple required>
+                                <select name="tags" id="tags-<%= draft._id %>" class="form-select" required>
                                   <% tags.forEach(tag => { %>
                                     <option value="<%= tag._id %>"><%= tag.tagName %></option>
                                   <% }) %>
                                 </select>
-                                
                               </div>
                               
                               <div class="col-md-3">
