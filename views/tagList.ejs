@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tags List</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      .tag-link {
+        font-size: 1.1rem;
+        color: #007bff;
+        text-decoration: none;
+      }
+      .tag-link:hover {
+        text-decoration: underline;
+      }
+      .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+      }
+      .pagination .page-link {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/header.ejs') %>
+    <main>
+      <div class="container mt-4">
+        <h2 class="text-center my-4">All Tags</h2>
+        <div class="row">
+          <div class="col-12">
+            <ul class="list-group">
+              <% tags.forEach(tag => { %>
+                <li class="list-group-item">
+                  <a href="/tags/<%- tag._id %>" class="tag-link"><%- tag.tagName %></a>
+                </li>
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+        <!-- Pagination -->
+        <div class="col-12 my-4 d-flex justify-content-center">
+          <nav>
+            <ul class="pagination">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a class="page-link" href="?page=<%- i %>"><%- i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <%- include('./partials/footer.ejs') %>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

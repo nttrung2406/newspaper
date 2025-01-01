@@ -40,4 +40,27 @@ const tagController = {
   },
 };
 
+export const getAllTagsPaginated = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = 10; // Number of tags per page
+    const skip = (page - 1) * limit;
+
+    const totalTags = await Tag.countDocuments();
+    const tags = await Tag.find().skip(skip).limit(limit);
+
+    res.render("tagList", {
+      pageTitle: "Tags",
+      tags,
+      totalPages: Math.ceil(totalTags / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    const error = new Error(err);
+    error.statusCode = 500;
+    next(error);
+  }
+};
+
+
 export default tagController;
