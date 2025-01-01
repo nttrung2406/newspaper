@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/auth.css" />
+    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
 
     <style>
       .form-control-active {
@@ -31,10 +32,10 @@
 
       /* Make all buttons large with appropriate padding and font size */
       .btn-lg {
-        padding: 0.75rem 2.5rem;  /* Increase padding for larger buttons */
-        font-size: 1.5rem;         /* Increase font size */
-        border-radius: 0.375rem;   /* Optional: for rounded corners */
-        min-width: 200px;          /* Optional: Ensure buttons have minimum width */
+        padding: 0.75rem 2.5rem; /* Increase padding for larger buttons */
+        font-size: 1.5rem; /* Increase font size */
+        border-radius: 0.375rem; /* Optional: for rounded corners */
+        min-width: 200px; /* Optional: Ensure buttons have minimum width */
       }
 
       .badge {
@@ -52,7 +53,8 @@
       }
 
       /* Decrease bottom margin and adjust margin-top adjustments */
-      #updateButtons, .mt-4 {
+      #updateButtons,
+      .mt-4 {
         margin-top: 20px; /* Adjust to your preference */
       }
 
@@ -64,7 +66,7 @@
       .btn.btn-success,
       .btn.btn-secondary,
       .btn.btn-danger {
-        margin-top: 10px;  /* Adjust top margin */
+        margin-top: 10px; /* Adjust top margin */
       }
     </style>
   </head>
@@ -77,27 +79,56 @@
         <div class="card w-75 text-left shadow-lg">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <h4 class="card-title font-weight-bold mb-0">Thông tin cá nhân</h4>
-              <button id="editButton" class="btn btn-primary">
-                <i class="fas fa-edit mr-2"></i>Chỉnh sửa
-              </button>
+              <h4 class="card-title font-weight-bold mb-0">
+                Thông tin cá nhân
+              </h4>
+              <div>
+                <button id="editButton" class="btn btn-primary">
+                  <i class="fas fa-edit mr-2"></i>Chỉnh sửa
+                </button>
+                <a
+                  href="/auth/profile/edit-password"
+                  id="editButton"
+                  class="btn btn-primary"
+                >
+                  <i class="fas fa-edit mr-2"></i>Đổi mật khẩu
+                </a>
+              </div>
             </div>
-            <hr>
+            <hr />
 
             <form id="profileForm" action="profile/update" method="POST">
               <!-- User Information Rows -->
               <div class="row mb-4">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="username" class="font-weight-semibold">Tên người dùng</label>
-                    <input type="text" class="form-control" id="username" name="username" readonly value="<%= user.username %>">
+                    <label for="username" class="font-weight-semibold"
+                      >Tên người dùng</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      readonly
+                      value="<%= user.username %>"
+                    />
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="email" class="font-weight-semibold">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" readonly value="<%= user.email %>">
+                    <label for="email" class="font-weight-semibold"
+                      >Email</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      readonly
+                      value="<%= user.email %>"
+                    />
                   </div>
                 </div>
               </div>
@@ -105,16 +136,33 @@
               <div class="row mb-4">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="fullname" class="font-weight-semibold">Họ và tên</label>
-                    <input type="text" class="form-control" id="fullname" name="fullname" readonly value="<%= userInfo.fullname %>">
+                    <label for="fullname" class="font-weight-semibold"
+                      >Họ và tên</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullname"
+                      name="fullname"
+                      readonly
+                      value="<%= userInfo.fullname %>"
+                    />
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="dob" class="font-weight-semibold">Ngày sinh</label>
-                    <input type="date" class="form-control" id="dob" name="dateOfBirth" readonly 
-                      value="<%= new Date(userInfo.dateOfBirth).toISOString().split('T')[0] %>">
+                    <label for="dob" class="font-weight-semibold"
+                      >Ngày sinh</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="dob"
+                      name="dateOfBirth"
+                      readonly
+                      value="<%= new Date(userInfo.dateOfBirth).toISOString().split('T')[0] %>"
+                    />
                   </div>
                 </div>
               </div>
@@ -122,52 +170,89 @@
               <!-- User Role -->
               <div class="form-group mb-4">
                 <label for="role" class="font-weight-semibold">Vai trò</label>
-                <input type="text" class="form-control" id="role" readonly value="<%= user.role %>">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="role"
+                  readonly
+                  value="<%= user.role %>"
+                />
               </div>
 
               <% if (user.role === "writer") { %>
-                <div class="form-group mb-4">
-                  <label for="penName" class="font-weight-semibold">Bút danh</label>
-                  <input type="text" class="form-control" id="penName" name="penName" readonly value="<%= userInfo.penName %>">
-                </div>
+              <div class="form-group mb-4">
+                <label for="penName" class="font-weight-semibold"
+                  >Bút danh</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="penName"
+                  name="penName"
+                  readonly
+                  value="<%= userInfo.penName %>"
+                />
+              </div>
               <% } %>
 
               <!-- Update Buttons (Initially Hidden) -->
-              <div id="updateButtons" class="mt-4 text-center" style="display: none;">
-                <button type="submit" class="btn btn-success btn-lg mr-2">Cập nhật thay đổi</button>
-                <button type="button" id="cancelButton" class="btn btn-secondary btn-lg">Hủy</button>
+              <div
+                id="updateButtons"
+                class="mt-4 text-center"
+                style="display: none"
+              >
+                <button type="submit" class="btn btn-success mr-2">
+                  Cập nhật thay đổi
+                </button>
+                <button
+                  type="button"
+                  id="cancelButton"
+                  class="btn btn-secondary"
+                >
+                  Hủy
+                </button>
               </div>
             </form>
 
             <% if (user.role === "membership") { %>
-              <!-- Membership Status -->
-              <div class="membership-status card shadow-sm p-4 mt-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h5 class="mb-0 font-weight-bold">Trạng thái Thẻ Thành Viên</h5>
-                  <span class="badge <%= extraInfo.isExpired ? 'badge-danger' : 'badge-success' %> p-3">
-                    <%= extraInfo.isExpired ? "Hết hạn" : "Còn hiệu lực" %>
-                  </span>
-                </div>
-                <hr>
-
-                <!-- Membership Dates -->
-                <div class="date-info mb-3">
-                  <p><strong>Ngày bắt đầu:</strong> <%= extraInfo.formattedStartDate %></p>
-                  <p><strong>Ngày kết thúc:</strong> <%= extraInfo.formattedEndDate %></p>
-                </div>
-
-                <!-- Remaining Time -->
-                <div class="remaining-time text-center mt-4">
-                  <p class="lead font-weight-bold">Thời gian còn lại:</p>
-                  <p class="display-4"><%= extraInfo.remainingTime %></p>
-                </div>
+            <!-- Membership Status -->
+            <div class="membership-status card shadow-sm p-4 mt-4">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h5 class="mb-0 font-weight-bold">Trạng thái Thẻ Thành Viên</h5>
+                <span
+                  class="badge <%= extraInfo.isExpired ? 'badge-danger' : 'badge-success' %> p-3"
+                >
+                  <%= extraInfo.isExpired ? "Hết hạn" : "Còn hiệu lực" %>
+                </span>
               </div>
+              <hr />
+
+              <!-- Membership Dates -->
+              <div class="date-info mb-3">
+                <p>
+                  <strong>Ngày bắt đầu:</strong> <%=
+                  extraInfo.formattedStartDate %>
+                </p>
+                <p>
+                  <strong>Ngày kết thúc:</strong> <%= extraInfo.formattedEndDate
+                  %>
+                </p>
+              </div>
+
+              <!-- Remaining Time -->
+              <div class="remaining-time text-center mt-4">
+                <p class="lead font-weight-bold">Thời gian còn lại:</p>
+                <p class="display-4"><%= extraInfo.remainingTime %></p>
+              </div>
+            </div>
             <% } %>
 
             <!-- Logout Button -->
             <div class="mt-4 text-center" id="logout-form">
               <form id="logout-form" action="/auth/logout" method="POST">
-                <button type="submit" class="btn btn-danger btn-lg">Đăng xuất</button>
+                <button type="submit" class="btn btn-danger">Đăng xuất</button>
               </form>
             </div>
           </div>
@@ -177,40 +262,50 @@
 
     <%- include('./partials/footer.ejs') %>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (successMessage) { %>
+    <script>
+      Swal.fire({
+        title: "Success!",
+        text: "<%= successMessage %>",
+        icon: "success",
+      });
+    </script>
+    <% } %>
     <!-- JS here -->
     <script src="/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
 
     <!-- Edit Profile Script -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const editButton = document.getElementById('editButton');
-        const updateButtons = document.getElementById('updateButtons');
-        const cancelButton = document.getElementById('cancelButton');
-        const form = document.getElementById('profileForm');
-        
+      document.addEventListener("DOMContentLoaded", function () {
+        const editButton = document.getElementById("editButton");
+        const updateButtons = document.getElementById("updateButtons");
+        const cancelButton = document.getElementById("cancelButton");
+        const form = document.getElementById("profileForm");
+
         // Get all input fields except role
-        const inputs = form.querySelectorAll('input:not(#role)');
+        const inputs = form.querySelectorAll("input:not(#role)");
 
         // Enable edit mode
-        editButton.addEventListener('click', function() {
-          inputs.forEach(input => {
-            input.removeAttribute('readonly');
-            input.classList.add('form-control-active');
+        editButton.addEventListener("click", function () {
+          inputs.forEach((input) => {
+            input.removeAttribute("readonly");
+            input.classList.add("form-control-active");
           });
-          updateButtons.style.display = 'block';
-          editButton.style.display = 'none';
+          updateButtons.style.display = "block";
+          editButton.style.display = "none";
         });
 
         // Cancel edit mode
-        cancelButton.addEventListener('click', function() {
+        cancelButton.addEventListener("click", function () {
           form.reset();
-          inputs.forEach(input => {
-            input.setAttribute('readonly', true);
-            input.classList.remove('form-control-active');
+          inputs.forEach((input) => {
+            input.setAttribute("readonly", true);
+            input.classList.remove("form-control-active");
           });
-          updateButtons.style.display = 'none';
-          editButton.style.display = 'block';
+          updateButtons.style.display = "none";
+          editButton.style.display = "block";
         });
       });
     </script>
