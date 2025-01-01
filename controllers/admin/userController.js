@@ -115,7 +115,7 @@ const viewUserDetail = async (req, res) => {
                 },
             });
 
-        console.log(user.accountID.category)
+        //console.log(user.accountID.category)
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
