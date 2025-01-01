@@ -130,35 +130,38 @@
 
             <!-- Signup Form (hidden by default) -->
             <div id="signupForm" style="display: none;">
-              <form>
+              <form id="signUpForm">
                 <div class="form-group">
                   <label for="signupFullname">Fullname</label>
-                  <input type="text" id="signupFullname" class="form-control custom-input" placeholder="Enter fullname"
+                  <input type="text" id="signupFullname" name="signupFullname" class="form-control custom-input" placeholder="Enter fullname"
                     required>
                 </div>
                 <div class="form-group">
                   <label for="signupUsername">Username</label>
-                  <input type="text" id="signupUsername" class="form-control custom-input" placeholder="Enter username"
+                  <input type="text" id="signupUsername" name="signupUsername" class="form-control custom-input" placeholder="Enter username"
                     required>
                 </div>
                 <div class="form-group">
                   <label for="signupDateOfBirth">Date of Birth</label>
-                  <input type="date" id="signupDateOfBirth" class="form-control custom-input" required>
+                  <input type="date" id="signupDateOfBirth" name="signupDateOfBirth" class="form-control custom-input" required>
                 </div>
                 <div class="form-group">
                   <label for="signupEmail">Email</label>
-                  <input type="email" id="signupEmail" class="form-control custom-input" placeholder="Enter email"
+                  <input type="email" id="signupEmail" name="signupEmail" class="form-control custom-input" placeholder="Enter email"
                     required>
+                  <div class="invalid-feedback" id="emailErr"></div>
                 </div>
                 <div class="form-group">
                   <label for="signupPassword">Password</label>
-                  <input type="password" id="signupPassword" class="form-control custom-input"
+                  <input type="password" id="signupPassword" name="signupPassword" class="form-control custom-input"
                     placeholder="Enter password" required>
+                  <div class="invalid-feedback" id="passErr"></div>
                 </div>
                 <div class="form-group">
                   <label for="signupConfirmPassword">Confirm Password</label>
                   <input type="password" id="signupConfirmPassword" class="form-control custom-input"
                     placeholder="Confirm password" required>
+                  <div class="invalid-feedback" id="passErr1"></div>
                 </div>
                 <div class="form-group d-flex justify-content-between align-items-center">
                   <button type="submit" class="btn btn-success w-100 custom-btn">Sign Up</button>
@@ -191,6 +194,81 @@
           </div>
         </div>
       </div>
+
+      <script>
+        const signUpForm = document.getElementById('signUpForm');
+        const signupPassword = document.getElementById('signupPassword');
+        const signupConfirmPassword = document.getElementById('signupConfirmPassword');
+        const passErr = document.getElementById('passErr');
+        const passErr1 = document.getElementById('passErr1');
+        const emailErr = document.getElementById('emailErr');
+        const signupEmail = document.getElementById('signupEmail');
+        signUpForm.addEventListener('submit', async(event)=>{
+          event.preventDefault();
+          if(signupPassword.value !== signupConfirmPassword.value){
+            passErr.textContent = 'Passwords do not match';
+            passErr1.textContent = 'Passwords do not match';
+            signupPassword.classList.add('is-invalid');
+            signupConfirmPassword.classList.add('is-invalid');
+            return;
+          }
+          else{
+            passErr.textContent = '';
+            passErr1.textContent = '';
+            signupPassword.classList.remove('is-invalid');
+            signupConfirmPassword.classList.remove('is-invalid');
+          }
+
+          if (signupPassword.value.length < 10){
+            passErr.textContent = 'Password must be at least 10 characters';
+            signupPassword.classList.add('is-invalid');
+            return;
+          }
+          else{
+            passErr.textContent = '';
+            signupPassword.classList.remove('is-invalid');
+          }
+
+          const formData = new FormData(signUpForm);
+          const response = await fetch('/auth/signup', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+          if(!result.success){
+            if (result.error.includes('Email')){
+              emailErr.textContent = result.error;
+              signupEmail.classList.add('is-invalid');
+              return;
+            }
+            else{
+              emailErr.textContent = '';
+              signupEmail.classList.remove('is-invalid');
+            }
+
+            Swal.fire({
+              title: 'Error!',
+              text: result.error,
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+            return
+          }
+
+          else{
+            Swal.fire({
+              title: 'Success!',
+              text: result.message,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(()=>{
+              window.location.href = '/auth';
+            });
+          }
+
+        })
+      </script>
 
       <script>
         document.getElementById("passwordToggle").addEventListener("mousedown", function () {

@@ -2,6 +2,9 @@ import express from "express";
 const router = express.Router();
 import { body } from "express-validator";
 import bcrypt from "bcryptjs";
+import multer from "multer";
+
+const upload = multer();
 
 import authController from "../controllers/authController.js";
 
@@ -47,7 +50,7 @@ router.post(
 router.post("/logout", authController.postLogout);
 
 // Sign up a new user
-router.post("/signup", authController.postSignup);
+router.post("/signup",upload.none(), authController.postSignup);
 
 // Login functionality
 router.post("/login", authController.postLogin);

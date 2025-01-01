@@ -53,43 +53,46 @@ const authController = {
     }
   },
   postSignup: async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { signupFullname, signupUsername, signupDateOfBirth, signupEmail, signupPassword } = req.body;
 
     try {
-      // Input validation
-      if (!username || !email || !password || !role) {
-        return res.status(400).json({ message: "All fields are required." });
-      }
-
-      // Prevent Admin role signup
-      if (role === "admin") {
-        return res.status(403).json({ message: "Cannot sign up as Admin." });
-      }
-
-      // Check for existing email
-      const existingUser = await User.findOne({ email });
+      console.log(signupFullname, signupUsername, signupDateOfBirth, signupEmail, signupPassword)
+      // Check if user already exists
+      const existingUser = await User.findOne({ email: signupEmail });
       if (existingUser) {
-        return res.status(409).json({ message: "Email already registered." });
+        return res.status(400).json({success: false, error: "Email already in use."});
       }
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(signupPassword, 10);
 
-      // Create and save new user
-      const newUser = new User({
-        username: username,
-        email: email,
+      // Create new user
+      const newUser = await User.create({
+        username: signupUsername,
+        email: signupEmail,
         password: hashedPassword,
-        role: role,
+        role: "guest",
+        membership:{
+          status: "inactive",
+          type: "basic",
+          startDate: new Date(),
+          endDate: new Date()
+        }
       });
-      await newUser.save();
 
-      res.status(201).json({ message: "User registered successfully!" });
+      const newUserInfor = await UserInformation.create({
+        accountID: newUser._id,
+        fullname: signupFullname,
+        dateOfBirth: new Date(signupDateOfBirth),
+        contact: signupEmail,
+        penName: "",
+      }
+      )
+
+
+      res.status(201).json({success: true, message: "User created successfully."});
     } catch (error) {
-      console.error(
-        "Error signing up:",
-        error.errorResponse.errInfo.details.schemaRulesNotSatisfied[0]
-      );
+      console.log("Error in signup route:", error);
       res.status(500).json({ message: "Internal server error." });
     }
   },
