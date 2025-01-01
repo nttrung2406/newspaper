@@ -95,14 +95,15 @@ const authController = {
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
-      //console.log(user)
+
       if (!user) {
         return res.redirect("/");
       }
-      if (await !bcrypt.compare(password, user.password)) {
-        return res.status(400).send("Invalid credentials");
-      }
 
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).redirect("/auth");
+      }
       // Save user data to session (or JWT token)
       req.session.isLoggedIn = true;
       req.session.user = user;
