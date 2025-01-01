@@ -28,33 +28,58 @@
   <body>
     <%- include('./partials/header.ejs') %>
     <main>
-      <div class="container mt-4">
-        <h2 class="text-center my-4">All Tags</h2>
-        <div class="row">
-          <div class="col-12">
-            <ul class="list-group">
-              <% tags.forEach(tag => { %>
-                <li class="list-group-item">
-                  <a href="/tags/<%- tag._id %>" class="tag-link"><%- tag.tagName %></a>
-                </li>
-              <% }); %>
-            </ul>
-          </div>
-        </div>
-        <!-- Pagination -->
-        <div class="col-12 my-4 d-flex justify-content-center">
-          <nav>
-            <ul class="pagination">
-              <% for (let i = 1; i <= totalPages; i++) { %>
-                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                  <a class="page-link" href="?page=<%- i %>"><%- i %></a>
-                </li>
+        <div class="container mt-4">
+          <h2 class="text-center my-4">All Tags</h2>
+      
+          <!-- Search Form -->
+          <form method="get" action="/tags" class="mb-4">
+            <div class="input-group">
+              <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search tags..."
+                value="<%- search %>"
+              />
+              <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+          </form>
+      
+          <div class="row">
+            <div class="col-12">
+              <% if (tags.length > 0) { %>
+                <ul class="list-group">
+                  <% tags.forEach(tag => { %>
+                    <li class="list-group-item">
+                      <a href="/tags/<%- tag._id %>" class="tag-link"><%- tag.tagName %></a>
+                    </li>
+                  <% }); %>
+                </ul>
+              <% } else { %>
+                <p class="text-center text-muted">No tags found</p>
               <% } %>
-            </ul>
-          </nav>
+            </div>
+          </div>
+      
+          <!-- Pagination -->
+          <% if (totalPages > 1) { %>
+            <div class="col-12 my-4 d-flex justify-content-center">
+              <nav>
+                <ul class="pagination">
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                      <a
+                        class="page-link"
+                        href="?search=<%- search %>&page=<%- i %>"
+                      ><%- i %></a>
+                    </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+          <% } %>
         </div>
-      </div>
-    </main>
+      </main>
     <%- include('./partials/footer.ejs') %>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>
