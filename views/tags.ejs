@@ -33,6 +33,7 @@
           <div class="row">
             <div class="col-lg-8">
               <!-- post container -->
+              <% if (posts.length > 0) { %>
               <div class="row">
                 <div class="col-12">
                   <!-- Nav Card -->
@@ -67,6 +68,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row d-flex justify-content-center">
+                <%- include('./partials/pagination.ejs', {currentPage: currentPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage}) %>
+              </div>
+              <% } else { %>
+              <div class="row d-flex justify-content-center alert alert-primary" role="alert">
+                This tag currently has no posts
+              </div>
+              <% } %>
             </div>
             <section class="col-lg-4 col-md-4">
               <div class="row-lg-3 row-md-3">
@@ -114,10 +123,6 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <!-- New Poster -->
-                <div class="news-poster d-none d-lg-block">
-                  <img src="/img/news/news_card.jpg" alt="" />
                 </div>
               </div>
             </section>
