@@ -37,8 +37,8 @@ postSchema.index(
   }, 
   { 
     weights: {
-      title: 10,
-      abstract: 5,
+      title: 20,
+      abstract: 1,
       content: 1
     },
     default_language: "none",

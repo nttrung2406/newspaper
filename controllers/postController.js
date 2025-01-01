@@ -74,9 +74,10 @@ export const deletePost = async (req, res) => {
 
 export const searchPostsByTitle = async (req, res) => {
   const { query, page = 1, searchBy = [] } = req.query;
-  const SCORE_THRESHOLD = 1.8; // Adjust this threshold value as needed
-  const limit = 5;
-  const skip = (page - 1) * limit;
+  const SCORE_THRESHOLD = 1.5;
+  const TOP_POSTS_LIMIT = 20; // Reduced to 20 posts
+  const POSTS_PER_PAGE = 5;
+  const skip = (page - 1) * POSTS_PER_PAGE;
 
   if (!query || typeof query !== 'string') {
     return res.status(400).render('errorPage', { error: "Query parameter must be a valid string." });
@@ -88,7 +89,6 @@ export const searchPostsByTitle = async (req, res) => {
       publishedDate: { $lte: new Date() }
     };
 
-    // If no checkboxes or all checkboxes selected, use full-text search
     if (!searchBy.length || 
         (Array.isArray(searchBy) && searchBy.length === 3) || 
         searchBy === 'title,abstract,content') {
@@ -99,8 +99,8 @@ export const searchPostsByTitle = async (req, res) => {
         $diacriticSensitive: false
       };
 
-      // First, get all results with scores
-      const allResults = await Post.aggregate([
+      // Two-stage approach: First get top 20 by score, then sort by premium
+      const topResults = await Post.aggregate([
         { $match: searchQuery },
         { 
           $addFields: {
@@ -109,14 +109,21 @@ export const searchPostsByTitle = async (req, res) => {
         },
         { 
           $match: {
-            score: { $gte: SCORE_THRESHOLD }  // Apply threshold
+            score: { $gte: SCORE_THRESHOLD }
           }
         },
         {
           $sort: {
-            premium: -1,        // Sort by premium first
-            score: -1,         // Then by text score
-            createdAt: -1      // Then by date
+            score: -1  // First sort by score to get top 20
+          }
+        },
+        {
+          $limit: TOP_POSTS_LIMIT
+        },
+        {
+          $sort: {
+            premium: -1,  // Then sort by premium within top 20
+            score: -1    // Maintain score order within premium groups
           }
         },
         {
@@ -142,17 +149,17 @@ export const searchPostsByTitle = async (req, res) => {
         }
       ]);
 
-      const totalResults = allResults.length;
-      const paginatedResults = allResults.slice(skip, skip + limit);
+      const totalResults = topResults.length;
+      const paginatedResults = topResults.slice(skip, skip + POSTS_PER_PAGE);
 
       const postsWithImages = paginatedResults.map(post => {
         const $ = cheerio.load(post.content);
         const firstImage = $('img').first().attr('src');
         return {
           ...post,
-          firstImage: firstImage,
+          firstImage,
           categoryName: post.category ? post.category.categoryName : 'Uncategorized',
-          searchScore: post.score
+          searchScore: post.score.toFixed(2)
         };
       });
 
@@ -160,13 +167,13 @@ export const searchPostsByTitle = async (req, res) => {
         query,
         results: postsWithImages,
         currentPage: parseInt(page, 10),
-        totalPages: Math.ceil(totalResults / limit),
+        totalPages: Math.ceil(totalResults / POSTS_PER_PAGE),
         searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean),
-        threshold: SCORE_THRESHOLD
+        threshold: SCORE_THRESHOLD,
+        totalResults
       });
-
     } else {
-      // For specific field search using regex
+      // Specific field search with regex - limited to top 20 and premium priority
       const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
       const searchConditions = searchFields.map(field => {
         if (['title', 'abstract', 'content'].includes(field)) {
@@ -176,23 +183,22 @@ export const searchPostsByTitle = async (req, res) => {
       
       searchQuery.$or = searchConditions;
 
-      const [totalResults, results] = await Promise.all([
-        Post.countDocuments(searchQuery),
-        Post.find(searchQuery)
-          .populate('category')
-          .populate('tags')
-          .sort({ premium: -1, createdAt: -1 })
-          .skip(skip)
-          .limit(limit)
-          .exec()
-      ]);
+      const results = await Post.find(searchQuery)
+        .populate('category')
+        .populate('tags')
+        .limit(TOP_POSTS_LIMIT)
+        .sort({ premium: -1, createdAt: -1 }) // Sort by premium after limiting to top 20
+        .exec();
 
-      const postsWithImages = results.map(post => {
+      const totalResults = Math.min(TOP_POSTS_LIMIT, results.length);
+      const paginatedResults = results.slice(skip, skip + POSTS_PER_PAGE);
+
+      const postsWithImages = paginatedResults.map(post => {
         const $ = cheerio.load(post.content);
         const firstImage = $('img').first().attr('src');
         return {
           ...post.toObject(),
-          firstImage: firstImage,
+          firstImage,
           categoryName: post.category ? post.category.categoryName : 'Uncategorized'
         };
       });
@@ -201,8 +207,9 @@ export const searchPostsByTitle = async (req, res) => {
         query,
         results: postsWithImages,
         currentPage: parseInt(page, 10),
-        totalPages: Math.ceil(totalResults / limit),
-        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean)
+        totalPages: Math.ceil(totalResults / POSTS_PER_PAGE),
+        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean),
+        totalResults
       });
     }
 
