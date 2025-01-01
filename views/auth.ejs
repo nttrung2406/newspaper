@@ -142,6 +142,16 @@
     <%- include('./partials/footer.ejs') %>
 
     <!-- JS here -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (errorMessage) { %>
+    <script>
+      Swal.fire({
+        title: "Warning!",
+        text: "<%= errorMessage %>",
+        icon: "warning",
+      });
+    </script>
+    <% } %>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -168,7 +178,6 @@
 
     <!-- Scrollup, nice-select, sticky -->
     <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
     <script src="/js/jquery.sticky.js"></script>
 
     <!-- contact js -->

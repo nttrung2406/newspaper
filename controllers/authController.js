@@ -12,7 +12,10 @@ import { validationResult } from "express-validator";
 
 const authController = {
   getAuth: (req, res) => {
-    res.render("auth");
+    let errorMessage = req.flash("error")[0] || null;
+    res.render("auth", {
+      errorMessage: errorMessage,
+    });
   },
   getEditPassword: async (req, res) => {
     res.render("edit-password", {
@@ -102,6 +105,7 @@ const authController = {
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
+        req.flash("error", "Incorrect password! Please try again.");
         return res.status(401).redirect("/auth");
       }
       // Save user data to session (or JWT token)
