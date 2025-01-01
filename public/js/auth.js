@@ -20,3 +20,41 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+document.getElementById("passwordToggle").addEventListener("mousedown", function () {
+  document.getElementById("loginPassword").type = "text";
+});
+
+document.getElementById("passwordToggle").addEventListener("mouseup", function () {
+  document.getElementById("loginPassword").type = "password";
+});
+
+document.getElementById("signupLink").addEventListener("click", function () {
+  console.log("clicked");
+  document.getElementById("formTitle").textContent = "Sign Up";
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("signupForm").style.display = "block";
+  document.getElementById("forgotPasswordForm").style.display = "none";
+});
+
+document.getElementById("loginLink").addEventListener("click", function () {
+  document.getElementById("formTitle").textContent = "Log In";
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("signupForm").style.display = "none";
+  document.getElementById("forgotPasswordForm").style.display = "none";
+});
+
+document.getElementById("forgotPasswordLink").addEventListener("click", function () {
+  document.getElementById("formTitle").textContent = "Forgot Password";
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("signupForm").style.display = "none";
+  document.getElementById("forgotPasswordForm").style.display = "block";
+});
+
+document.getElementById("backToLoginLink").addEventListener("click", function () {
+  document.getElementById("formTitle").textContent = "Log In";
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("signupForm").style.display = "none";
+  document.getElementById("forgotPasswordForm").style.display = "none";
+});
+
+

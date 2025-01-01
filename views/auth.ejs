@@ -192,118 +192,6 @@
         </div>
       </div>
 
-      <script>
-        document.getElementById("passwordToggle").addEventListener("mousedown", function () {
-          document.getElementById("loginPassword").type = "text";
-        });
-
-        document.getElementById("passwordToggle").addEventListener("mouseup", function () {
-          document.getElementById("loginPassword").type = "password";
-        });
-
-        document.getElementById("signupLink").addEventListener("click", function () {
-          console.log("clicked");
-          document.getElementById("formTitle").textContent = "Sign Up";
-          document.getElementById("loginForm").style.display = "none";
-          document.getElementById("signupForm").style.display = "block";
-          document.getElementById("forgotPasswordForm").style.display = "none";
-        });
-
-        document.getElementById("loginLink").addEventListener("click", function () {
-          document.getElementById("formTitle").textContent = "Log In";
-          document.getElementById("loginForm").style.display = "block";
-          document.getElementById("signupForm").style.display = "none";
-          document.getElementById("forgotPasswordForm").style.display = "none";
-        });
-
-        document.getElementById("forgotPasswordLink").addEventListener("click", function () {
-          document.getElementById("formTitle").textContent = "Forgot Password";
-          document.getElementById("loginForm").style.display = "none";
-          document.getElementById("signupForm").style.display = "none";
-          document.getElementById("forgotPasswordForm").style.display = "block";
-        });
-
-        document.getElementById("backToLoginLink").addEventListener("click", function () {
-          document.getElementById("formTitle").textContent = "Log In";
-          document.getElementById("loginForm").style.display = "block";
-          document.getElementById("signupForm").style.display = "none";
-          document.getElementById("forgotPasswordForm").style.display = "none";
-        });
-      </script>
-
-      <style>
-        .custom-card {
-          border-radius: 10px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-title {
-          font-size: 1.8rem;
-          font-weight: 600;
-        }
-
-        .custom-welcome-text {
-          font-size: 1rem;
-        }
-
-        .custom-input {
-          border-radius: 5px;
-        }
-
-        .custom-btn {
-          border-radius: 5px;
-          font-weight: 500;
-        }
-
-        .custom-link {
-          text-decoration: none;
-        }
-
-        .custom-link:hover {
-          color: darkblue;
-          text-decoration: underline;
-        }
-
-        .custom-text {
-          font-size: 0.9rem;
-        }
-
-        .input-group-text.custom-eye {
-          cursor: pointer;
-        }
-
-        .input-group-append {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .fas.fa-eye {
-          font-size: 1.2rem;
-        }
-
-        .card-body {
-          padding: 30px;
-        }
-
-        .card-title {
-          font-size: 1.5rem;
-          font-weight: 500;
-        }
-
-        .text-center a {
-          text-decoration: none;
-        }
-
-        .text-center a:hover {
-          text-decoration: underline;
-        }
-
-        .btn {
-          border-radius: 5px;
-        }
-      </style>
-
 
     </main>
 
@@ -365,6 +253,7 @@
           <!-- sigun up protocal -->
           <script src="/js/signup.js"></script>
           <script src="/js/head.js"></script>
+          <script src="/js/auth.js"></script>
 </body>
 
 </html>
