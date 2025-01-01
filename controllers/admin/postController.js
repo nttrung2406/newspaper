@@ -232,7 +232,8 @@ const setPublish = async (req, res) => {
         }
 
         // Update the post status to 'Published'
-        post.status = 'Published';
+        post.status = 'Published'
+        post.publishedDate = new Date();
         await post.save();
 
         // Success response
