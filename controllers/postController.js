@@ -74,7 +74,7 @@ export const deletePost = async (req, res) => {
 
 export const searchPostsByTitle = async (req, res) => {
   const { query, page = 1, searchBy = [] } = req.query;
-  const SCORE_THRESHOLD = 1.5; // Adjust this threshold value as needed
+  const SCORE_THRESHOLD = 1.8; // Adjust this threshold value as needed
   const limit = 5;
   const skip = (page - 1) * limit;
 
