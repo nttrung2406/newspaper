@@ -74,6 +74,7 @@ export const deletePost = async (req, res) => {
 
 export const searchPostsByTitle = async (req, res) => {
   const { query, page = 1, searchBy = [] } = req.query;
+  const SCORE_THRESHOLD = 1.0; // Adjust this threshold value as needed
   const limit = 5;
   const skip = (page - 1) * limit;
 
@@ -82,70 +83,134 @@ export const searchPostsByTitle = async (req, res) => {
   }
 
   try {
-    let searchConditions = [];
+    let searchQuery = {
+      status: "Published",
+      publishedDate: { $lte: new Date() }
+    };
 
-    // If no checkboxes or all checkboxes selected, do full-text search
+    // If no checkboxes or all checkboxes selected, use full-text search
     if (!searchBy.length || 
         (Array.isArray(searchBy) && searchBy.length === 3) || 
         searchBy === 'title,abstract,content') {
-      searchConditions = [
-        { title: { $regex: query, $options: 'i' } },
-        { abstract: { $regex: query, $options: 'i' } },
-        { content: { $regex: query, $options: 'i' } }
-      ];
-    } else {
-      const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
+      
+      searchQuery.$text = { 
+        $search: query,
+        $caseSensitive: false,
+        $diacriticSensitive: false
+      };
 
-      searchFields.forEach(field => {
-        if (['title', 'abstract', 'content'].includes(field)) {
-          searchConditions.push({ [field]: { $regex: query, $options: 'i' } });
+      // First, get all results with scores
+      const allResults = await Post.aggregate([
+        { $match: searchQuery },
+        { 
+          $addFields: {
+            score: { $meta: "textScore" }
+          }
+        },
+        { 
+          $match: {
+            score: { $gte: SCORE_THRESHOLD }  // Apply threshold
+          }
+        },
+        {
+          $sort: {
+            premium: -1,        // Sort by premium first
+            score: -1,         // Then by text score
+            createdAt: -1      // Then by date
+          }
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category'
+          }
+        },
+        {
+          $lookup: {
+            from: 'tags',
+            localField: 'tags',
+            foreignField: '_id',
+            as: 'tags'
+          }
+        },
+        {
+          $addFields: {
+            category: { $arrayElemAt: ["$category", 0] }
+          }
         }
+      ]);
+
+      const totalResults = allResults.length;
+      const paginatedResults = allResults.slice(skip, skip + limit);
+
+      const postsWithImages = paginatedResults.map(post => {
+        const $ = cheerio.load(post.content);
+        const firstImage = $('img').first().attr('src');
+        return {
+          ...post,
+          firstImage: firstImage,
+          categoryName: post.category ? post.category.categoryName : 'Uncategorized',
+          searchScore: post.score
+        };
+      });
+
+      return res.render('searchResult', {
+        query,
+        results: postsWithImages,
+        currentPage: parseInt(page, 10),
+        totalPages: Math.ceil(totalResults / limit),
+        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean),
+        threshold: SCORE_THRESHOLD
+      });
+
+    } else {
+      // For specific field search using regex
+      const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
+      const searchConditions = searchFields.map(field => {
+        if (['title', 'abstract', 'content'].includes(field)) {
+          return { [field]: { $regex: query, $options: 'i' } };
+        }
+      }).filter(Boolean);
+      
+      searchQuery.$or = searchConditions;
+
+      const [totalResults, results] = await Promise.all([
+        Post.countDocuments(searchQuery),
+        Post.find(searchQuery)
+          .populate('category')
+          .populate('tags')
+          .sort({ premium: -1, createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .exec()
+      ]);
+
+      const postsWithImages = results.map(post => {
+        const $ = cheerio.load(post.content);
+        const firstImage = $('img').first().attr('src');
+        return {
+          ...post.toObject(),
+          firstImage: firstImage,
+          categoryName: post.category ? post.category.categoryName : 'Uncategorized'
+        };
+      });
+
+      return res.render('searchResult', {
+        query,
+        results: postsWithImages,
+        currentPage: parseInt(page, 10),
+        totalPages: Math.ceil(totalResults / limit),
+        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean)
       });
     }
-
-    // Combine conditions with OR operator
-    const searchQuery = {
-      $or: searchConditions,
-      status: "Published",  // Only fetch published posts
-      publishedDate: { $lte: new Date() }  // Ensure the published date is before now
-    };
-
-    const totalResults = await Post.countDocuments(searchQuery);
-    const results = await Post.find(searchQuery)
-      .populate('category')
-      .populate('tags')
-      .skip(skip)
-      .limit(limit)
-      .sort({ premium: -1, createdAt: -1 });
-
-    const postsWithImages = results.map(post => {
-      const $ = cheerio.load(post.content);
-      const firstImage = $('img').first().attr('src');
-      return {
-        ...post.toObject(),
-        firstImage: firstImage,
-        categoryName: post.category ? post.category.categoryName : 'Uncategorized'
-      };
-    });
-
-    const totalPages = Math.ceil(totalResults / limit);
-
-    res.render('searchResult', {
-      query,
-      results: postsWithImages,
-      currentPage: parseInt(page, 10),
-      totalPages,
-      searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean)
-    });
 
   } catch (error) {
     console.error('Search error:', error);
     res.status(500).render('errorPage', { error: "An error occurred while searching. Please try again." });
   }
 };
-
-
-
 
 export const getPostById = async (req, res) => {
   try {

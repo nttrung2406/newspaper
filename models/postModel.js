@@ -29,8 +29,22 @@ const postSchema = new mongoose.Schema({
   timestamps: true // Automatically adds createdAt and updatedAt fields
 });
 
-postSchema.index({ title: 'text', abstract: 'text', content: 'text' });
-postSchema.index({ status: 1, publishedDate: 1 });
+postSchema.index(
+  { 
+    title: 'text', 
+    abstract: 'text', 
+    content: 'text' 
+  }, 
+  { 
+    weights: {
+      title: 10,
+      abstract: 5,
+      content: 1
+    },
+    default_language: "none",
+    language_override: "none"
+  }
+);
 
 const Post = mongoose.model('Post', postSchema);
 

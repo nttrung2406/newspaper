@@ -21,7 +21,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "http": "^0.0.1-security",
@@ -31,6 +31,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.7",
-    "package.json": "^2.0.1"
+    "package.json": "^2.0.1",
+    "validator": "^13.12.0"
   }
 }
