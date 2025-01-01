@@ -8,11 +8,49 @@ import {
 import dotenv from "dotenv";
 import UserInformation from "../models/UserInformation.js";
 dotenv.config({ path: "./config/env/development.env" });
-
+import { validationResult } from "express-validator";
 
 const authController = {
   getAuth: (req, res) => {
-    res.render("auth");
+    let errorMessage = req.flash("error")[0] || null;
+    res.render("auth", {
+      errorMessage: errorMessage,
+    });
+  },
+  getEditPassword: async (req, res) => {
+    res.render("edit-password", {
+      oldInput: {
+        password: "",
+        newPassword: "",
+        confirmPassword: "",
+      },
+      errorMessage: null,
+      validationErrors: [],
+    });
+  },
+  postEditPassword: async (req, res) => {
+    const { password, newPassword, confirmPassword } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).render("edit-password", {
+        oldInput: {
+          password: password,
+          newPassword: newPassword,
+          confirmPassword: confirmPassword,
+        },
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array(),
+      });
+    }
+    try {
+      const newHashedPassword = await bcrypt.hash(newPassword, 12);
+      req.user.password = newHashedPassword;
+      await req.user.save();
+      req.flash("success", "Password updated successfully!");
+      res.status(200).redirect("/auth/profile");
+    } catch (err) {
+      res.status(500).json({ message: "Internal server error." });
+    }
   },
   postSignup: async (req, res) => {
     const { username, email, password, role } = req.body;
@@ -60,25 +98,29 @@ const authController = {
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
-      //console.log(user)
-      if (!user) { return res.redirect("/"); }
-      if ((await !bcrypt.compare(password, user.password))) {
-        return res.status(400).send("Invalid credentials");
+
+      if (!user) {
+        return res.redirect("/");
       }
 
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        req.flash("error", "Incorrect password! Please try again.");
+        return res.status(401).redirect("/auth");
+      }
       // Save user data to session (or JWT token)
       req.session.isLoggedIn = true;
       req.session.user = user;
 
       return req.session.save((err) => {
         console.log(err);
-        if (req.session.user.role === 'admin') {
-          res.redirect('/admin');
+        if (req.session.user.role === "admin") {
+          res.redirect("/admin");
+        } else if (req.session.user.role === "editor") {
+          res.redirect("/editor");
+        } else {
+          res.redirect("/index");
         }
-        else if (req.session.user.role === 'editor') {
-          res.redirect('/editor');
-        }
-        else { res.redirect("/index"); }
       });
     } catch (error) {
       console.error("Error logging in:", error);
@@ -147,11 +189,15 @@ const authController = {
       return res.redirect("/auth");
     }
 
+    let successMessage = req.flash("success")[0] || null;
+
     const user = req.session.user;
 
-    const userInformation = await UserInformation.findOne({ accountID: user._id })
+    const userInformation = await UserInformation.findOne({
+      accountID: user._id,
+    });
 
-    if (user.role === 'membership') {
+    if (user.role === "membership") {
       // Calculate remaining time in the controller
       const now = new Date();
       const endDate = new Date(user.membership.endDate);
@@ -164,7 +210,9 @@ const authController = {
         isExpired = false;
         const diffInMs = endDate - now;
         const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
         remainingTime = `${days} ngày, ${hours} giờ, ${minutes} phút còn lại`;
       } else {
@@ -176,12 +224,21 @@ const authController = {
         isExpired,
         remainingTime,
         formattedStartDate: startDate.toLocaleString("vi-VN"),
-        formattedEndDate: endDate.toLocaleString("vi-VN")
+        formattedEndDate: endDate.toLocaleString("vi-VN"),
       };
-      return res.render("profile", { user: user, userInfo: userInformation, extraInfo: extraInfo });
+      return res.render("profile", {
+        user: user,
+        userInfo: userInformation,
+        extraInfo: extraInfo,
+        successMessage: successMessage,
+      });
     }
 
-    res.render("profile", { user: user, userInfo: userInformation });
+    res.render("profile", {
+      user: user,
+      userInfo: userInformation,
+      successMessage: successMessage,
+    });
   },
   postLogout: (req, res) => {
     req.session.destroy((err) => {
@@ -200,6 +257,54 @@ const authController = {
   getResetPassword: (req, res) => {
     const { token } = req.query;
     res.render("reset_password", { token });
+  },
+  postUpdateProfile: async (req, res) => {
+    const userId = req.session.user._id; // Get user ID from session
+    const { username, email, fullname, dateOfBirth, penName } = req.body; // Extract updated fields from request body
+
+    try {
+      // Input validation
+      if (!username || !email || !fullname || !dateOfBirth) {
+        return res.status(400).json({ message: "All fields are required." });
+      }
+
+      // Check if email is being updated and if it's already in use
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== userId.toString()) {
+        return res
+          .status(409)
+          .json({ message: "Email already in use by another account." });
+      }
+
+      // Update User Information
+      const user = await User.findById(userId);
+      user.username = username;
+      user.email = email;
+      await user.save();
+
+      // Update UserInformation if applicable
+      const userInfo = await UserInformation.findOne({ accountID: userId });
+      if (userInfo) {
+        userInfo.fullname = fullname;
+        userInfo.dateOfBirth = new Date(dateOfBirth);
+        if (penName) {
+          userInfo.penName = penName; // Only update penName if the user is a writer
+        }
+        await userInfo.save();
+      }
+
+      // Update session with the new data
+      req.session.user = user;
+
+      // Store success message in the session
+      req.session.successMessage = "Profile updated successfully!";
+
+      // Redirect back to profile page
+      res.redirect("/auth/profile");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
   },
 };
 

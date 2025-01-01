@@ -118,6 +118,7 @@
             </div>
           </div>
           <button
+            id="submit-button"
             type="submit"
             class="btn btn-secondary"
             name="status"
@@ -137,6 +138,16 @@
     <%- include('../partials/footer.ejs') %>
 
     <script src="/js/summernote-setup.js"></script>
+    <script>
+      document
+        .getElementById("submit-button")
+        .addEventListener("click", function (event) {
+          if ($("#summernote").summernote("isEmpty")) {
+            event.preventDefault();
+            $("#summernote").summernote("focus");
+          }
+        });
+    </script>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>

@@ -7,9 +7,56 @@ import {
 } from "../utils/postHelpers.js";
 import Tag from "../models/Tag.js";
 import User from "../models/User.js";
+import { get } from "http";
 
 const PREVIEW_POST = 3;
 const POSTS_PER_PAGE = 3;
+
+const getFilteredPosts = async (req, res, next, status = null) => {
+  const page = Math.max(1, +req.query.page || 1);
+
+  const errorMessage = req.flash("error")[0] || null;
+  const successMessage = req.flash("success")[0] || null;
+
+  try {
+    const filter = { writer: req.user._id };
+    if (status) {
+      filter.status = status; // Add status to the filter if provided
+    }
+
+    const totalPosts = await Post.countDocuments(filter);
+
+    const lastPage = totalPosts > 0 ? Math.ceil(totalPosts / POSTS_PER_PAGE) : 1;
+
+    if (page > lastPage) {
+      return res.status(404).redirect(`/writer/posts?page=${lastPage}`);
+    }
+
+    const posts = await Post.find(filter)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * POSTS_PER_PAGE)
+      .limit(POSTS_PER_PAGE);
+
+    res.render("writer/writer-posts", {
+      pageTitle: "Posts",
+      path: "/writer/posts",
+      status: status,
+      posts: posts,
+      errorMessage: errorMessage,
+      successMessage: successMessage,
+      currentPage: page,
+      hasNextPage: POSTS_PER_PAGE * page < totalPosts,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: lastPage,
+    });
+  } catch (err) {
+    const error = new Error(err.message || "An error occurred while fetching posts");
+    error.statusCode = 500;
+    next(error);
+  }
+}
 
 const writerController = {
   getWriterPage: async (req, res, next) => {
@@ -29,44 +76,16 @@ const writerController = {
     }
   },
   getPosts: async (req, res, next) => {
-    const page = Math.max(1, +req.query.page || 1);
+    await getFilteredPosts(req, res, next);
+  },
+  getPostsByStatus: async (req, res, next) => {
+    const status = req.params.status;
 
-    let errorMessage = req.flash("error")[0] || null;
-    let successMessage = req.flash("success")[0] || null;
-
-    try {
-      const totalPosts = await Post.countDocuments({ writer: req.user._id });
-
-      const lastPage =
-        totalPosts > 0 ? Math.ceil(totalPosts / POSTS_PER_PAGE) : 1;
-
-      if (page > lastPage) {
-        return res.status(404).redirect(`/writer/posts?page=${lastPage}`);
-      }
-
-      const posts = await Post.find({ writer: req.user._id })
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * POSTS_PER_PAGE)
-        .limit(POSTS_PER_PAGE);
-
-      res.render("writer/writer-posts", {
-        pageTitle: "Posts",
-        path: "/writer/posts",
-        posts: posts,
-        errorMessage: errorMessage,
-        successMessage: successMessage,
-        currentPage: page,
-        hasNextPage: POSTS_PER_PAGE * page < totalPosts,
-        hasPreviousPage: page > 1,
-        nextPage: page + 1,
-        previousPage: page - 1,
-        lastPage: lastPage,
-      });
-    } catch (err) {
-      const error = new Error(err);
-      error.statusCode = 500;
-      next(error);
+    if (status === "all") {
+      return res.redirect("/writer/posts");
     }
+    
+    await getFilteredPosts(req, res, next, status);
   },
   getAddPost: async (req, res, next) => {
     try {

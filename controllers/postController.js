@@ -1,4 +1,5 @@
 import Post from '../models/postModel.js';
+import UserInformation from '../models/UserInformation.js';
 import Membership from '../models/Membership.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
@@ -28,6 +29,8 @@ export const getPosts = async (req, res) => {
   try {
       const posts = await Post.find().populate('category');
     //   res.status(200).json(posts);
+    console.log("run")
+    console.log(posts);
       res.render('index', { posts });
   } catch (error) {
       res.status(500).json({ error: error.message });
@@ -71,6 +74,7 @@ export const deletePost = async (req, res) => {
 
 export const searchPostsByTitle = async (req, res) => {
   const { query, page = 1, searchBy = [] } = req.query;
+  const SCORE_THRESHOLD = 1.5; // Adjust this threshold value as needed
   const limit = 5;
   const skip = (page - 1) * limit;
 
@@ -79,63 +83,128 @@ export const searchPostsByTitle = async (req, res) => {
   }
 
   try {
-    // Build search conditions based on selected checkboxes
-    let searchConditions = [];
-    
-    // If no checkboxes or all checkboxes selected, do full-text search
+    let searchQuery = {
+      status: "Published",
+      publishedDate: { $lte: new Date() }
+    };
+
+    // If no checkboxes or all checkboxes selected, use full-text search
     if (!searchBy.length || 
         (Array.isArray(searchBy) && searchBy.length === 3) || 
         searchBy === 'title,abstract,content') {
-      searchConditions = [
-        { title: { $regex: query, $options: 'i' } },
-        { abstract: { $regex: query, $options: 'i' } },
-        { content: { $regex: query, $options: 'i' } }
-      ];
-    } else {
-      // Convert to array if single value
-      const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
       
-      // Add conditions for each selected field
-      searchFields.forEach(field => {
-        if (['title', 'abstract', 'content'].includes(field)) {
-          searchConditions.push({ [field]: { $regex: query, $options: 'i' } });
+      searchQuery.$text = { 
+        $search: query,
+        $caseSensitive: false,
+        $diacriticSensitive: false
+      };
+
+      // First, get all results with scores
+      const allResults = await Post.aggregate([
+        { $match: searchQuery },
+        { 
+          $addFields: {
+            score: { $meta: "textScore" }
+          }
+        },
+        { 
+          $match: {
+            score: { $gte: SCORE_THRESHOLD }  // Apply threshold
+          }
+        },
+        {
+          $sort: {
+            premium: -1,        // Sort by premium first
+            score: -1,         // Then by text score
+            createdAt: -1      // Then by date
+          }
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category'
+          }
+        },
+        {
+          $lookup: {
+            from: 'tags',
+            localField: 'tags',
+            foreignField: '_id',
+            as: 'tags'
+          }
+        },
+        {
+          $addFields: {
+            category: { $arrayElemAt: ["$category", 0] }
+          }
         }
+      ]);
+
+      const totalResults = allResults.length;
+      const paginatedResults = allResults.slice(skip, skip + limit);
+
+      const postsWithImages = paginatedResults.map(post => {
+        const $ = cheerio.load(post.content);
+        const firstImage = $('img').first().attr('src');
+        return {
+          ...post,
+          firstImage: firstImage,
+          categoryName: post.category ? post.category.categoryName : 'Uncategorized',
+          searchScore: post.score
+        };
+      });
+
+      return res.render('searchResult', {
+        query,
+        results: postsWithImages,
+        currentPage: parseInt(page, 10),
+        totalPages: Math.ceil(totalResults / limit),
+        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean),
+        threshold: SCORE_THRESHOLD
+      });
+
+    } else {
+      // For specific field search using regex
+      const searchFields = Array.isArray(searchBy) ? searchBy : searchBy.split(',');
+      const searchConditions = searchFields.map(field => {
+        if (['title', 'abstract', 'content'].includes(field)) {
+          return { [field]: { $regex: query, $options: 'i' } };
+        }
+      }).filter(Boolean);
+      
+      searchQuery.$or = searchConditions;
+
+      const [totalResults, results] = await Promise.all([
+        Post.countDocuments(searchQuery),
+        Post.find(searchQuery)
+          .populate('category')
+          .populate('tags')
+          .sort({ premium: -1, createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .exec()
+      ]);
+
+      const postsWithImages = results.map(post => {
+        const $ = cheerio.load(post.content);
+        const firstImage = $('img').first().attr('src');
+        return {
+          ...post.toObject(),
+          firstImage: firstImage,
+          categoryName: post.category ? post.category.categoryName : 'Uncategorized'
+        };
+      });
+
+      return res.render('searchResult', {
+        query,
+        results: postsWithImages,
+        currentPage: parseInt(page, 10),
+        totalPages: Math.ceil(totalResults / limit),
+        searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean)
       });
     }
-
-    // Combine conditions with OR operator
-    const searchQuery = { $or: searchConditions };
-
-    // Get total count for pagination
-    const totalResults = await Post.countDocuments(searchQuery);
-
-    // Execute search with pagination
-    const results = await Post.find(searchQuery)
-      .populate('category')
-      .populate('tags')
-      .skip(skip)
-      .limit(limit);
-
-    // Process posts to include first image and category name
-    const postsWithImages = results.map(post => {
-      const $ = cheerio.load(post.content);
-      const firstImage = $('img').first().attr('src');
-      return {
-        ...post.toObject(),
-        firstImage: firstImage,
-        categoryName: post.category ? post.category.categoryName : 'Uncategorized'
-      };
-    });
-
-    const totalPages = Math.ceil(totalResults / limit);
-
-    res.render('searchResult', {
-      query,
-      results: postsWithImages,
-      currentPage: parseInt(page, 10),
-      totalPages,
-      searchBy: Array.isArray(searchBy) ? searchBy : [searchBy].filter(Boolean) // Ensure searchBy is always an array
-    });
 
   } catch (error) {
     console.error('Search error:', error);
@@ -143,50 +212,40 @@ export const searchPostsByTitle = async (req, res) => {
   }
 };
 
-
-
 export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Fetch the post and populate category, writer, and tags
-    const post = await Post.findById(id)
-      .populate("category")  // Populate category
-      .populate("writer")    // Populate writer
-      .populate("tags");     // Populate tags
+    const user = req.session.user;
+    const post = await Post.findOne({
+      _id: id,
+      status: "Published",  // Ensure the post is published
+      publishedDate: { $lte: new Date() }  // Ensure the published date is before now
+    })
+      .populate("category")
+      .populate("writer")
+      .populate("tags");
+    
+    const writerId = post.writer._id;
+    const userInfo = await UserInformation.findOne({ accountID: writerId });
+    const penName = userInfo.penName;
 
     if (!post) {
       console.log(`Post with id ${id} not found`);
       return res.status(404).render("errorPage", { error: `Post with id ${id} not found` });
     }
 
-    post.viewCount += 1; // Increment the view count
+    post.viewCount += 1;
     await Post.findByIdAndUpdate(id, { $inc: { viewCount: 1 } });
 
-    // Use cheerio to extract the first image from the post's content
-    let imageUrl = null;
-    if (post.content) {
-      const $ = cheerio.load(post.content); // Load the post's content as HTML
-      const firstImg = $("img").first().attr("src"); // Extract the `src` attribute of the first <img>
-      imageUrl = firstImg || null; // Assign the URL or leave null if no <img> tag exists
-    }
-
-    // Add the extracted image URL to the post object
-    const processedPost = {
-      ...post._doc, // Spread the existing post fields
-      imageUrl,     // Include the extracted image URL
-    };
-
-    // Fetch random posts from the same category
     const randomPosts = await getRandomPostsByCategory(post.category._id, post._id);
 
-    // Pass full details including category, writer, tags, and random posts to the view
     res.render("details", { 
-      post: processedPost, // Use the processed post with the image URL
+      post: post,
       category: post.category,
-      user: post.writer,
-      tags: post.tags,      // Include tags in the view
+      penName: penName,
+      tags: post.tags,
       randomPosts,
+      currentUser: user,
     });
   } catch (error) {
     res.status(500).render("errorPage", { error: error.message });
@@ -194,79 +253,91 @@ export const getPostById = async (req, res) => {
 };
 
 
-  const getPostByCategory = async (req, res) => {
-    try {
-        const { category, page } = req.query;
-        const currentPage = parseInt(page) || 1;
-        const limit = 10;
-        const skip = (currentPage - 1) * limit;
+const getPostByCategory = async (req, res) => {
+  try {
+    const { category, page } = req.query;
+    const currentPage = parseInt(page) || 1;
+    const limit = 6;
+    const skip = (currentPage - 1) * limit;
 
-        console.log("category:", category);
-        console.log("currentPage:", currentPage);
+    const posts = await Post.find({
+      category,
+      status: "Published",  // Only fetch published posts
+      publishedDate: { $lte: new Date() }  // Ensure the published date is before now
+    })
+      .sort({premium: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("category", "categoryName")
+      .populate("tags", "tagName");
 
-        // Query bài viết theo category
-        const posts = await Post.find({ category })
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
+    const processedPosts = posts.map((post) => {
+      let imageUrl = null;
 
-        // Process posts to extract the first image using Cheerio
-        const processedPosts = posts.map((post) => {
-            let imageUrl = null;
+      if (post.content) {
+        const $ = cheerio.load(post.content);
+        const firstImg = $("img").first().attr("src");
+        imageUrl = firstImg || null;
+      }
+      console.log(post.tags.map(tag => tag.tagName));
+      const tagNames = post.tags && post.tags.length > 0
+        ? post.tags.map(tag => tag.tagName).join(', ')
+        : 'Không có thẻ';
+      return {
+        ...post._doc,
+        imageUrl,
+        categoryId: post.category._id,  // Include category ID
+        categoryName: post.category.categoryName,  // Include category name
+        tagNames   // Include tag names
+      };
+    });
 
-            if (post.content) {
-                const $ = cheerio.load(post.content); // Load the content as HTML
-                const firstImg = $("img").first().attr("src"); // Extract the `src` of the first <img>
-                imageUrl = firstImg || null; // Assign the extracted URL or null if no image is found
-            }
+    const totalPosts = await Post.countDocuments({ category, status: "Published", publishedDate: { $lte: new Date() } });
 
-            return {
-                ...post._doc, // Include all other properties of the post
-                imageUrl, // Add the extracted image URL (or null if none found)
-            };
-        });
+    res.json({
+      posts: processedPosts,
+      totalPosts,
+      currentPage,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch posts' });
+  }
+};
 
-        const totalPosts = await Post.countDocuments({ category });
-
-        res.json({
-            posts: processedPosts, // Return the posts with the extracted image URLs
-            totalPosts,
-            currentPage,
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch posts' });
-    }
-}
 
 export default getPostByCategory;
 
 export const getRandomPostsByCategory = async (categoryId, postId) => {
-    try {
-      // Fetch random posts excluding the current post
-      const posts = await Post.aggregate([
-        { $match: { category: categoryId, _id: { $ne: postId } } }, // Exclude the current post
-        { $sample: { size: 5 } }, // Fetch 5 random posts
-      ]);
-  
-      // Process each post to extract the first image using cheerio
-      const processedPosts = posts.map((post) => {
-        let imageUrl = null;
-  
-        if (post.content) {
-          const $ = cheerio.load(post.content); // Load the content as HTML
-          const firstImg = $("img").first().attr("src"); // Extract the `src` of the first <img>
-          imageUrl = firstImg || null; // Assign the extracted URL or null
-        }
-  
-        return {
-          ...post, // Include all other fields of the post
-          imageUrl, // Add the extracted image URL
-        };
-      });
-  
-      return processedPosts;
-    } catch (error) {
-      console.error("Error fetching random posts by category:", error.message);
-      throw error;
-    }
-  };
+  try {
+    const posts = await Post.aggregate([
+      { $match: { 
+        category: categoryId, 
+        _id: { $ne: postId },
+        status: "Published",  // Only fetch published posts
+        publishedDate: { $lte: new Date() }  // Ensure the published date is before now
+      } },
+      { $sample: { size: 5 } },
+    ]);
+
+    const processedPosts = posts.map((post) => {
+      let imageUrl = null;
+
+      if (post.content) {
+        const $ = cheerio.load(post.content);
+        const firstImg = $("img").first().attr("src");
+        imageUrl = firstImg || null;
+      }
+
+      return {
+        ...post,
+        imageUrl,
+      };
+    });
+
+    return processedPosts;
+  } catch (error) {
+    console.error("Error fetching random posts by category:", error.message);
+    throw error;
+  }
+};
+

@@ -47,17 +47,31 @@ export const authorizeRole = (allowedRoles) => {
   };
 };
 
-export const authorizeMembership = (allowedMemberships) => {
-  return (req, res, next) => {
+import Post from '../models/postModel.js'; // Import model bài viết
+
+export const authorizeMembership = () => {
+  return async (req, res, next) => {
+    //Check if posts is premium
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post.premium) {
+      return next();
+    };
+
     // Check if user is logged in
     if (!req.session || !req.session.user) {
       req.flash('login_error', 'You must be logged in to access this page.');
       return res.redirect('/auth'); 
     }
+    // Check if user is admin
+    if (req.session.user.role === 'admin' || req.session.user.role === 'editor') {
+      return next();
+    };
+
+    // Check if user has premium access
     const membership = req.session.user.membership;
-    console.log(membership);
     if (membership.type==='basic') {
-      req.flash('membership_error', 'Access Denied: Youre accessing the premium only content.');
+      req.flash('membership_error', 'Access Denied: Youre accessing the premium-only content.');
       return res.redirect('/categori'); 
     }
     else if (membership.endDate < Date.now()) {

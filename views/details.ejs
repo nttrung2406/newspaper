@@ -22,14 +22,12 @@
     <link rel="stylesheet" href="/css/slick.css" />
     <link rel="stylesheet" href="/css/nice-select.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
-    />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    
+    <!-- Add html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-      /* Add custom CSS for image scaling */
       .post-content img {
         width: 100%;
         height: auto;
@@ -38,12 +36,10 @@
         display: block;
       }
 
-      /* Optional: Add styles for main content area */
       main {
         padding: 20px;
       }
 
-      /* Additional styling for cards */
       .card {
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -53,11 +49,51 @@
       .card-body {
         padding: 20px;
       }
+
+      /* PDF download button styles */
+      .download-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .download-btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .download-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      
+      @media print {
+        .download-btn {
+          display: none;
+        }
+      }
     </style>
   </head>
 
   <body>
     <%- include('./partials/header.ejs') %>
+
+    <!-- Add download button -->
+    <button class="download-btn" id="downloadPdf">
+      <i class="fas fa-download"></i> Download PDF
+    </button>
 
     <main>
       <section class="post-content">
@@ -82,31 +118,20 @@
                     <%- post.title %>
                   </h2>
                   <div class="d-flex justify-content-between text-muted mb-3">
-                    <small
-                      ><i class="far fa-calendar-alt me-1"></i> <%- new
-                      Date(post.createdAt).toLocaleDateString() %></small
-                    >
-                    <small
-                      ><i class="far fa-user me-1"></i> <%- user.username
-                      %></small
-                    >
+                    <small><i class="far fa-calendar-alt me-1"></i> <%- new Date(post.createdAt).toLocaleDateString() %></small>
+                    <small><i class="far fa-user me-1"></i> <%= penName %></small>
                   </div>
                   <p class="card-text"><%- post.content %></p>
-                  <% if (post.tags?.length > 0) { %>
-                  <p class="text-muted">
-                    Tags: <% post.tags.forEach(tag => { %>
-                    <a
-                      href="/tags/<%= tag._id %>"
-                      class="badge bg-warning text-white"
-                      ><%- tag.tagName %></a
-                    >
-                    <% }); %>
-                  </p>
-                  <% } %>
-
-                  <!-- Add your image here -->
-                  <img src="<%- post.imageUrl %>" alt="Post Image" />
                 </div>
+                <% if (post.tags?.length > 0) { %>
+                  <div class="tags-container ml-3">
+                    <p class="text-muted">
+                      Tags: <% post.tags.forEach(tag => { %>
+                      <a href="/tags/<%= tag._id %>" class="badge bg-warning text-white"><%- tag.tagName %></a>
+                      <% }); %>
+                    </p>
+                  </div>
+                  <% } %>
               </div>
 
               <!-- Comments Section -->
@@ -133,29 +158,22 @@
                 </form>
               </section>
             </div>
-            <!-- Các bài viết ngẫu nhiên -->
+            <!-- Related Posts -->
             <div class="col-lg-4">
               <aside>
                 <h4 class="mb-1">Related Posts</h4>
-                <% if (randomPosts && randomPosts.length> 0) { %>
+                <% if (randomPosts && randomPosts.length > 0) { %>
                 <div class="row">
-                  <% randomPosts.forEach(post=> { %>
+                  <% randomPosts.forEach(post => { %>
                   <div class="col-lg-12">
                     <div class="single-what-news">
                       <div class="what-img">
-                        <img
-                          src="<%= post.imageUrl || '/img/news/whatNews1.jpg' %>"
-                          alt="<%- post.title %>"
-                        />
+                        <img src="<%= post.imageUrl || '/img/post/default-image.jpg' %>" alt="<%- post.title %>" />
                       </div>
                       <div class="what-cap">
-                        <span class="color1">
-                          <%- category.categoryName || 'Uncategorized' %>
-                        </span>
+                        <span class="color1"><%- category.categoryName || 'Uncategorized' %></span>
                         <h4>
-                          <a href="/posts/<%- post._id %>">
-                            <%- post.title %>
-                          </a>
+                          <a href="/posts/<%- post._id %>"><%- post.title %></a>
                         </h4>
                       </div>
                     </div>
@@ -198,11 +216,9 @@
     <script src="/js/jquery.ajaxchimp.min.js"></script>
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/toastify-js"
-    ></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+    <!-- Comments handling script -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const postId = document.getElementById("postId").value;
@@ -218,21 +234,17 @@
             commentsList.innerHTML = comments
               .map(
                 (comment) => `
-                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                            <div>
-                                <strong>${comment.userId.username}</strong>
-                                <p class="mb-1">${comment.content}</p>
-                                <small class="text-muted">${new Date(
-                                  comment.createdAt
-                                ).toLocaleString()}</small>
-                            </div>
-                            ${
-                              comment.isOwner // Chỉ hiển thị nút xóa nếu là người dùng hiện tại
-                                ? `<button class="btn btn-danger btn-sm delete-comment" data-id="${comment._id}">Delete</button>`
-                                : ""
-                            }
-                        </div>
-                    `
+                  <div class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>${comment.userId.username}</strong>
+                      <p class="mb-1">${comment.content}</p>
+                      <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                    </div>
+                    ${comment.isOwner ? 
+                      `<button class="btn btn-danger btn-sm delete-comment" data-id="${comment._id}">Delete</button>` 
+                      : ""}
+                  </div>
+                `
               )
               .join("");
           } catch (error) {
@@ -258,9 +270,8 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ postId, content }),
             });
-            console.log(response);
+
             if (response.status === 401) {
-              // Người dùng chưa đăng nhập
               Toastify({
                 text: "You must be logged in to add a comment.",
                 duration: 1000,
@@ -272,9 +283,10 @@
               setTimeout(() => {
                 window.location.href = "/auth";
               }, 1000);
+              return;
             }
+
             if (response.ok) {
-              // document.getElementById('author').value = '';
               document.getElementById("content").value = "";
               commentForm.classList.remove("was-validated");
               loadComments();
@@ -290,7 +302,6 @@
             }
           } catch (error) {
             console.error("Error adding comment:", error);
-
             Toastify({
               text: "Failed to add comment. Please try again!",
               duration: 3000,
@@ -300,7 +311,6 @@
               stopOnFocus: true,
             }).showToast();
           } finally {
-            // Khôi phục nút submit
             submitButton.innerHTML = "Submit";
             submitButton.disabled = false;
           }
@@ -328,8 +338,7 @@
             }
           } catch (error) {
             Toastify({
-              text:
-                error.message || "Failed to delete comment. Please try again!",
+              text: error.message || "Failed to delete comment. Please try again!",
               duration: 3000,
               gravity: "bottom",
               position: "left",
@@ -345,7 +354,60 @@
             handleDelete(commentId);
           }
         });
+
         loadComments();
+      });
+
+      // PDF Generation Script
+      document.getElementById('downloadPdf').addEventListener('click', function() {
+        // Show loading state
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+        this.disabled = true;
+
+        // Create a clone of the main content
+        const mainContent = document.querySelector('main').cloneNode(true);
+        
+        // Remove related posts section from the clone
+        const relatedPosts = mainContent.querySelector('.col-lg-4');
+        if (relatedPosts) {
+            relatedPosts.remove();
+        }
+
+        // Adjust the main content column to full width
+        const mainColumn = mainContent.querySelector('.col-lg-8');
+        if (mainColumn) {
+            mainColumn.classList.remove('col-lg-8');
+            mainColumn.classList.add('col-lg-12');
+        }
+        
+        // Configure PDF options
+        const opt = {
+            margin: [15, 15],
+            filename: `article-${new Date().toISOString().slice(0,10)}.pdf`,
+            image: { 
+                type: 'jpeg', 
+                quality: 0.98 
+            },
+            html2canvas: { 
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                letterRendering: true
+            },
+            jsPDF: { 
+            unit: 'pt',
+            format: 'a4',
+            orientation: 'portrait'
+            }
+        };
+
+        // Generate PDF
+        html2pdf().from(mainContent).set(opt).save().then(() => {
+            // Reset the download button
+            this.innerHTML = '<i class="fas fa-download"></i> Download PDF';
+            this.disabled = false;
+        });
+
       });
     </script>
   </body>

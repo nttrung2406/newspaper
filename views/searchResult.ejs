@@ -16,6 +16,34 @@
         background-color: #007bff;
         color: white;
       }
+      .premium-badge {
+      background-color: rgb(42, 41, 28);
+      color: rgb(251, 251, 0) !important;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      animation: blinkColor 1s infinite;
+      /* Hiệu ứng nhấp nháy giữa 2 màu */
+    }
+
+    @keyframes blinkColor {
+      0% {
+        background-color: #480d00;
+        /* Màu đầu tiên */
+      }
+
+      50% {
+        background-color: #008819;
+        /* Màu thứ hai */
+      }
+
+      100% {
+        background-color: #480d00;
+        /* Quay lại màu đầu tiên */
+      }
+    }
       .pagination .page-item.active .page-link {
         background-color: #007bff;
         border-color: #007bff;
@@ -30,7 +58,7 @@
     <%- include('./partials/header.ejs') %>
     <main>
       <div class="container mt-4">
-        <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
+        <p class="text-center h2 my-4">Search Results for "<%- query %>"</p>
         <div class="row">
           <% if (results.length > 0) { %>
             <% results.forEach(post => { %>
@@ -39,16 +67,21 @@
                   <div class="row g-0">
                     <!-- Post Image -->
                     <div class="col-md-3">
-                      <img src="<%- post.firstImage || '/img/default-image.jpg' %>" 
+                      <img src="<%- post.firstImage || '/img/post/default-image.jpg' %>" 
                            class="img-fluid rounded-start" 
                            alt="<%- post.title %>" 
-                           style="height: 200px; object-fit: cover;">
+                           style="height: 100%; object-fit: cover;">
                     </div>
                     <!-- Post Details -->
                     <div class="col-md-9">
                       <div class="card-body">
+                        <!-- Premium Badge -->
+                        <% if (post.premium) { %>
+                          <span class="premium-badge">Premium</span>
+                        <% } %>
+                        
                         <!-- Post Title -->
-                        <h5 class="card-title">
+                        <h5 class="card-title mt-2">
                           <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
                             <%- post.title %>
                           </a>
@@ -87,7 +120,7 @@
             <% }); %>
 
             <!-- Pagination -->
-            <div class="col-12 mt-4 d-flex justify-content-center">
+            <div class="col-12 my-4 d-flex justify-content-center">
               <nav>
                 <ul class="pagination">
                   <% for (let i = 1; i <= totalPages; i++) { %>
@@ -100,10 +133,10 @@
             </div>
 
           <% } else { %>
-            <div class="col-12">
+            <div class="col-12 mb-4">
               <div class="card text-center shadow-sm rounded">
                 <div class="card-body">
-                  <p class="card-text mb-0 text-muted">No results found.</p>
+                  <p class="card-text mb-0 text-muted">No results found</p>
                 </div>
               </div>
             </div>
@@ -114,6 +147,7 @@
     <%- include('./partials/footer.ejs') %>
 
     <!-- JS here -->
+    <script src="/js/popper.min.js"></script>
     <script src="/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>
