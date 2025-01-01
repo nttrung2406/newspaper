@@ -30,125 +30,7 @@
         <%- include('partials/_header') %>
 
         <main class="content">
-          <h1>Draft Articles</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% console.log("drafts: ", drafts) %>
-              <% drafts.forEach(draft => { %>                
-              <tr>              
-                <td><%= draft.title %></td>
-                <td><%= draft.writer ? draft.writer.username : "Unknown Writer" %></td>
-                <td>
-                  <!-- Check Button -->
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-<%= draft._id %>">
-                    Check
-                  </button>
-                  
-                  <!-- Modal -->
-                  <div class="modal fade" id="modal-<%= draft._id %>" tabindex="-1" aria-labelledby="modalLabel-<%= draft._id %>" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="modalLabel-<%= draft._id %>">Post Details</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <!-- Display post content -->
-                          <div class="modal_show">
-                            <p><b>Category:</b> <%= draft.category ? draft.category.categoryName : "No Category" %></p>
-                            
-                            <!-- Summernote editor for draft content -->s
-                            <div id="content-<%= draft._id %>" class="summernote">
-                              <%- draft.content %> <!-- Render content as raw HTML -->
-                            </div>
-                          </div>
-                          
-                                      
-                          <!-- Approval and Rejection Forms -->
-                          <div class="mt-4">
-                            <!-- Approval Form -->
-                            <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="row g-2 align-items-center mb-3">
-                              <div class="col-md-3">
-                                <label for="category-<%= draft._id %>" class="form-label" style="color: white;">Category:</label>
-                                <select name="category" id="category-<%= draft._id %>" class="form-select" required>
-                                  <% categories.forEach(category => { %>
-                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
-                                  <% }) %>
-                                </select>
-                              </div>
-                              
-                              <div class="col-md-4">
-                                <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
-                                <select name="tags" id="tags-<%= draft._id %>" class="form-select" multiple required>
-                                  <% tags.forEach(tag => { %>
-                                    <option value="<%= tag._id %>"><%= tag.tagName %></option>
-                                  <% }) %>
-                                </select>
-                                
-                              </div>
-                              
-                              <div class="col-md-3">
-                                <label for="scheduledPublishTime-<%= draft._id %>" class="form-label" style="color: white;">Publish Time:</label>
-                                <input type="datetime-local" name="scheduledPublishTime" id="scheduledPublishTime-<%= draft._id %>" class="form-control" required style="background-color: white; color: black;">
-                              </div>
-                              
-                              <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-success w-100">Approve</button>
-                              </div>
-                            </form>
-                        
-                            <!-- Rejection Form -->
-                            <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
-                              <div class="col-md-10">
-                                <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required>
-                              </div>
-                              <div class="col-md-2">
-                                <button type="submit" class="btn btn-danger w-100">Reject</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                        
-                        
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <% }) %>
-            </tbody>                       
-          </table>
-        </main>
-
-        <div class="content-wrapper">
-
-          <div class="card text-left">
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col-12">
-                  <ul class="nav nav-pills justify-content-start">
-                    <li class="nav-item">
-                      <a href="?role=all" class="nav-link px-4 py-2 active">All</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="?role=admin" class="nav-link px-4 py-2 ">Administrator</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="?role=writer" class="nav-link px-4 py-2 ">Writer</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="?role=editor" class="nav-link px-4 py-2 ">Editor</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-    
+          <div class="content-wrapper">
               <div class="row">
                 <div class="col col-12 col-md-6 grid-margin stretch-card">
                   <div class="table-sponsive">
@@ -162,8 +44,87 @@
                         </tr>
                       </thead>
                       <tbody>
-    
-                      </tbody>
+                          <% drafts.forEach(draft => { %>                
+                          <tr>              
+                            <td><%= draft.title %></td>
+                            <td><%= draft.writer ? draft.writer.username : "Unknown Writer" %></td>
+                            <td><%= draft.status %></td>
+                            <td>
+                              <!-- Check Button -->
+                              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-<%= draft._id %>">
+                                Check
+                              </button>
+                              
+                              <!-- Modal -->
+                              <div class="modal fade" id="modal-<%= draft._id %>" tabindex="-1" aria-labelledby="modalLabel-<%= draft._id %>" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="modalLabel-<%= draft._id %>">Post Details</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <!-- Display post content -->
+                                      <div class="modal_show">
+                                        <p><b>Category:</b> <%= draft.category ? draft.category.categoryName : "No Category" %></p>
+                                        
+                                        <!-- Summernote editor for draft content -->s
+                                        <div id="content-<%= draft._id %>" class="summernote">
+                                          <%- draft.content %> <!-- Render content as raw HTML -->
+                                        </div>
+                                      </div>
+                                      
+                                                  
+                                      <!-- Approval and Rejection Forms -->
+                                      <div class="mt-4">
+                                        <!-- Approval Form -->
+                                        <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="row g-2 align-items-center mb-3">
+                                          <div class="col-md-3">
+                                            <label for="category-<%= draft._id %>" class="form-label" style="color: white;">Category:</label>
+                                            <select name="category" id="category-<%= draft._id %>" class="form-select" required>
+                                              <% categories.forEach(category => { %>
+                                                <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                              <% }) %>
+                                            </select>
+                                          </div>
+                                          
+                                          <div class="col-md-4">
+                                            <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
+                                            <select name="tags" id="tags-<%= draft._id %>" class="form-select" required>
+                                              <% tags.forEach(tag => { %>
+                                                <option value="<%= tag._id %>"><%= tag.tagName %></option>
+                                              <% }) %>
+                                            </select>
+                                            
+                                          </div>
+                                          
+                                          <div class="col-md-3">
+                                            <label for="scheduledPublishTime-<%= draft._id %>" class="form-label" style="color: white;">Publish Time:</label>
+                                            <input type="datetime-local" name="scheduledPublishTime" id="scheduledPublishTime-<%= draft._id %>" class="form-control" required style="background-color: white; color: black;">
+                                          </div>
+                                          
+                                          <div class="col-md-2 d-flex align-items-end">
+                                            <button type="submit" class="btn btn-success w-100">Approve</button>
+                                          </div>
+                                        </form>
+                                    
+                                        <!-- Rejection Form -->
+                                        <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
+                                          <div class="col-md-10">
+                                            <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <button type="submit" class="btn btn-danger w-100">Reject</button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>                                    
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% }) %>
+                        </tbody>  
                     </table>
                   </div>
                 </div>
@@ -171,9 +132,10 @@
             </div>
           </div>
         </div>
-
+      </main>
       </div>
     </div>
+    </body>
     <script>
       $(document).ready(function() {
         // Attach Summernote when modal is shown
