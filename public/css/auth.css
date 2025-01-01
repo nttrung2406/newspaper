@@ -88,4 +88,76 @@
     background-color: #ff1a1a;
 }
 
+
+.custom-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.custom-welcome-text {
+  font-size: 1rem;
+}
+
+.custom-input {
+  border-radius: 5px;
+}
+
+.custom-btn {
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.custom-link {
+  text-decoration: none;
+}
+
+.custom-link:hover {
+  color: darkblue;
+  text-decoration: underline;
+}
+
+.custom-text {
+  font-size: 0.9rem;
+}
+
+.input-group-text.custom-eye {
+  cursor: pointer;
+}
+
+.input-group-append {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fas.fa-eye {
+  font-size: 1.2rem;
+}
+
+.card-body {
+  padding: 30px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.text-center a {
+  text-decoration: none;
+}
+
+.text-center a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
   
