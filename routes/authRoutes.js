@@ -24,11 +24,13 @@ router.post(
       .trim()
       .isLength({ min: 5 })
       .withMessage("Password must be at least 5 characters long")
-      .custom((value, { req }) => {
-        if (value === req.body.password) {
-          throw new Error("This one is already in use. Please choose another.");
+      .custom(async (value, { req }) => {
+        const isMatch = await bcrypt.compare(value, req.user.password);
+        if (isMatch) {
+          return Promise.reject(
+            "This one is already in used. Please try another one."
+          );
         }
-        return true;
       }),
     body("confirmPassword")
       .trim()
