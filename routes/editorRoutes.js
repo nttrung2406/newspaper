@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
       .populate("writer", "username") 
       .populate("category", "categoryName")
       .lean(); 
-
+    
     const categories = await Category.find().lean(); 
     const tags = await Tag.find().lean();
 
@@ -40,7 +40,7 @@ router.post("/articles/approve/:id", async (req, res) => {
     await Post.findByIdAndUpdate(req.params.id, {
       status: "Approved",
       category,
-      tags: tags.split(","), // Split tags by comma for an array
+      tags: Array.isArray(tags) ? tags : [tags], // Ensure tags is an array
       scheduledPublishTime,
     });
 
@@ -50,6 +50,7 @@ router.post("/articles/approve/:id", async (req, res) => {
     res.status(500).send("Error approving article");
   }
 });
+
 
 // Reject an article
 router.post("/articles/reject/:id", async (req, res) => {
@@ -61,7 +62,7 @@ router.post("/articles/reject/:id", async (req, res) => {
       rejectionReason,
     });
 
-    res.redirect("/editor/articles");
+    res.render("editor/", { drafts, categories, tags }); 
   } catch (err) {
     console.error(err);
     res.status(500).send("Error rejecting article");
