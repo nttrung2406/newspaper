@@ -353,6 +353,13 @@
                                                 </div>
                                               </div>
                                             </div>
+
+                                            <div class="form-group">
+                                              <label for="contactEmailView">Email liên lạc</label>
+                                              <input type="text" name="contactEmailView" id="contactEmailView"
+                                                class="form-control" readonly>
+                                            </div>
+
                                             <div class="form-group d-flex align-items-center">
                                               <label for="roleview" class="mr-2">Role</label>
                                               <span id="roleview" class="badge badge-outline align-middle"></span>
@@ -377,6 +384,44 @@
                                                 </div>
                                               </div>
                                             </div>
+
+                                            <!-- New Field: Chuyên mục được phân công -->
+                                            <div class="form-group">
+                                              <label for="assignedCategoryView">Chuyên mục được phân công</label>
+                                              <input type="text" id="assignedCategoryView" class="form-control"
+                                                readonly>
+                                            </div>
+
+                                            <!-- New Field: Membership Section with Box -->
+                                            <div class="membership-box p-3 border rounded mb-3" id="membershipBox">
+                                              <h5>Membership</h5>
+                                              <div class="form-group">
+                                                <label for="membershipStatusView">Membership Status</label>
+                                                <input type="text" id="membershipStatusView" class="form-control"
+                                                  readonly>
+                                              </div>
+                                              <div class="form-group">
+                                                <label for="membershipTypeView">Membership Type</label>
+                                                <input type="text" id="membershipTypeView" class="form-control"
+                                                  readonly>
+                                              </div>
+                                              <div class="row">
+                                                <div class="col-md-6">
+                                                  <div class="form-group">
+                                                    <label for="membershipStartDateView">Membership Start Date</label>
+                                                    <input type="text" id="membershipStartDateView" class="form-control"
+                                                      readonly>
+                                                  </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                  <div class="form-group">
+                                                    <label for="membershipEndDateView">Membership End Date</label>
+                                                    <input type="text" id="membershipEndDateView" class="form-control"
+                                                      readonly>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
                                           </div>
                                           <button type="button" class="btn btn-dark" id="viewModalDismiss"
                                             data-dismiss="modal">Close</button>
@@ -386,6 +431,8 @@
                                   </div>
                                 </div>
                               </div>
+
+
 
                               <!-- Modal for updating a User -->
                               <div class="modal fade" id="updateUser" tabindex="-1" role="dialog"
@@ -419,11 +466,18 @@
                                                 aria-describedby="helpId" required>
                                             </div>
                                             <div class="form-group">
+                                              <label for="contactUpdate">Email liên lạc</label>
+                                              <input type="text" class="form-control" name="contactUpdate"
+                                                id="contactUpdate" aria-describedby="helpId"
+                                                placeholder="Nhập email liên lạc">
+                                            </div>
+                                            <div class="form-group">
                                               <label for="pennameUpdate">Bút danh</label>
                                               <input type="text" class="form-control" name="pennameUpdate"
                                                 id="pennameUpdate" aria-describedby="helpId"
                                                 placeholder="Nhập bút danh">
                                             </div>
+                                            
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="button" class="btn btn-dark"
                                               onclick="resetUpdateForm()">Cancel</button>
@@ -483,18 +537,20 @@
                               </div>
 
                               <!-- Modal for confirming to grant a membership-->
-                              <div class="modal fade" id="confirmMembershipModal" tabindex="-1" role="dialog" aria-labelledby="confirmMembershipLabelLabel" aria-hidden="true">
+                              <div class="modal fade" id="confirmMembershipModal" tabindex="-1" role="dialog"
+                                aria-labelledby="confirmMembershipLabelLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" style="width: 30%;" role="document">
                                   <div class="modal-content">
                                     <div class="card text-left">
                                       <div class="card-body">
                                         <h4 class="card-title">Confirmation</h4>
-                                        
+
                                         <form id="confirmMembershipForm">
                                           <p>Bạn có chắc chắn cấp người dùng này membership?</p>
                                           <div class="d-flex justify-content-center">
                                             <button type="submit" class="btn btn-primary mr-3">Confirm</button>
-                                            <button type="button" class="btn btn-dark" data-dismiss="modal" id="closeMembershipBtn">Cancel</button>
+                                            <button type="button" class="btn btn-dark" data-dismiss="modal"
+                                              id="closeMembershipBtn">Cancel</button>
                                           </div>
                                         </form>
                                       </div>
@@ -708,6 +764,14 @@
                                 const penNameView = document.getElementById('pennameview');
                                 const createdDateView = document.getElementById('createdDateView');
                                 const updatedDateView = document.getElementById('updatedDateView');
+                                const contactEmailView = document.getElementById('contactEmailView');
+                                const assignedCategoryView = document.getElementById('assignedCategoryView');
+                                const membershipStatusView = document.getElementById('membershipStatusView')
+                                const membershipTypeView = document.getElementById('membershipTypeView')
+                                const membershipStartDateView = document.getElementById('membershipStartDateView')
+                                const membershipEndDateView = document.getElementById('membershipEndDateView')
+                                const membershipBox  = document.getElementById('membershipBox')
+
 
                                 document.querySelectorAll('.view-user').forEach(button => {
                                   button.addEventListener('click', async () => {
@@ -734,10 +798,41 @@
                                     roleView.textContent = result.accountID.role;
                                     fullnameView.value = result.fullname;
                                     dobView.value = new Date(result.dateOfBirth).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' });
-                                    penNameView.value = result.penName ? result.penName : 'N/A';
 
                                     createdDateView.value = `${new Date(result.accountID.createdAt).toLocaleTimeString('vi-VN', { hour: "2-digit", minute: "2-digit", second: "2-digit" })} ${new Date(result.accountID.createdAt).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
                                     updatedDateView.value = `${new Date(result.accountID.updatedAt).toLocaleTimeString('vi-VN', { hour: "2-digit", minute: "2-digit", second: "2-digit" })} ${new Date(result.accountID.updatedAt).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+                                    contactEmailView.value = result.contact ? result.contact : 'N/A';
+
+                                    if (result.accountID.role === 'writer') {
+                                      penNameView.value = result.penName;
+                                      penNameView.parentElement.classList.remove('d-none');
+                                    } else {
+                                      penNameView.value = 'N/A';
+                                      penNameView.parentElement.classList.add('d-none');
+                                    }
+
+                                    if (result.accountID.role === 'membership') {
+                                      membershipStatusView.value = result.accountID.membership.status;
+                                      membershipTypeView.value = result.accountID.membership.type;
+                                      membershipStartDateView.value = new Date(result.accountID.membership.startDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' });
+                                      membershipEndDateView.value = new Date(result.accountID.membership.endDate).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' });
+                                      membershipBox.classList.remove('d-none');
+                                    } else {
+                                      membershipStatusView.value = 'N/A';
+                                      membershipTypeView.value = 'N/A';
+                                      membershipStartDateView.value = 'N/A';
+                                      membershipEndDateView.value = 'N/A';
+                                      membershipBox.classList.add('d-none');
+                                    }
+
+                                    if (result.accountID.role === 'editor') {
+                                      const assignedCategories = result.accountID.category.map(category => category.categoryName).join(', ');
+                                      assignedCategoryView.value = assignedCategories ? assignedCategories : 'N/A';
+                                      assignedCategoryView.parentElement.classList.remove('d-none');
+                                    } else {
+                                      assignedCategoryView.value = 'N/A';
+                                      assignedCategoryView.parentElement.classList.add('d-none');
+                                    }
 
                                   });
                                 });
@@ -896,6 +991,7 @@
                                     document.getElementById('fullnameUpdate').value = result.fullname;
                                     document.getElementById('dobUpdate').value = new Date(result.dateOfBirth).toISOString().split('T')[0];
                                     document.getElementById('pennameUpdate').value = result.penName || '';
+                                    document.getElementById('contactUpdate').value = result.contact || '';
 
                                     if (result.accountID.role !== 'writer') {
                                       document.getElementById('pennameUpdate').disabled = true;
@@ -944,12 +1040,12 @@
                               <script>
                                 const confirmMembershipForm = document.getElementById('confirmMembershipForm')
 
-                                document.getElementById('closeMembershipBtn').addEventListener('click',()=>{
+                                document.getElementById('closeMembershipBtn').addEventListener('click', () => {
                                   $('#confirmMembershipModal').modal('hide')
                                 })
 
-                                document.querySelectorAll('.grant-membership').forEach(button =>{
-                                  button.addEventListener('click', (event)=>{
+                                document.querySelectorAll('.grant-membership').forEach(button => {
+                                  button.addEventListener('click', (event) => {
                                     $('#confirmMembershipModal').modal({
                                       backdrop: 'static',
                                       keyboard: false
@@ -961,23 +1057,23 @@
                                   })
                                 })
 
-                                confirmMembershipForm.addEventListener('submit', async(event)=>{
+                                confirmMembershipForm.addEventListener('submit', async (event) => {
                                   event.preventDefault();
                                   const userID = confirmMembershipForm.getAttribute('data-id')
-                                  const response = await fetch('/admin/user/membership',{
+                                  const response = await fetch('/admin/user/membership', {
                                     method: "POST",
                                     headers: {
                                       'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify({id: userID})
+                                    body: JSON.stringify({ id: userID })
                                   })
 
                                   const result = await response.json()
 
-                                  if (!result.success){
-                                    alert('Error: ',result.error)
+                                  if (!result.success) {
+                                    alert('Error: ', result.error)
                                   }
-                                  else{
+                                  else {
                                     alert(result.message)
                                   }
 

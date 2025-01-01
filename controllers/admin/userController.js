@@ -1,10 +1,11 @@
-import  User from '../../models/User.js'
+import User from '../../models/User.js'
 import UserInformation from '../../models/UserInformation.js'
 import mongoose from 'mongoose'
 import bcrypt from "bcryptjs";
 import Category from '../../models/Category.js';
+import { populate } from 'dotenv';
 
-const getUserList = async(req, res) => {
+const getUserList = async (req, res) => {
     try {
         const { role = 'all', search = '', page = '1' } = req.query;
 
@@ -12,30 +13,30 @@ const getUserList = async(req, res) => {
         const pageIdx = Math.max(parseInt(page, 10), 1); // Ensure page is at least 1
 
         const query = {
-            ...(role !== 'all' && {role}),
-            ...(search && {username: new RegExp(search, 'i')})
+            ...(role !== 'all' && { role }),
+            ...(search && { username: new RegExp(search, 'i') })
         };
 
-        
+
         const totalUsers = await User.countDocuments(query);
         const totalPages = Math.ceil(totalUsers / limit);
 
         const userList = await User.find(query)
             .limit(limit)
             .skip((pageIdx - 1) * limit)
-            .sort({createdAt: -1});
+            .sort({ createdAt: -1 });
 
         const addSuccess = req.flash('addSuccess');
         const updateSuccess = req.flash('updateSuccess');
         const successMessage = addSuccess.length > 0 ? addSuccess[0] : updateSuccess[0] || '';
-            
+
 
         // Render the user list view with pagination
         res.render('admin/user/user_list', {
-            role, 
-            search, 
-            page: pageIdx, 
-            totalPages,  
+            role,
+            search,
+            page: pageIdx,
+            totalPages,
             userList,
             successMessage
         });
@@ -46,19 +47,19 @@ const getUserList = async(req, res) => {
 };
 
 
-const addUser = async(req, res) =>{
+const addUser = async (req, res) => {
     try {
-        const {usernameadd, emailadd, fullnameadd, dobadd,roleadd, pennameadd =  null} = req.body;
+        const { usernameadd, emailadd, fullnameadd, dobadd, roleadd, pennameadd = null } = req.body;
         //console.log(usernameadd, emailadd, fullnameadd, dobadd,roleadd, penameadd)
 
-        const checkExistingEmail = await User.findOne({email: emailadd});
-        if (checkExistingEmail){
+        const checkExistingEmail = await User.findOne({ email: emailadd });
+        if (checkExistingEmail) {
             const userList = await User.find()
-            .limit(10)
+                .limit(10)
 
             const error = "Email đã sử dụng."
 
-            return res.json({success: false,  error})
+            return res.json({ success: false, error })
         }
 
         const membership = {
@@ -74,24 +75,31 @@ const addUser = async(req, res) =>{
             membership: membership,
             password: await bcrypt.hash('1234567890', 10),
             role: roleadd,
+            membership: {
+                type: "basic",
+                startDate: Date.now(),
+                endDate: Date.now(),
+                status: "inactive"
+            },
         })
 
-        
+
         //console.log("pemnameadd", pennameadd, fullnameadd, dobadd, addUser._id)
         await UserInformation.create({
             accountID: addUser._id,
             fullname: fullnameadd,
             dateOfBirth: dobadd,
-            penName: pennameadd
+            penName: pennameadd,
+            contact: emailadd,
         })
 
-        req.flash('addSuccess',"Tài khoản đã thêm thành công.")
-        
-        return res.json({success: true})
-       
+        req.flash('addSuccess', "Tài khoản đã thêm thành công.")
+
+        return res.json({ success: true })
+
     } catch (error) {
         console.log("Error adding a user:", error.message);
-        res.status(500).send('server error: '+error.message);
+        res.status(500).send('server error: ' + error.message);
     }
 }
 
@@ -99,8 +107,15 @@ const viewUserDetail = async (req, res) => {
     try {
         const id = req.params.id;
         const user = await UserInformation.findOne({ accountID: id })
-            .populate('accountID', 'username email role createdAt updatedAt');
+            .populate({
+                path: 'accountID',
+                populate: {
+                    path: 'category',
+                    select: 'categoryName',
+                },
+            });
 
+        console.log(user.accountID.category)
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -109,7 +124,8 @@ const viewUserDetail = async (req, res) => {
             accountID: user.accountID,
             fullname: user.fullname,
             dateOfBirth: user.dateOfBirth,
-            penName: user.penName
+            penName: user.penName,
+            contact: user.contact,
         });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
@@ -119,7 +135,7 @@ const viewUserDetail = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { usernameUpdate, fullnameUpdate, dobUpdate, pennameUpdate } = req.body;
+        const { usernameUpdate, fullnameUpdate, dobUpdate, pennameUpdate, contactUpdate } = req.body;
         //console.log("update user", id, usernameUpdate, fullnameUpdate, dobUpdate, pennameUpdate)
         const user = await User.findById(id);
         if (!user) {
@@ -137,6 +153,7 @@ const updateUser = async (req, res) => {
             userInfo.fullname = fullnameUpdate;
             userInfo.dateOfBirth = dobUpdate;
             userInfo.penName = pennameUpdate;
+            userInfo.contact = contactUpdate;
             await userInfo.save();
         }
 
@@ -149,12 +166,12 @@ const updateUser = async (req, res) => {
 };
 
 
-const getPremiumUSer = async(req, res) => {
+const getPremiumUSer = async (req, res) => {
     try {
 
-        const now = new Date(); 
-        
-        const userList = await User.find({role: 'membership'})
+        const now = new Date();
+
+        const userList = await User.find({ role: 'membership' })
 
         const tableRows = userList.map(user => {
             const isPremiumActive = user.membership.endDate > now;
@@ -170,8 +187,8 @@ const getPremiumUSer = async(req, res) => {
             }
             const badgeClass = isPremiumActive ? 'badge badge-outline-warning' : 'badge badge-outline-success';
 
-            const minDate = isPremiumActive 
-                ? user.membership.endDate.toISOString().slice(0, 16) 
+            const minDate = isPremiumActive
+                ? user.membership.endDate.toISOString().slice(0, 16)
                 : now.toISOString().slice(0, 16);
 
             return `
@@ -190,7 +207,7 @@ const getPremiumUSer = async(req, res) => {
             `
         }).join("")
         //console.log(tableRows)
-        res.json({tableRows})
+        res.json({ tableRows })
 
     } catch (error) {
         console.log("Error fetching User's data: ", error.message);
@@ -213,7 +230,7 @@ const extendPremium = async (req, res) => {
         }
 
         const newEndDate = new Date(extendDate);
-        user.membership.startDate = user.membership.endDate < now? now :user.membership.startDate
+        user.membership.startDate = user.membership.endDate < now ? now : user.membership.startDate
         user.membership.endDate = newEndDate;
         user.membership.status = "active"
         user.membership.type = "premium"
@@ -234,9 +251,9 @@ const getEditorList = async (req, res) => {
         // Fetch the list of editors with their associated categories
         const editorList = await User.find({ role: 'editor' })
 
-        for (let item of editorList){
-            const ret = await UserInformation.findOne({accountID: item.id})
-            item['fullname'] = ret ? ret.fullname: ""
+        for (let item of editorList) {
+            const ret = await UserInformation.findOne({ accountID: item.id })
+            item['fullname'] = ret ? ret.fullname : ""
         }
 
         // Generate table rows dynamically for each editor
@@ -370,7 +387,7 @@ const grantMembership = async (req, res) => {
 
 
 
-export default{
+export default {
     getUserList,
     addUser,
     viewUserDetail,

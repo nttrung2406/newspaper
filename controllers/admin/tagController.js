@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Tag from '../../models/Tag.js';
+import Post from '../../models/postModel.js'
 
 const viewTagList = async(req, res) =>{
     const {page =1, search =''} = req.query;
@@ -9,7 +10,7 @@ const viewTagList = async(req, res) =>{
     const skip = (page-1) * limit;
 
     const [tags, total] = await Promise.all([
-        Tag.find(query).skip(skip).limit(limit).sort({createdAt:-1}),
+        Tag.find(query).skip(skip).limit(limit).sort({updatedAt:-1}),
         Tag.countDocuments(query),
     ]);
 
@@ -102,29 +103,40 @@ const updateTag = async(req,res) => {
     }
 }
 
-const deleteTag = async(req,res) =>{
+const deleteTag = async (req, res) => {
     try {
-        const {id} = req.params;
-        if (!mongoose.Types.ObjectId.isValid(id))
-        {
-            console.log("Invalid ObjectID: ",id)
-            return res.status(400).send('Invalid ID format.')
-        }
-
-        const tagInformation = await Tag.findById(id);
-        if (!tagInformation){
-            return res.status(500).send('ID nhãn không tồn tại')
-        }
-
-        await Tag.findByIdAndDelete(id);
-
-        req.flash('tag_success','Nhãn đã xóa thành công.')
-        res.json({success: true})
+      const { id } = req.params;
+  
+      // Validate ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.error("Invalid ObjectId: ", id);
+        return res.status(400).json({ success: false, error: 'Invalid ID format.' });
+      }
+  
+      // Check if the tag exists
+      const tagInformation = await Tag.findById(id);
+      if (!tagInformation) {
+        return res.status(404).json({ success: false, error: 'ID nhãn không tồn tại.' });
+      }
+  
+      // Check if the tag is used in any posts
+      const isUsedByPost = await Post.exists({ tags: id });
+      if (isUsedByPost) {
+        return res.status(400).json({ success: false, error: 'Nhãn này đang được sử dụng bởi bài viết.' });
+      }
+  
+      // Delete the tag
+      await Tag.findByIdAndDelete(id);
+  
+      // Flash message and response
+      req.flash('tag_success', 'Nhãn đã xóa thành công.');
+      res.json({ success: true });
     } catch (error) {
-        console.log("Error deleting tag: ", error.message)
-        res.status(500).search("Server error: "+ error.message)
+      console.error("Error deleting tag: ", error.message);
+      res.status(500).json({ success: false, error: "Server error: " + error.message });
     }
-}
+  };
+  
 
 export default {
     viewTagList,

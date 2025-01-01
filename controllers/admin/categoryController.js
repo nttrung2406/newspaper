@@ -1,5 +1,6 @@
 
 import Category from "../../models/Category.js";
+import Post from "../../models/postModel.js"
 import mongoose from "mongoose";
 
 // Get Category List and Render
@@ -235,6 +236,11 @@ const deleteCategory = async (req, res) => {
 
   if (hasChildren) {
     return res.json({success: false, error: "Chuyên mục này đang sử dụng"});
+  }
+
+  const isUsedByPost = await Post.exists({ category: id });
+  if (isUsedByPost) {
+    return res.json({ success: false, error: "Chuyên mục này đang được sử dụng bởi bài viết." });
   }
 
   await Category.findByIdAndDelete(id);
