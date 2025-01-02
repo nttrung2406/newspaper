@@ -58,12 +58,15 @@ router.post("/login", authController.postLogin);
 router.post("/profile/update", authController.postUpdateProfile);
 
 // Forgot password functionality
-router.post("/forgot-password", authController.postForgotPassword);
+//router.post("/forgot-password", authController.postForgotPassword);
 
-router.post("/reset-password", authController.postResetPassword);
+//router.post("/reset-password", authController.postResetPassword);
 
-router.get("/forgot_password", authController.getForgotPassword);
+//router.get("/forgot_password", authController.getForgotPassword);
 
-router.get("/reset_password", authController.getResetPassword);
+//router.get("/reset_password", authController.getResetPassword);
 
+router.post('/forgot_password', authController.verifyEmail);
+router.post('/resend-code', authController.resendCode);
+router.post('/verify_forgot_password', authController.verifyCode);
 export default router;
