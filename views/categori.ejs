@@ -205,12 +205,8 @@
       <!-- alert -->
       <% if (messages.membership_error && messages.membership_error.length> 0) { %>
         <script type="text/javascript">
-          window.onload = function () {
-            const userResponse = confirm("<%= messages.membership_error %> \n\nDo you want to upgrade to premium?");
-            if (userResponse) {
-              window.location.href = '/premium-signup';
-            }
-          };
+          window.alert("Upgrade to premium to view this content!");
+          
         </script>
         <% } %>
           <script>

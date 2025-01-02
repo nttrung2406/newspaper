@@ -102,9 +102,11 @@
     <%- include('./partials/header.ejs') %>
 
     <!-- Add download button -->
+    <% if (post.premium) { %>
     <button class="download-btn" id="downloadPdf">
       <i class="fas fa-download"></i> Download PDF
     </button>
+    <% } %>
 
     <main>
       <section class="post-content">
@@ -369,57 +371,90 @@
         loadComments();
       });
 
-      // PDF Generation Script
       document.getElementById('downloadPdf').addEventListener('click', function() {
-        // Show loading state
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
-        this.disabled = true;
-
-        // Create a clone of the main content
-        const mainContent = document.querySelector('main').cloneNode(true);
-        
-        // Remove related posts section from the clone
-        const relatedPosts = mainContent.querySelector('.col-lg-4');
-        if (relatedPosts) {
-            relatedPosts.remove();
-        }
-
-        // Adjust the main content column to full width
-        const mainColumn = mainContent.querySelector('.col-lg-8');
-        if (mainColumn) {
-            mainColumn.classList.remove('col-lg-8');
-            mainColumn.classList.add('col-lg-12');
-        }
-        
-        // Configure PDF options
-        const opt = {
-            margin: [15, 15],
-            filename: `article-${new Date().toISOString().slice(0,10)}.pdf`,
-            image: { 
-                type: 'jpeg', 
-                quality: 0.98 
-            },
-            html2canvas: { 
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                letterRendering: true
-            },
-            jsPDF: { 
-            unit: 'pt',
-            format: 'a4',
-            orientation: 'portrait'
+            // Create a temporary container for the filtered content
+            const tempContainer = document.createElement('div');
+            
+            // Clone the article content we want to keep
+            const cardBody = document.querySelector('.card-body').cloneNode(true);
+            const tagsContainer = document.querySelector('.tags-container')?.cloneNode(true);
+            
+            // Add the content to our temporary container
+            tempContainer.appendChild(cardBody);
+            if (tagsContainer) {
+              tempContainer.appendChild(tagsContainer);
             }
-        };
+            
+            // Create a new window with only the content we want
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.open();
+            printWindow.document.write(`
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <title>Article PDF</title>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                      line-height: 1.6;
+                      margin: 40px;
+                      color: #333;
+                    }
+                    .card-body {
+                      margin-bottom: 20px;
+                    }
+                    .card-title {
+                      font-size: 24px;
+                      color: #333;
+                      margin-bottom: 15px;
+                    }
+                    .text-muted {
+                      color: #666;
+                      font-size: 14px;
+                      margin-bottom: 20px;
+                    }
+                    .card-text {
+                      margin-top: 20px;
+                    }
+                    .tags-container {
+                      margin-top: 20px;
+                      padding-top: 10px;
+                      border-top: 1px solid #eee;
+                    }
+                    .badge {
+                      background-color: #ffc107;
+                      color: #000;
+                      padding: 5px 10px;
+                      border-radius: 3px;
+                      margin-right: 5px;
+                      text-decoration: none;
+                      display: inline-block;
+                    }
+                    img {
+                      max-width: 100%;
+                      height: auto;
+                      margin: 15px 0;
+                    }
+                  </style>
+                </head>
+                <body>
+                  ${tempContainer.innerHTML}
+                </body>
+              </html>
+            `);
+            printWindow.document.close();
+            
+            // Print the content
+            printWindow.print();
+            
+            // Close the window after printing
+            printWindow.onafterprint = () => {
+              printWindow.close();
+            };
+          });
 
-        // Generate PDF
-        html2pdf().from(mainContent).set(opt).save().then(() => {
-            // Reset the download button
-            this.innerHTML = '<i class="fas fa-download"></i> Download PDF';
-            this.disabled = false;
-        });
 
-      });
+
     </script>
   </body>
 </html>
