@@ -102,9 +102,11 @@
     <%- include('./partials/header.ejs') %>
 
     <!-- Add download button -->
+    <% if (post.premium) { %>
     <button class="download-btn" id="downloadPdf">
       <i class="fas fa-download"></i> Download PDF
     </button>
+    <% } %>
 
     <main>
       <section class="post-content">
