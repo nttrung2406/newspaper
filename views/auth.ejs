@@ -221,7 +221,7 @@
           event.preventDefault();
           // check if email is exists if not show warning
 
-          const emailValid = false;//Replace this line with the actual code to check if email exists
+          const emailValid = false;//Replace this line with the actual code to check if email exists via post request to /auth/forgot_password
 
           if (!emailValid){
             document.getElementById('forgotEmailErr').textContent = 'Email does not exist';
@@ -236,11 +236,6 @@
           // check if email is exists in db then go here
           document.getElementById('forgotPasswordForm').style.display = 'none';
           document.getElementById('verificationCodeForm').style.display = 'block';
-        });
-
-        document.getElementById('backToLoginLink').addEventListener('click', function () {
-          document.getElementById('verificationCodeForm').style.display = 'none';
-          document.getElementById('forgotPasswordForm').style.display = 'block';
         });
 
       </script>
