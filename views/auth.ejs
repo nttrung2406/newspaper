@@ -101,8 +101,8 @@
               <form id="login-form" action="/auth/login" method="POST">
                 <div class="form-group">
                   <label for="loginEmail">Email</label>
-                  <input type="email" id="loginEmail" class="form-control custom-input" placeholder="Enter email" name="email"
-                    required>
+                  <input type="email" id="loginEmail" class="form-control custom-input" placeholder="Enter email"
+                    name="email" required>
                 </div>
                 <div class="form-group">
                   <label for="loginPassword">Password</label>
@@ -133,22 +133,23 @@
               <form id="signUpForm">
                 <div class="form-group">
                   <label for="signupFullname">Fullname</label>
-                  <input type="text" id="signupFullname" name="signupFullname" class="form-control custom-input" placeholder="Enter fullname"
-                    required>
+                  <input type="text" id="signupFullname" name="signupFullname" class="form-control custom-input"
+                    placeholder="Enter fullname" required>
                 </div>
                 <div class="form-group">
                   <label for="signupUsername">Username</label>
-                  <input type="text" id="signupUsername" name="signupUsername" class="form-control custom-input" placeholder="Enter username"
-                    required>
+                  <input type="text" id="signupUsername" name="signupUsername" class="form-control custom-input"
+                    placeholder="Enter username" required>
                 </div>
                 <div class="form-group">
                   <label for="signupDateOfBirth">Date of Birth</label>
-                  <input type="date" id="signupDateOfBirth" name="signupDateOfBirth" class="form-control custom-input" required>
+                  <input type="date" id="signupDateOfBirth" name="signupDateOfBirth" class="form-control custom-input"
+                    required>
                 </div>
                 <div class="form-group">
                   <label for="signupEmail">Email</label>
-                  <input type="email" id="signupEmail" name="signupEmail" class="form-control custom-input" placeholder="Enter email"
-                    required>
+                  <input type="email" id="signupEmail" name="signupEmail" class="form-control custom-input"
+                    placeholder="Enter email" required>
                   <div class="invalid-feedback" id="emailErr"></div>
                 </div>
                 <div class="form-group">
@@ -175,11 +176,12 @@
 
             <!-- Forgot Password Form (hidden by default) -->
             <div id="forgotPasswordForm" style="display: none;">
-              <form>
+              <form method="post" action="/auth/forgot_password">
                 <div class="form-group">
                   <label for="forgotPasswordEmail">Enter your email address</label>
                   <input type="email" id="forgotPasswordEmail" class="form-control custom-input"
                     placeholder="Enter email" required>
+                  <div class="invalid-feedback" id="forgotEmailErr"></div>
                 </div>
                 <div class="form-group d-flex justify-content-between align-items-center">
                   <button type="submit" class="btn btn-warning w-100 custom-btn">Submit</button>
@@ -191,9 +193,57 @@
               </form>
             </div>
 
+            <div id="verificationCodeForm" style="display: none;">
+              <form method="post" action="/auth/verify_forgot_password">
+                <div class="form-group">
+                  <label for="verificationCode">Enter the 6-digit code sent to your email</label>
+                  <input type="text" id="verificationCode" class="form-control custom-input"
+                    placeholder="Enter 6-digit code" pattern="\d{6}" maxlength="6" required>
+                </div>
+                <div class="form-group d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-warning w-100 custom-btn">Verify</button>
+                </div>
+                <div class="text-center mt-3">
+                  <span class="custom-text">Didn't receive the code? <a href="javascript:void(0);" id="resendCodeLink"
+                      class="custom-link">Resend Code</a></span>
+                </div>
+              </form>
+            </div>
+
+
           </div>
         </div>
       </div>
+
+      <!--Script for verifying email-->
+      <script>
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function (event) {
+          event.preventDefault();
+          // check if email is exists if not show warning
+
+          const emailValid = false;//Replace this line with the actual code to check if email exists
+
+          if (!emailValid){
+            document.getElementById('forgotEmailErr').textContent = 'Email does not exist';
+            document.getElementById('forgotPasswordEmail').classList.add('is-invalid');
+            return
+          }else{
+            document.getElementById('forgotEmailErr').textContent = '';
+            document.getElementById('forgotPasswordEmail').classList.remove('is-invalid');
+          }
+
+
+          // check if email is exists in db then go here
+          document.getElementById('forgotPasswordForm').style.display = 'none';
+          document.getElementById('verificationCodeForm').style.display = 'block';
+        });
+
+        document.getElementById('backToLoginLink').addEventListener('click', function () {
+          document.getElementById('verificationCodeForm').style.display = 'none';
+          document.getElementById('forgotPasswordForm').style.display = 'block';
+        });
+
+      </script>
 
       <script>
         const signUpForm = document.getElementById('signUpForm');
@@ -203,28 +253,28 @@
         const passErr1 = document.getElementById('passErr1');
         const emailErr = document.getElementById('emailErr');
         const signupEmail = document.getElementById('signupEmail');
-        signUpForm.addEventListener('submit', async(event)=>{
+        signUpForm.addEventListener('submit', async (event) => {
           event.preventDefault();
-          if(signupPassword.value !== signupConfirmPassword.value){
+          if (signupPassword.value !== signupConfirmPassword.value) {
             passErr.textContent = 'Passwords do not match';
             passErr1.textContent = 'Passwords do not match';
             signupPassword.classList.add('is-invalid');
             signupConfirmPassword.classList.add('is-invalid');
             return;
           }
-          else{
+          else {
             passErr.textContent = '';
             passErr1.textContent = '';
             signupPassword.classList.remove('is-invalid');
             signupConfirmPassword.classList.remove('is-invalid');
           }
 
-          if (signupPassword.value.length < 10){
+          if (signupPassword.value.length < 10) {
             passErr.textContent = 'Password must be at least 10 characters';
             signupPassword.classList.add('is-invalid');
             return;
           }
-          else{
+          else {
             passErr.textContent = '';
             signupPassword.classList.remove('is-invalid');
           }
@@ -236,13 +286,13 @@
           });
 
           const result = await response.json();
-          if(!result.success){
-            if (result.error.includes('Email')){
+          if (!result.success) {
+            if (result.error.includes('Email')) {
               emailErr.textContent = result.error;
               signupEmail.classList.add('is-invalid');
               return;
             }
-            else{
+            else {
               emailErr.textContent = '';
               signupEmail.classList.remove('is-invalid');
             }
@@ -256,13 +306,13 @@
             return
           }
 
-          else{
+          else {
             Swal.fire({
               title: 'Success!',
               text: result.message,
               icon: 'success',
               confirmButtonText: 'OK'
-            }).then(()=>{
+            }).then(() => {
               window.location.href = '/auth';
             });
           }
