@@ -97,3 +97,24 @@ export const viewArticle = async (req, res) => {
     res.status(500).send("Error loading article");
   }
 };
+
+export const publishPosts = async (req, res) => {
+  try {
+    const postId = req.params.id; // Get post ID from the URL
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    // Update the post status to "published"
+    post.status = 'Published';
+    post.publishedDate = new Date(); // Set the published date
+    await post.save();
+
+    res.redirect('/editor/approved-posts'); // Redirect back to the Approved Posts page
+  } catch (err) {
+    console.error('Error publishing post:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};

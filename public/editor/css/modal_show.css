@@ -15,3 +15,43 @@
     }
     
 }
+element.style {
+    margin-right: 0px;
+    margin-left: 0px;
+    padding: 0px;
+    text-rendering: optimizelegibility;
+    font-size: 18px;
+    line-height: 28.8px;
+    color: rgb(255 255 255);
+    font-family: arial;
+}
+
+.custom-modal .modal-content {
+    background-color: rgb(254 254 254); /* Black background with 75% opacity */
+    color: white; /* White text */
+    border: none; /* Remove borders if any */
+  }
+
+  .custom-modal .modal-header {
+    border-bottom: 1px solid #ffffff33; /* Subtle border for header */
+  }
+
+  .custom-modal .modal-body {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .custom-modal .btn-close {
+    filter: invert(1); /* White close button */
+  }
+
+  .custom-modal .btn-close:hover {
+    opacity: 0.8; /* Slight transparency on hover */
+  }
+
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

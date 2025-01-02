@@ -1,7 +1,7 @@
 // editorRoutes.js
 
 import express from "express";
-import { getDrafts, approveArticle, rejectArticle, manageArticles, viewArticle } from '../controllers/editorController.js'; 
+import { getDrafts, approveArticle, rejectArticle, manageArticles, viewArticle, publishPosts } from '../controllers/editorController.js'; 
 
 const router = express.Router();
 
@@ -19,5 +19,7 @@ router.get("/manage", manageArticles);
 
 // Handle AJAX request to fetch article data for modal
 router.get('/articles/view/:id', viewArticle);
+
+router.post('/articles/publish/:id', publishPosts);
 
 export default router;
