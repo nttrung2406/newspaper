@@ -171,8 +171,8 @@
                   <h4>${response.title}</h4>
                   <p><strong>Writer:</strong> ${response.writer ? response.writer.username : 'Unknown Writer'}</p>
                   <p><strong>Category:</strong> ${response.category ? response.category.categoryName : 'No Category'}</p>
-                  <p><strong>Content:</strong> ${response.content}</p>
                   <p><strong>Created At:</strong> ${response.createdAt}</p>
+                  <p><strong>Content:</strong> ${response.content}</p>                  
                 `);
               },
               error: function(error) {
