@@ -1,20 +1,23 @@
 import express from 'express'
 import tagController from '../../../controllers/admin/tagController.js'
+import multer from 'multer';
+
 
 const router = express.Router();
+const upload = multer();
+
 
 router.route('/create')
-.get((req,res)=>{
-    const message = req.flash("tag_create_err")
-    res.render('admin/tag/tag_create', {message})
-})
-.post(tagController.addTag)
+.post(upload.none(),tagController.addTag)
 
 router.route('/info/:id')
 .get(tagController.viewTag)
 
 router.route('/update/:id')
-.get(tagController.getTagForUpdate)
-.post(tagController.updateTag)
+.post(upload.none(), tagController.updateTag)
+
+
+router.route('/delete/:id')
+.post(tagController.deleteTag)
 
 export default router;

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
+    <title><%= pageTitle %></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -53,33 +53,43 @@
         <!-- Card for listing posts -->
         <div class="container my-5">
           <div class="card mb-5">
-            <div class="card-header" style="font-size: 1.5rem">
-              List of Posts
+            <div class="card-header d-flex align-items-center justify-content-between" style="font-size: 1.5rem">
+              <div class="lead">List of posts</div>
+              <div>
+                <a href="/writer/posts/status/all" class="badge badge-<%= status === null ? 'primary' : 'secondary' %>">All</a>
+                <a href="/writer/posts/status/Draft" class="badge badge-<%= status === 'Draft' ? 'primary' : 'secondary' %>">Draft</a>
+                <a href="/writer/posts/status/Approved" class="badge badge-<%= status === 'Approved' ? 'primary' : 'secondary' %>">Approved</a>
+                <a href="/writer/posts/status/Rejected" class="badge badge-<%= status === 'Rejected' ? 'primary' : 'secondary' %>">Rejected</a>
+                <a href="/writer/posts/status/Submitted" class="badge badge-<%= status === 'Submitted' ? 'primary' : 'secondary' %>">Submitted</a>
+                <a href="/writer/posts/status/Published" class="badge badge-<%= status === 'Published' ? 'primary' : 'secondary' %>">Published</a>
+              </div>
             </div>
             <% if (posts && posts.length > 0) { %>
             <ul class="list-group list-group-flush">
               <% for (const post of posts) { %>
               <li
-                class="list-group-item d-flex justify-content-between align-items-center"
+                class="list-group-item"
               >
-                <div>
-                  <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
-                  <div class="text-muted"><%= post.createdAt %></div>
-                  <div class="text-muted">
-                    Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
+                <div class="row">
+                  <div class="col-md-5">
+                    <h5 class="mb-1"><a class="text-dark" href="/writer/posts/<%= post._id %>"><%= post.title %></a></h5>
+                    <div class="text-muted"><%= post.createdAt %></div>
+                    <div class="text-muted">
+                      Status: <span class="text-<%= post.status === 'Rejected' ? 'danger' : 'success' %>"><%= post.status %></span>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-2">
-                    View
-                  </a>
-                  <% if (post.status === 'Rejected' || post.status === 'Draft') { %>
-                  <a href="/writer/edit-post/<%= post._id %>?edit=true&page=<%= currentPage %>" class="btn btn-outline-warning btn-sm">Edit</a>
-                  <button class="delete-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Delete</button>
-                  <% } %>
-                  <% if (post.status === 'Approved') { %>
-                  <button class="submit-button btn btn-outline-info btn-sm mr-2" data-post-id=<%= post._id %>>Submit</button>
-                  <% } %>
+                  <div class="d-flex col-md-7 align-items-center justify-content-end flex-wrap">
+                    <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-1 mb-1">
+                      View
+                    </a>
+                    <% if (post.status === 'Rejected' || post.status === 'Draft') { %>
+                    <a href="/writer/edit-post/<%= post._id %>?edit=true&page=<%= currentPage %>" class="btn btn-outline-warning btn-sm mr-1 mb-1">Edit</a>
+                    <button class="delete-button btn btn-outline-info btn-sm mr-1 mb-1" data-post-id=<%= post._id %>>Delete</button>
+                    <% } %>
+                    <% if (post.status === 'Approved') { %>
+                    <button class="submit-button btn btn-outline-info btn-sm mr-1 mb-1" data-post-id=<%= post._id %>>Submit</button>
+                    <% } %>
+                  </div>
                 </div>
               </li>
               <% } %>
@@ -98,7 +108,7 @@
 
     <%- include('../partials/sweetAlert.ejs') %>
 
-    <script src="/js/writerActions.js"></script>
+    <script src="/js/writerAction.js"></script>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>News</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/css/ticker-style.css" />
+  <link rel="stylesheet" href="/css/flaticon.css" />
+  <link rel="stylesheet" href="/css/slicknav.css" />
+  <link rel="stylesheet" href="/css/animate.min.css" />
+  <link rel="stylesheet" href="/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/css/themify-icons.css" />
+  <link rel="stylesheet" href="/css/slick.css" />
+  <link rel="stylesheet" href="/css/nice-select.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .tag-badge {
+      background-color: #007bff;
+      color: white;
+    }
+    .premium-badge {
+      background-color: rgb(42, 41, 28);
+      color: rgb(251, 251, 0) !important;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      animation: blinkColor 1s infinite;
+    }
+    @keyframes blinkColor {
+      0% { background-color: #480d00; }
+      50% { background-color: #008819; }
+      100% { background-color: #480d00; }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('./partials/header.ejs') %>
+  <main>
+    <section class="whats-news-area pt-50 pb-20">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="posts-container" role="tabpanel" aria-labelledby="nav-home-tab">
+                <% if (posts.length > 0) { %>
+                  <% posts.forEach(post => { %>
+                    <div class="card w-100 shadow-sm rounded mb-4">
+                      <div class="row g-0">
+                        <div class="col-md-3">
+                          <img src="<%= post.imageUrl || '/img/default-image.jpg' %>" 
+                               class="img-fluid w-100 rounded-start" 
+                               alt="<%= post.title %>" 
+                               style="object-fit: cover; height: 100%;">
+                        </div>
+                        <div class="col-md-9">
+                          <div class="card-body">
+                            <% if (post.premium) { %>
+                              <span class="premium-badge">💎💎Premium💎💎</span>
+                            <% } %>
+                            <h5 class="card-title">
+                              <a href="/posts/<%= post._id %>" class="text-decoration-none text-primary">
+                                <%= post.title %>
+                              </a>
+                            </h5>
+                            <p class="card-text text-muted">
+                              <strong>Danh mục:</strong> <%= post.categoryName || 'Chưa phân loại' %>
+                            </p>
+                            <p class="card-text">
+                              <strong>Thẻ:</strong> 
+                              <% if (post.tags && post.tags.length > 0) { %>
+                                <% post.tags.forEach(tag => { %>
+                                  <a href="/tags/<%= tag._id %>" class="badge tag-badge text-decoration-none"><%= tag.tagName %></a>
+                                <% }) %>
+                              <% } else { %>
+                                <span class="text-muted">Không có thẻ</span>
+                              <% } %>
+                            </p>
+                            <p class="card-text text-muted">
+                              <strong>Ngày đăng:</strong> <%= new Date(post.createdAt).toLocaleDateString() %>
+                            </p>
+                            <p class="card-text">
+                              <strong>Tóm tắt:</strong> 
+                              <%= post.abstract.split(' ').slice(0, 10).join(' ') %>...
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% }) %>
+                <% } else { %>
+                  <div class="alert alert-primary" role="alert">
+                    This tag currently has no posts
+                  </div>
+                <% } %>
+              </div>
+            </div>
+            
+            <div class="pagination-area pb-45 text-center">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xl-12">
+                    <div class="single-wrap d-flex justify-content-center">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start" id="pagination">
+                          <%- include('./partials/pagination.ejs', {currentPage, hasNextPage, hasPreviousPage, nextPage, previousPage, lastPage}) %>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <%- include('./partials/footer.ejs') %>
+
+  <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+  <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.slicknav.min.js"></script>
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/slick.min.js"></script>
+  <script src="/js/gijgo.min.js"></script>
+  <script src="/js/wow.min.js"></script>
+  <script src="/js/animated.headline.js"></script>
+  <script src="/js/jquery.magnific-popup.js"></script>
+  <script src="/js/jquery.ticker.js"></script>
+  <script src="/js/site.js"></script>
+  <script src="/js/jquery.scrollUp.min.js"></script>
+  <script src="/js/jquery.nice-select.min.js"></script>
+  <script src="/js/jquery.sticky.js"></script>
+  <script src="/js/contact.js"></script>
+  <script src="/js/jquery.form.js"></script>
+  <script src="/js/jquery.validate.min.js"></script>
+  <script src="/js/mail-script.js"></script>
+  <script src="/js/jquery.ajaxchimp.min.js"></script>
+  <script src="/js/plugins.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/head.js"></script>
+</body>
+</html>

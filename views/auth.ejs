@@ -1,192 +1,483 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
 
-    <!-- CSS here -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/ticker-style.css" />
-    <link rel="stylesheet" href="/css/flaticon.css" />
-    <link rel="stylesheet" href="/css/slicknav.css" />
-    <link rel="stylesheet" href="/css/animate.min.css" />
-    <link rel="stylesheet" href="/css/magnific-popup.css" />
-    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/css/themify-icons.css" />
-    <link rel="stylesheet" href="/css/slick.css" />
-    <link rel="stylesheet" href="/css/nice-select.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/auth.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>News</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
 
-  <body>
-    <%- include('./partials/header.ejs') %>
+  <!-- CSS here -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/css/ticker-style.css" />
+  <link rel="stylesheet" href="/css/flaticon.css" />
+  <link rel="stylesheet" href="/css/slicknav.css" />
+  <link rel="stylesheet" href="/css/animate.min.css" />
+  <link rel="stylesheet" href="/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/css/themify-icons.css" />
+  <link rel="stylesheet" href="/css/slick.css" />
+  <link rel="stylesheet" href="/css/nice-select.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+
+<body>
+  <%- include('./partials/header.ejs') %>
     <main>
-      <div class="auth-container">
-        <div class="form-toggle">
-          <button id="login-btn" class="toggle-btn active">Login</button>
-          <button id="signup-btn" class="toggle-btn">Sign Up</button>
-        </div>
-        <div class="form-container">
-          <!-- Login Form -->
-          <form
-            id="login-form"
-            class="auth-form"
-            action="/auth/login"
-            method="POST"
-          >
-            <h2>Login</h2>
-            <div class="form-group">
-              <label for="login-email">Email</label>
-              <input
-                type="email"
-                id="login-email"
-                class="form-control"
-                placeholder="Enter your email"
-                name="email"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="login-password">Password</label>
-              <input
-                type="password"
-                id="login-password"
-                class="form-control"
-                placeholder="Enter your password"
-                name="password"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <div class="form-footer">
-              <a href="/auth/forgot_password" id="forgot-password"
-                >Forgot Password?</a
-              >
-            </div>
-          </form>
 
-          <!-- Sign Up Form -->
-          <form
-            id="signup-form"
-            class="auth-form hidden"
-            action="/auth/signup"
-            method="POST"
-          >
-            <h2>Sign Up</h2>
-            <div class="form-group">
-              <label for="signup-username">Username</label>
-              <input
-                name="username"
-                type="text"
-                id="signup-username"
-                class="form-control"
-                placeholder="Choose a username"
-                required
-              />
+      <div class="container d-flex justify-content-center align-items-center min-vh-100 my-5">
+        <div class="card custom-card shadow-lg w-100" style="max-width: 400px;">
+          <div class="card-body">
+            <h4 class="card-title text-center custom-title" id="formTitle">Log In</h4>
+            <p class="text-center text-muted custom-welcome-text">Welcome to Saigon News. Log in to stay updated with
+              the latest news.</p>
+            <hr>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+              <form id="login-form" action="/auth/login" method="POST">
+                <div class="form-group">
+                  <label for="loginEmail">Email</label>
+                  <input type="email" id="loginEmail" class="form-control custom-input" placeholder="Enter email"
+                    name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">Password</label>
+                  <div class="input-group">
+                    <input type="password" id="loginPassword" class="form-control custom-input" name="password"
+                      placeholder="Enter password" required>
+                    <div class="input-group-append">
+                      <span class="input-group-text custom-eye h-100" id="passwordToggle">
+                        <i class="fas fa-eye"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-primary w-100 custom-btn">Login</button>
+                </div>
+                <div class="text-center mt-3">
+                  <a href="javascript:void(0);" id="forgotPasswordLink" class="custom-link">Forgot Password?</a>
+                  <br>
+                  <span class="custom-text">Don't have an account? <a href="javascript:void(0);" id="signupLink"
+                      class="custom-link">Sign up</a></span>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="signup-email">Email</label>
-              <input
-                name="email"
-                type="email"
-                id="signup-email"
-                class="form-control"
-                placeholder="Enter your email"
-                required
-              />
+
+            <!-- Signup Form (hidden by default) -->
+            <div id="signupForm" style="display: none;">
+              <form id="signUpForm">
+                <div class="form-group">
+                  <label for="signupFullname">Fullname</label>
+                  <input type="text" id="signupFullname" name="signupFullname" class="form-control custom-input"
+                    placeholder="Enter fullname" required>
+                </div>
+                <div class="form-group">
+                  <label for="signupUsername">Username</label>
+                  <input type="text" id="signupUsername" name="signupUsername" class="form-control custom-input"
+                    placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                  <label for="signupDateOfBirth">Date of Birth</label>
+                  <input type="date" id="signupDateOfBirth" name="signupDateOfBirth" class="form-control custom-input"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="signupEmail">Email</label>
+                  <input type="email" id="signupEmail" name="signupEmail" class="form-control custom-input"
+                    placeholder="Enter email" required>
+                  <div class="invalid-feedback" id="emailErr"></div>
+                </div>
+                <div class="form-group">
+                  <label for="signupPassword">Password</label>
+                  <input type="password" id="signupPassword" name="signupPassword" class="form-control custom-input"
+                    placeholder="Enter password" required>
+                  <div class="invalid-feedback" id="passErr"></div>
+                </div>
+                <div class="form-group">
+                  <label for="signupConfirmPassword">Confirm Password</label>
+                  <input type="password" id="signupConfirmPassword" class="form-control custom-input"
+                    placeholder="Confirm password" required>
+                  <div class="invalid-feedback" id="passErr1"></div>
+                </div>
+                <div class="form-group d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-success w-100 custom-btn">Sign Up</button>
+                </div>
+                <div class="text-center mt-3">
+                  <span class="custom-text">Already have an account? <a href="javascript:void(0);" id="loginLink"
+                      class="custom-link">Login</a></span>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="signup-password">Password</label>
-              <input
-                name="password"
-                type="password"
-                id="signup-password"
-                class="form-control"
-                placeholder="Create a password"
-                required
-              />
+
+            <!-- Forgot Password Form (hidden by default) -->
+            <div id="forgotPasswordForm" style="display: none;">
+              <form id="forgotPassForm">
+                <div class="form-group">
+                  <label for="forgotPasswordEmail">Enter your email address</label>
+                  <input type="email" id="forgotPasswordEmail" class="form-control custom-input"
+                    placeholder="Enter email" required>
+                  <div class="invalid-feedback" id="forgotEmailErr"></div>
+                </div>
+                <div class="form-group d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-warning w-100 custom-btn">Submit</button>
+                </div>
+                <div class="text-center mt-3">
+                  <span class="custom-text">Remember your password? <a href="javascript:void(0);" id="backToLoginLink"
+                      class="custom-link">Back to Login</a></span>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="signup-role">Role</label>
-              <select
-                id="signup-role"
-                class="form-control"
-                name="role"
-                required
-              >
-                <option value="" disabled selected>Select your role</option>
-                <option value="membership">Membership</option>
-                <option value="editor">Editor</option>
-                <option value="writer">Writer</option>
-                <option value="admin">Admin</option>
-              </select>
+
+            <div id="verificationCodeForm" style="display: none;">
+              <form method="post" action="/auth/verify_forgot_password" id="verifyCodeForm">
+                <div class="form-group">
+                  <label for="verificationCode">Enter the 6-digit code sent to your email</label>
+                  <input type="text" id="verificationCode" class="form-control custom-input"
+                    placeholder="Enter 6-digit code" pattern="\d{6}" maxlength="6" required>
+                  <div class="invalid-feedback" id="codeErr"></div>
+                </div>
+                <div class="form-group d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-warning w-100 custom-btn">Verify</button>
+                </div>
+                <div class="text-center mt-3">
+                  <span class="custom-text">Didn't receive the code? <a href="javascript:void(0);" id="resendCodeLink"
+                      class="custom-link">Resend Code</a></span>
+                </div>
+              </form>
             </div>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              style="margin-top: 20px"
-            >
-              Sign Up
-            </button>
-          </form>
+
+
+          </div>
         </div>
       </div>
+
+      <!--Script for verifying email-->
+      <script>
+        document.getElementById('forgotPassForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          // check if email is exists if not show warning
+          const response = await fetch('/auth/forgot_password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: document.getElementById('forgotPasswordEmail').value
+            })
+          });
+
+          const result = await response.json();
+          const emailValid = result.success;
+
+          if (!emailValid) {
+            document.getElementById('forgotEmailErr').textContent = 'Email does not exist';
+            document.getElementById('forgotPasswordEmail').classList.add('is-invalid');
+            return
+          } else {
+            document.getElementById('forgotEmailErr').textContent = '';
+            document.getElementById('forgotPasswordEmail').classList.remove('is-invalid');
+          }
+
+          document.getElementById('forgotPassForm').setAttribute('data-id', document.getElementById('forgotPassForm').value)
+
+          // check if email is exists in db then go here
+          document.getElementById('forgotPasswordForm').style.display = 'none';
+          document.getElementById('verificationCodeForm').style.display = 'block';
+        });
+
+
+        document.getElementById('verifyCodeForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const response = await fetch('/auth/verify_forgot_password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: document.getElementById('forgotPasswordEmail').value,
+              code: document.getElementById('verificationCode').value
+            })
+          });
+
+          const result = await response.json();
+          if (!result.success) {
+            document.getElementById('codeErr').textContent = result.error;
+            document.getElementById('verificationCode').classList.add('is-invalid');
+            return;
+          }
+          else {
+            document.getElementById('codeErr').textContent = '';
+            document.getElementById('verificationCode').classList.remove('is-invalid');
+          }
+
+          Swal.fire({
+            title: 'Success!',
+            text: 'Mật khẩu của bạn đã thiết lập lại thành công: ' + result.password,
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            // Wait until the user clicks "OK" and then redirect
+            window.location.href = '/auth';
+          });
+
+        })
+
+      </script>
+
+      <!-- Script for handling sign up.-->
+      <script>
+        const signUpForm = document.getElementById('signUpForm');
+        const signupPassword = document.getElementById('signupPassword');
+        const signupConfirmPassword = document.getElementById('signupConfirmPassword');
+        const passErr = document.getElementById('passErr');
+        const passErr1 = document.getElementById('passErr1');
+        const emailErr = document.getElementById('emailErr');
+        const signupEmail = document.getElementById('signupEmail');
+        signUpForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (signupPassword.value !== signupConfirmPassword.value) {
+            passErr.textContent = 'Passwords do not match';
+            passErr1.textContent = 'Passwords do not match';
+            signupPassword.classList.add('is-invalid');
+            signupConfirmPassword.classList.add('is-invalid');
+            return;
+          }
+          else {
+            passErr.textContent = '';
+            passErr1.textContent = '';
+            signupPassword.classList.remove('is-invalid');
+            signupConfirmPassword.classList.remove('is-invalid');
+          }
+
+          if (signupPassword.value.length < 10) {
+            passErr.textContent = 'Password must be at least 10 characters';
+            signupPassword.classList.add('is-invalid');
+            return;
+          }
+          else {
+            passErr.textContent = '';
+            signupPassword.classList.remove('is-invalid');
+          }
+
+          const formData = new FormData(signUpForm);
+          const response = await fetch('/auth/signup', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+          if (!result.success) {
+            if (result.error.includes('Email')) {
+              emailErr.textContent = result.error;
+              signupEmail.classList.add('is-invalid');
+              return;
+            }
+            else {
+              emailErr.textContent = '';
+              signupEmail.classList.remove('is-invalid');
+            }
+
+            Swal.fire({
+              title: 'Error!',
+              text: result.error,
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+            return
+          }
+
+          else {
+            Swal.fire({
+              title: 'Success!',
+              text: result.message,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              window.location.href = '/auth';
+            });
+          }
+
+        })
+      </script>
+
+      <script>
+        document.getElementById("passwordToggle").addEventListener("mousedown", function () {
+          document.getElementById("loginPassword").type = "text";
+        });
+
+        document.getElementById("passwordToggle").addEventListener("mouseup", function () {
+          document.getElementById("loginPassword").type = "password";
+        });
+
+        document.getElementById("signupLink").addEventListener("click", function () {
+          console.log("clicked");
+          document.getElementById("formTitle").textContent = "Sign Up";
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("signupForm").style.display = "block";
+          document.getElementById("forgotPasswordForm").style.display = "none";
+        });
+
+        document.getElementById("loginLink").addEventListener("click", function () {
+          document.getElementById("formTitle").textContent = "Log In";
+          document.getElementById("loginForm").style.display = "block";
+          document.getElementById("signupForm").style.display = "none";
+          document.getElementById("forgotPasswordForm").style.display = "none";
+        });
+
+        document.getElementById("forgotPasswordLink").addEventListener("click", function () {
+          document.getElementById("formTitle").textContent = "Forgot Password";
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("signupForm").style.display = "none";
+          document.getElementById("forgotPasswordForm").style.display = "block";
+        });
+
+        document.getElementById("backToLoginLink").addEventListener("click", function () {
+          document.getElementById("formTitle").textContent = "Log In";
+          document.getElementById("loginForm").style.display = "block";
+          document.getElementById("signupForm").style.display = "none";
+          document.getElementById("forgotPasswordForm").style.display = "none";
+        });
+      </script>
+
+      <style>
+        .custom-card {
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-title {
+          font-size: 1.8rem;
+          font-weight: 600;
+        }
+
+        .custom-welcome-text {
+          font-size: 1rem;
+        }
+
+        .custom-input {
+          border-radius: 5px;
+        }
+
+        .custom-btn {
+          border-radius: 5px;
+          font-weight: 500;
+        }
+
+        .custom-link {
+          text-decoration: none;
+        }
+
+        .custom-link:hover {
+          color: darkblue;
+          text-decoration: underline;
+        }
+
+        .custom-text {
+          font-size: 0.9rem;
+        }
+
+        .input-group-text.custom-eye {
+          cursor: pointer;
+        }
+
+        .input-group-append {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .fas.fa-eye {
+          font-size: 1.2rem;
+        }
+
+        .card-body {
+          padding: 30px;
+        }
+
+        .card-title {
+          font-size: 1.5rem;
+          font-weight: 500;
+        }
+
+        .text-center a {
+          text-decoration: none;
+        }
+
+        .text-center a:hover {
+          text-decoration: underline;
+        }
+
+        .btn {
+          border-radius: 5px;
+        }
+      </style>
+
+
     </main>
 
     <%- include('./partials/footer.ejs') %>
 
-    <!-- JS here -->
+      <!-- JS here -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <% if (errorMessage) { %>
+        <script>
+          Swal.fire({
+            title: "Warning!",
+            text: "<%= errorMessage %>",
+            icon: "warning",
+          });
+        </script>
+        <% } %>
 
-    <!-- All JS Custom Plugins Link Here here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-    <!-- Jquery, Popper, Bootstrap -->
-    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <!-- Jquery Mobile Menu -->
-    <script src="/js/jquery.slicknav.min.js"></script>
+          <!-- All JS Custom Plugins Link Here here -->
+          <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
+          <!-- Jquery, Popper, Bootstrap -->
+          <script src="/js/vendor/jquery-1.12.4.min.js"></script>
+          <script src="/js/popper.min.js"></script>
+          <script src="/js/bootstrap.min.js"></script>
+          <!-- Jquery Mobile Menu -->
+          <script src="/js/jquery.slicknav.min.js"></script>
 
-    <!-- Jquery Slick , Owl-Carousel Plugins -->
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <!-- Date Picker -->
-    <script src="/js/gijgo.min.js"></script>
-    <!-- One Page, Animated-HeadLin -->
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
+          <!-- Jquery Slick , Owl-Carousel Plugins -->
+          <script src="/js/owl.carousel.min.js"></script>
+          <script src="/js/slick.min.js"></script>
+          <!-- Date Picker -->
+          <script src="/js/gijgo.min.js"></script>
+          <!-- One Page, Animated-HeadLin -->
+          <script src="/js/wow.min.js"></script>
+          <script src="/js/animated.headline.js"></script>
+          <script src="/js/jquery.magnific-popup.js"></script>
 
-    <!-- Breaking New Pluging -->
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
+          <!-- Breaking New Pluging -->
+          <script src="/js/jquery.ticker.js"></script>
+          <script src="/js/site.js"></script>
 
-    <!-- Scrollup, nice-select, sticky -->
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
+          <!-- Scrollup, nice-select, sticky -->
+          <script src="/js/jquery.scrollUp.min.js"></script>
+          <script src="/js/jquery.sticky.js"></script>
 
-    <!-- contact js -->
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
+          <!-- contact js -->
+          <script src="/js/contact.js"></script>
+          <script src="/js/jquery.form.js"></script>
+          <script src="/js/jquery.validate.min.js"></script>
+          <script src="/js/mail-script.js"></script>
+          <script src="/js/jquery.ajaxchimp.min.js"></script>
 
-    <!-- Jquery Plugins, main Jquery -->
-    <script src="/js/plugins.js"></script>
-    <script src="/js/main.js"></script>
+          <!-- Jquery Plugins, main Jquery -->
+          <script src="/js/plugins.js"></script>
+          <script src="/js/main.js"></script>
 
-    <!-- auth form-->
-    <script src="/js/auth.js"></script>
 
-    <!-- sigun up protocal -->
-    <script src="/js/signup.js"></script>
-    <script src="/js/head.js"></script>
-  </body>
+          <!-- sigun up protocal -->
+          <script src="/js/signup.js"></script>
+          <script src="/js/head.js"></script>
+          <!-- <script src="/js/auth.js"></script> -->
+</body>
+
 </html>

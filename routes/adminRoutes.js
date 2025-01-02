@@ -29,4 +29,13 @@ router.use("/tag", tagAction)
 import userList from './admin/user/userList.route.js'
 router.use('/users', userList)
 
+import userAction from './admin/user/userAction.route.js'
+router.use('/user',userAction)
+
+import postList from './admin/post/postList.route.js'
+router.use('/posts', postList)
+
+import postAction from './admin/post/postAction.route.js'
+router.use('/post', postAction)
+
 export default router;

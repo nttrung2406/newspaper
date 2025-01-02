@@ -10,68 +10,146 @@
 
     <!-- CSS here -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/css/ticker-style.css" />
-    <link rel="stylesheet" href="/css/flaticon.css" />
-    <link rel="stylesheet" href="/css/slicknav.css" />
-    <link rel="stylesheet" href="/css/animate.min.css" />
-    <link rel="stylesheet" href="/css/magnific-popup.css" />
-    <link rel="stylesheet" href="/css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="/css/themify-icons.css" />
-    <link rel="stylesheet" href="/css/slick.css" />
-    <link rel="stylesheet" href="/css/nice-select.css" />
     <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      .tag-badge {
+        background-color: #007bff;
+        color: white;
+      }
+      .premium-badge {
+      background-color: rgb(42, 41, 28);
+      color: rgb(251, 251, 0) !important;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      animation: blinkColor 1s infinite;
+      /* Hiệu ứng nhấp nháy giữa 2 màu */
+    }
+
+    @keyframes blinkColor {
+      0% {
+        background-color: #480d00;
+        /* Màu đầu tiên */
+      }
+
+      50% {
+        background-color: #008819;
+        /* Màu thứ hai */
+      }
+
+      100% {
+        background-color: #480d00;
+        /* Quay lại màu đầu tiên */
+      }
+    }
+      .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+      }
+      .pagination .page-link {
+        color: #007bff;
+      }
+    </style>
   </head>
   <body>
     <%- include('./partials/header.ejs') %>
     <main>
       <div class="container mt-4">
-        <h1 class="text-center mb-4">Search Results for "<%- query %>"</h1>
-        <ul class="list-group">
+        <p class="text-center h2 my-4">Search Results for "<%- query %>"</p>
+        <div class="row">
           <% if (results.length > 0) { %>
             <% results.forEach(post => { %>
-              <li class="list-group-item mb-3 p-4 shadow-sm rounded">
-                <h2 class="h5 text-primary">
-                  <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
-                    <%- post.title %>
-                  </a>
-                </h2>
-              </li>
+              <div class="col-12 d-flex my-3">
+                <div class="card w-100 shadow-sm rounded">
+                  <div class="row g-0">
+                    <!-- Post Image -->
+                    <div class="col-md-3">
+                      <img src="<%- post.firstImage || '/img/post/default-image.jpg' %>" 
+                           class="img-fluid rounded-start" 
+                           alt="<%- post.title %>" 
+                           style="height: 100%; object-fit: cover;">
+                    </div>
+                    <!-- Post Details -->
+                    <div class="col-md-9">
+                      <div class="card-body">
+                        <!-- Premium Badge -->
+                        <% if (post.premium) { %>
+                          <span class="premium-badge">Premium</span>
+                        <% } %>
+                        
+                        <!-- Post Title -->
+                        <h5 class="card-title mt-2">
+                          <a href="/posts/<%- post._id %>" class="text-decoration-none text-primary">
+                            <%- post.title %>
+                          </a>
+                        </h5>
+                        <!-- Category -->
+                        <p class="card-text text-muted">
+                          <strong>Category:</strong> <%- post.categoryName || 'Uncategorized' %>
+                        </p>
+                        <!-- Tags -->
+                        <p class="card-text">
+                          <strong>Tags:</strong>
+                          <% if (post.tags && post.tags.length > 0) { %>
+                            <% post.tags.forEach(tag => { %>
+                              <a href="/tags/<%- tag._id %>" class="badge tag-badge text-decoration-none">
+                                <%- tag.tagName %>
+                              </a>
+                            <% }); %>
+                          <% } else { %>
+                            <span class="text-muted">No tags</span>
+                          <% } %>
+                        </p>
+                        <!-- Publish Date -->
+                        <p class="card-text text-muted">
+                          <strong>Published:</strong> <%- new Date(post.createdAt).toLocaleDateString() %>
+                        </p>
+                        <!-- Abstract -->
+                        <p class="card-text">
+                          <strong>Abstract:</strong> 
+                          <%- post.abstract.length > 10 ? post.abstract.split(' ').slice(0, 10).join(' ') + '...' : post.abstract %>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <% }); %>
+
+            <!-- Pagination -->
+            <div class="col-12 my-4 d-flex justify-content-center">
+              <nav>
+                <ul class="pagination">
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                      <a class="page-link" href="?query=<%- query %>&page=<%- i %>"><%- i %></a>
+                    </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+
           <% } else { %>
-            <li class="list-group-item p-4 text-center shadow-sm rounded">
-              <p class="mb-0 text-muted">No results found.</p>
-            </li>
+            <div class="col-12 mb-4">
+              <div class="card text-center shadow-sm rounded">
+                <div class="card-body">
+                  <p class="card-text mb-0 text-muted">No results found</p>
+                </div>
+              </div>
+            </div>
           <% } %>
-        </ul>
+        </div>
       </div>
     </main>
     <%- include('./partials/footer.ejs') %>
 
     <!-- JS here -->
-    <script src="/js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/js/popper.min.js"></script>
+    <script src="/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.slicknav.min.js"></script>
-    <script src="/js/owl.carousel.min.js"></script>
-    <script src="/js/slick.min.js"></script>
-    <script src="/js/gijgo.min.js"></script>
-    <script src="/js/wow.min.js"></script>
-    <script src="/js/animated.headline.js"></script>
-    <script src="/js/jquery.magnific-popup.js"></script>
-    <script src="/js/jquery.ticker.js"></script>
-    <script src="/js/site.js"></script>
-    <script src="/js/jquery.scrollUp.min.js"></script>
-    <script src="/js/jquery.nice-select.min.js"></script>
-    <script src="/js/jquery.sticky.js"></script>
-    <script src="/js/contact.js"></script>
-    <script src="/js/jquery.form.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/mail-script.js"></script>
-    <script src="/js/jquery.ajaxchimp.min.js"></script>
-    <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/head.js"></script>
   </body>
 </html>

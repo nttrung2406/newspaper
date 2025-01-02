@@ -1,6 +1,7 @@
 import writerController from "../controllers/writerController.js";
 import express from "express";
 import { checkRole } from "../middlewares/roleMiddleware.js";
+import preventCache from "../middlewares/preventCache.js";
 
 const router = express.Router();
 
@@ -18,10 +19,27 @@ router.get(
 
 router.post("/edit-post", checkRole("writer"), writerController.postEditPost);
 
-router.get("/posts", checkRole("writer"), writerController.getPosts);
+router.get(
+  "/posts",
+  checkRole("writer"),
+  preventCache,
+  writerController.getPosts
+);
 
 router.get("/posts/:postId", checkRole("writer"), writerController.getPost);
 
-router.post('/delete-post/:postId', checkRole("writer"), writerController.postDelete);
+router.post(
+  "/delete-post/:postId",
+  checkRole("writer"),
+  writerController.postDelete
+);
+
+router.post(
+  "/submit-post/:postId",
+  checkRole("writer"),
+  writerController.postSubmit
+);
+
+router.get('/posts/status/:status', checkRole('writer'), writerController.getPostsByStatus);
 
 export default router;

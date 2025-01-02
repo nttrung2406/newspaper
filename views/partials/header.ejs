@@ -18,15 +18,9 @@
               </div>
               <div class="header-info-right">
                 <ul class="header-social">
-                  <li>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                  </li>
+                  <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                  <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                  <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
                 </ul>
               </div>
             </div>
@@ -52,62 +46,135 @@
       </div>
       <div class="header-bottom header-sticky">
         <div class="container">
-          <div class="row align-items-center">
-            <div class="col-xl-10 col-lg-10 col-md-12 header-flex">
-              <!-- sticky -->
+
+
+          <div class="row align-content-center">
+            <div class="col col-12">
               <div class="sticky-logo">
                 <a href="/index"><img src="/img/logo/logo.png" alt="" /></a>
               </div>
-              <!-- Main-menu -->
-              <div class="main-menu d-none d-md-block">
+            </div>
+
+            <div class="col col-6">
+              <div class="main-menu d-none d-md-flex">
                 <nav>
                   <ul id="navigation">
                     <li><a href="/index">Home</a></li>
                     <li><a href="/categori">Category</a></li>
                     <li><a href="/about">About</a></li>
-                    <li><a href="/latest_news">Latest News</a></li>
+                    <li><a href="/tags">Tag</a></li>
+                    <!-- <li><a href="/latest_news">Latest News</a></li> -->
                     <li><a href="/contact">Contact</a></li>
-                    <li>
-                      <a href="#">Pages</a>
-                      <ul class="submenu">
-                        <li><a href="/blog">Blog</a></li>
-                        <li><a href="/single-blog">Blog Details</a></li>
-                        <li><a href="/details">Category Details</a></li>
-                      </ul>
-                    </li>
-                    <% if (role && role === 'writer') { %>
+                    <% if (role && role==='writer' ) { %>
                       <li><a href="/writer">Compose</a></li>
-                      <% } %>                   
+                      <% } %>
                   </ul>
                 </nav>
               </div>
             </div>
-            <div class="col-xl-2 col-lg-2 col-md-4">
-              <div class="header-right-btn f-right d-none d-lg-block">
-                <i class="fas fa-search special-tag"></i>
-                <div class="search-box">
-                  <form id="searchForm" action="/posts/search" method="GET">
-                    <input type="text" id="searchInput" name="query" placeholder="Search"/>
-                  </form>
+
+            <div class="col col-6 d-none d-lg-flex"
+              style="display: flex; justify-content: flex-end; align-items: center;">
+              <form id="searchForm" action="/posts/search" method="GET" style="width: 100%; max-width: 400px;">
+                <div class="input-group">
+                  <input type="text" id="searchInput" name="query" placeholder="Search" class="form-control" aria-label="Text input with dropdown button"/>
+                  
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary dropdown-toggle h-100" type="button" id="searchByDropdown"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                      style="color: white; border: 1px solid #6c757d; border-radius: 0 4px 4px 0; padding: 0.5rem 1rem; margin: 0 !important; ">
+                      Search By
+                    </button>
+
+                    <div class="dropdown-menu" aria-labelledby="searchByDropdown"
+                      style="position: absolute; top: 100%; left: 0; width: 100%; background-color: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                      <label class="dropdown-item d-flex align-items-center"
+                        style="display: flex; align-items: center; padding: 0.5rem;">
+                        <input type="checkbox" name="searchBy" value="title" style="margin-right: 8px;" />
+                        <span style="font-size: 14px;">Title</span>
+                      </label>
+                      <label class="dropdown-item d-flex align-items-center"
+                        style="display: flex; align-items: center; padding: 0.5rem;">
+                        <input type="checkbox" name="searchBy" value="abstract" style="margin-right: 8px;" />
+                        <span style="font-size: 14px;">Abstract</span>
+                      </label>
+                      <label class="dropdown-item d-flex align-items-center"
+                        style="display: flex; align-items: center; padding: 0.5rem;">
+                        <input type="checkbox" name="searchBy" value="content" style="margin-right: 8px;" />
+                        <span style="font-size: 14px;">Content</span>
+                      </label>
+                    </div>
+                    
+                  </div>
                 </div>
-                <% if (isAuthenticated) { %>
-                <!-- If user is logged in, show Profile link -->
-                <a href="/auth/profile" class="person-icon" title="Profile">
-                  <i class="fas fa-user"></i>
-                  <span><%= isAuthenticated ? 'Profile' : '' %></span>
+                
+              </form>
+
+              <% if (isAuthenticated) { %>
+                <a href="/auth/profile" class="person-icon" title="Profile"
+                  style="margin-left: 1rem; text-decoration: none; color: #333;">
+                  <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                  <span style="margin-left: 0.5rem;">
+                    <%= isAuthenticated ? 'Profile' : '' %>
+                  </span>
                 </a>
                 <% } else { %>
-                <!-- If user is not logged in, show Sign Up/Login button -->
-                <a href="/auth" class="person-icon" title="Sign Up / Login">
-                  <i class="fas fa-user"></i>
-                </a>
-                <% } %>
-              </div>
+                  <a href="/auth" class="person-icon" title="Sign Up / Login"
+                    style="margin-left: 1rem; text-decoration: none; color: #333;">
+                    <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                  </a>
+                  <% } %>
             </div>
+
+            
+              
+
           </div>
+
         </div>
       </div>
     </div>
   </div>
-  <!-- Header End -->
+
+  <style>
+    /* Custom styles for search dropdown */
+    /* .dropdown-item {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .dropdown-item input[type="checkbox"] {
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .dropdown-item span {
+      vertical-align: middle;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .search-box .dropdown {
+      width: 100%;
+      margin-top: 10px;
+    } */
+
+    .d-flex.align-items-center {
+      gap: 8px;
+    }
+
+    /* Adjusted checkbox position */
+    /* .checkbox-adjusted {
+      position: relative;
+      top: 100px;
+    }
+
+    .dropdown-item.d-flex.align-items-center {
+      align-items: start !important;
+      padding-top: 30px;
+      padding-bottom: 30px;
+    } */
+  </style>
 </header>

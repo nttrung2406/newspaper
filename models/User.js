@@ -7,15 +7,29 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["membership", "writer", "editor", "admin"],
+      enum: ["membership", "writer", "editor", "admin", "guest"],
       required: true,
     },
     membership: {
-      expiryDate: { type: Date },
-      categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+      type: {
+        type: String, // Ví dụ: "basic", "premium"
+        required: true
+      },
+      startDate: { type: Date, required: true },
+      endDate: { type: Date, required: true },
+      status: { type: String, enum: ["active", "inactive"], required: true }
     },
     writerPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     editorPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    category: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+      required: function () {
+        return this.role === "editor";
+      },
+      default: function () {
+        return this.role === "editor" ? [] : null;
+      },
+    },
     resetToken: { type: String }, // For storing reset token
     resetTokenExpiry: { type: Date }, // Token expiry timestamp
   },

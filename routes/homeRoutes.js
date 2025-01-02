@@ -5,5 +5,6 @@ const router = express.Router();
 
 // Route cho trang chủ
 router.get('/index', renderHomePage);
+router.get('/', renderHomePage);
 
 export default router;

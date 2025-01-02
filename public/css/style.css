@@ -250,7 +250,7 @@ a:hover,
 
 a,
 button {
-	color: #fff;
+	color: blue;
 	outline: medium none
 }
 
@@ -2603,50 +2603,49 @@ hr {
 }
 
 .header-area .search-box {
-	position: absolute;
-	right: -30px;
-	opacity: 0;
-	visibility: hidden;
-	transition: .3s
+    position: absolute;
+    right: 60%; /* Adjust the position as needed */
+    opacity: 1;
+    visibility: visible;
+    transition: none; /* Disable animation */
 }
 
 .header-area .search-box input {
-	position: relative;
-	border: 1px solid #ddd;
-	padding-left: 10px;
-	color: #000;
-	width: 189px;
-	padding-right: 34px;
-	box-shadow: 0px 0px 36px 0px rgba(142, 142, 142, 0.1);
-	-webkit-transition: all .4s ease-out 0s;
-	-moz-transition: all .4s ease-out 0s;
-	-ms-transition: all .4s ease-out 0s;
-	-o-transition: all .4s ease-out 0s;
-	transition: all .4s ease-out 0s;
-	right: 29px;
-	top: -26px
+    position: relative;
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    color: #000;
+    width: 189px;
+    padding-right: 34px;
+    box-shadow: 0px 0px 36px 0px rgba(142, 142, 142, 0.1);
+    transition: none; /* Disable animation */
+    right: 0; /* Adjust alignment if necessary */
+    top: -26px; /* Keep consistent with original design */
 }
 
 .header-area .search-box form button {
-	position: absolute;
-	right: 0px;
-	background: none;
-	border: none;
-	color: #646363;
-	cursor: pointer;
-	top: 2px
+    position: absolute;
+    right: 0px;
+    background: none;
+    border: none;
+    color: #646363;
+    cursor: pointer;
+    top: 2px;
 }
 
 .header-area .header-right-btn:hover .search-box {
-	visibility: visible;
-	opacity: 1;
-	transition: .3s;
-    right: 60%;
+    /* Remove hover effects */
+    visibility: visible;
+    opacity: 1;
+    transition: none; /* Disable animation */
 }
 
 .header-area .header-right-btn:hover .search-box input {
-	right: 60px
+    /* Remove hover effects */
+    right: 0; /* Adjust alignment if necessary */
+    transition: none; /* Disable animation */
 }
+
 
 .main-header {
 	position: relative;
@@ -6734,3 +6733,4 @@ del {
 .switch-wrap {
 	margin-bottom: 10px
 }
+

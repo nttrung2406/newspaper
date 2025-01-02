@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>News</title>
+    <title><%= pageTitle %></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -68,8 +68,8 @@
         <!-- Card for listing posts -->
         <div class="card mt-5">
           <div class="card-header" style="font-size: 1.5rem">
-            List of Posts &centerdot;
-            <a href="/writer/posts" class="text-secondary">See full lists</a>
+            <span class="lead">List of posts</span> &centerdot;
+            <a href="/writer/posts" class="lead text-muted">See full list</a>
           </div>
           <% if (posts.length > 0) { %>
           <ul class="list-group list-group-flush">
@@ -90,7 +90,10 @@
                 </div>
               </div>
               <div>
-                <a href="/writer/posts/<%= post._id %>" class="btn btn-outline-info btn-sm mr-2">
+                <a
+                  href="/writer/posts/<%= post._id %>"
+                  class="btn btn-outline-info btn-sm mr-2"
+                >
                   View
                 </a>
               </div>
@@ -104,8 +107,6 @@
 
     <!-- Footer start -->
     <%- include('../partials/footer.ejs') %>
-
-    <%- include('../partials/sweetAlert.ejs') %>
 
     <!-- All JS Custom Plugins Link Here here -->
     <script src="/js/vendor/modernizr-3.5.0.min.js"></script>

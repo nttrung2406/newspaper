@@ -1,72 +1,25 @@
+// editorRoutes.js
+
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import Post from "../models/postModel.js"; 
-import Category from "../models/Category.js"; 
-import Tag from "../models/Tag.js"; 
+import { getDrafts, approveArticle, rejectArticle, manageArticles, viewArticle, publishPosts } from '../controllers/editorController.js'; 
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-router.use(express.static(path.join(__dirname, "../public/editor")));
-
-router.get("/", (req, res) => {
-  res.render("editor/dashboard");
-});
-
-router.get("/articles", async (req, res) => {
-  try {
-    const drafts = await Post.find({ status: "Draft", category: req.user.category })
-      .populate("writer", "username") 
-      .lean(); 
-
-    const categories = await Category.find().lean(); 
-    const tags = await Tag.find().lean();
-
-    res.render("editor/articles", { drafts, categories, tags }); 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching drafts");
-  }
-});
+// Define the route handlers
+router.get("/", getDrafts);
 
 // Approve an article
-router.post("/articles/approve/:id", async (req, res) => {
-  try {
-    const { category, tags, scheduledPublishTime } = req.body;
-
-    await Post.findByIdAndUpdate(req.params.id, {
-      status: "Approved",
-      category,
-      tags: tags.split(","), // Split tags by comma for an array
-      scheduledPublishTime,
-    });
-
-    res.redirect("/editor/articles");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error approving article");
-  }
-});
+router.post("/articles/approve/:id", approveArticle);
 
 // Reject an article
-router.post("/articles/reject/:id", async (req, res) => {
-  try {
-    const { rejectionReason } = req.body;
+router.post("/articles/reject/:id", rejectArticle);
 
-    await Post.findByIdAndUpdate(req.params.id, {
-      status: "Rejected",
-      rejectionReason,
-    });
+// Manage approved and rejected articles
+router.get("/manage", manageArticles);
 
-    res.redirect("/editor/articles");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error rejecting article");
-  }
-});
+// Handle AJAX request to fetch article data for modal
+router.get('/articles/view/:id', viewArticle);
+
+router.post('/articles/publish/:id', publishPosts);
 
 export default router;

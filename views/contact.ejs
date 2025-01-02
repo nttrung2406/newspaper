@@ -1557,44 +1557,6 @@
               </table>
             </div>
           </div>
-          <script>
-            function initMap() {
-              var uluru = {
-                lat: -25.363,
-                lng: 131.044,
-              };
-              var grayStyles = [
-                {
-                  featureType: "all",
-                  stylers: [
-                    {
-                      saturation: -90,
-                    },
-                    {
-                      lightness: 50,
-                    },
-                  ],
-                },
-                {
-                  elementType: "labels.text.fill",
-                  stylers: [
-                    {
-                      color: "#ccdee9",
-                    },
-                  ],
-                },
-              ];
-              var map = new google.maps.Map(document.getElementById("map"), {
-                center: {
-                  lat: -31.197,
-                  lng: 150.744,
-                },
-                zoom: 9,
-                styles: grayStyles,
-                scrollwheel: false,
-              });
-            }
-          </script>
           <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA;callback=initMap" async defer></script>
         </div>
 
@@ -1692,7 +1654,7 @@
               <span class="contact-info__icon"><i class="ti-email"></i></span>
               <div class="media-body">
                 <h3>trungnt240602@gmail.com</h3>
-                <p>Send us your query anytime!</p>
+                <p>Send us your question anytime!</p>
               </div>
             </div>
           </div>
@@ -1744,5 +1706,6 @@
     <script src="/js/plugins.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/head.js"></script>
+    <script src="/js/map.js"></script>
   </body>
 </html>

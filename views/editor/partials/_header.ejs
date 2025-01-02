@@ -27,16 +27,18 @@
           <div class="dropdown-divider"></div>
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item preview-item" href="/">
-            <div class="preview-thumbnail">
-              <div class="preview-icon bg-dark rounded-circle">
-                <i class="mdi mdi-logout text-danger"></i>
+          <form action="/auth/logout" method="post">
+            <button type="submit" class="dropdown-item preview-item btn btn-link" style="border: none; background: none;">
+              <div class="preview-thumbnail">
+                <div class="preview-icon bg-dark rounded-circle">
+                  <i class="mdi mdi-logout text-danger"></i>
+                </div>
               </div>
-            </div>
-            <div class="preview-item-content">
-              <p class="preview-subject mb-1" >Log out</p>
-            </div>
-          </a>
+              <div class="preview-item-content">
+                <p class="preview-subject mb-1">Log out</p>
+              </div>
+            </button>
+          </form>
         </div>
       </li>
     </ul>
