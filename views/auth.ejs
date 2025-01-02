@@ -28,65 +28,6 @@
 <body>
   <%- include('./partials/header.ejs') %>
     <main>
-      <div class="auth-container d-none">
-        <div class="form-toggle">
-          <button id="login-btn" class="toggle-btn active">Login</button>
-          <button id="signup-btn" class="toggle-btn">Sign Up</button>
-        </div>
-        <div class="form-container">
-          <!-- Login Form -->
-          <form id="login-form" class="auth-form" action="/auth/login" method="POST">
-            <h2>Login</h2>
-            <div class="form-group">
-              <label for="login-email">Email</label>
-              <input type="email" id="login-email" class="form-control" placeholder="Enter your email" name="email"
-                required />
-            </div>
-            <div class="form-group">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" class="form-control" placeholder="Enter your password"
-                name="password" required />
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <div class="form-footer">
-              <a href="/auth/forgot_password" id="forgot-password">Forgot Password?</a>
-            </div>
-          </form>
-
-          <!-- Sign Up Form -->
-          <form id="signup-form" class="auth-form hidden" action="/auth/signup" method="POST">
-            <h2>Sign Up</h2>
-            <div class="form-group">
-              <label for="signup-username">Username</label>
-              <input name="username" type="text" id="signup-username" class="form-control"
-                placeholder="Choose a username" required />
-            </div>
-            <div class="form-group">
-              <label for="signup-email">Email</label>
-              <input name="email" type="email" id="signup-email" class="form-control" placeholder="Enter your email"
-                required />
-            </div>
-            <div class="form-group">
-              <label for="signup-password">Password</label>
-              <input name="password" type="password" id="signup-password" class="form-control"
-                placeholder="Create a password" required />
-            </div>
-            <div class="form-group">
-              <label for="signup-role">Role</label>
-              <select id="signup-role" class="form-control" name="role" required>
-                <option value="" disabled selected>Select your role</option>
-                <option value="membership">Membership</option>
-                <option value="editor">Editor</option>
-                <option value="writer">Writer</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 20px">
-              Sign Up
-            </button>
-          </form>
-        </div>
-      </div>
 
       <div class="container d-flex justify-content-center align-items-center min-vh-100 my-5">
         <div class="card custom-card shadow-lg w-100" style="max-width: 400px;">
@@ -176,7 +117,7 @@
 
             <!-- Forgot Password Form (hidden by default) -->
             <div id="forgotPasswordForm" style="display: none;">
-              <form method="post" action="/auth/forgot_password">
+              <form id="forgotPassForm">
                 <div class="form-group">
                   <label for="forgotPasswordEmail">Enter your email address</label>
                   <input type="email" id="forgotPasswordEmail" class="form-control custom-input"
@@ -194,11 +135,12 @@
             </div>
 
             <div id="verificationCodeForm" style="display: none;">
-              <form method="post" action="/auth/verify_forgot_password">
+              <form method="post" action="/auth/verify_forgot_password" id="verifyCodeForm">
                 <div class="form-group">
                   <label for="verificationCode">Enter the 6-digit code sent to your email</label>
                   <input type="text" id="verificationCode" class="form-control custom-input"
                     placeholder="Enter 6-digit code" pattern="\d{6}" maxlength="6" required>
+                  <div class="invalid-feedback" id="codeErr"></div>
                 </div>
                 <div class="form-group d-flex justify-content-between align-items-center">
                   <button type="submit" class="btn btn-warning w-100 custom-btn">Verify</button>
@@ -217,29 +159,78 @@
 
       <!--Script for verifying email-->
       <script>
-        document.getElementById('forgotPasswordForm').addEventListener('submit', function (event) {
+        document.getElementById('forgotPassForm').addEventListener('submit', async (event) => {
           event.preventDefault();
           // check if email is exists if not show warning
+          const response = await fetch('/auth/forgot_password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: document.getElementById('forgotPasswordEmail').value
+            })
+          });
 
-          const emailValid = false;//Replace this line with the actual code to check if email exists via post request to /auth/forgot_password
+          const result = await response.json();
+          const emailValid = result.success;
 
-          if (!emailValid){
+          if (!emailValid) {
             document.getElementById('forgotEmailErr').textContent = 'Email does not exist';
             document.getElementById('forgotPasswordEmail').classList.add('is-invalid');
             return
-          }else{
+          } else {
             document.getElementById('forgotEmailErr').textContent = '';
             document.getElementById('forgotPasswordEmail').classList.remove('is-invalid');
           }
 
+          document.getElementById('forgotPassForm').setAttribute('data-id', document.getElementById('forgotPassForm').value)
 
           // check if email is exists in db then go here
           document.getElementById('forgotPasswordForm').style.display = 'none';
           document.getElementById('verificationCodeForm').style.display = 'block';
         });
 
+
+        document.getElementById('verifyCodeForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const response = await fetch('/auth/verify_forgot_password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: document.getElementById('forgotPasswordEmail').value,
+              code: document.getElementById('verificationCode').value
+            })
+          });
+
+          const result = await response.json();
+          if (!result.success) {
+            document.getElementById('codeErr').textContent = result.error;
+            document.getElementById('verificationCode').classList.add('is-invalid');
+            return;
+          }
+          else {
+            document.getElementById('codeErr').textContent = '';
+            document.getElementById('verificationCode').classList.remove('is-invalid');
+          }
+
+          Swal.fire({
+            title: 'Success!',
+            text: 'Mật khẩu của bạn đã thiết lập lại thành công: ' + result.password,
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            // Wait until the user clicks "OK" and then redirect
+            window.location.href = '/auth';
+          });
+
+        })
+
       </script>
 
+      <!-- Script for handling sign up.-->
       <script>
         const signUpForm = document.getElementById('signUpForm');
         const signupPassword = document.getElementById('signupPassword');
@@ -482,13 +473,11 @@
           <script src="/js/plugins.js"></script>
           <script src="/js/main.js"></script>
 
-          <!-- auth form-->
-          <script src="/js/auth.js"></script>
 
           <!-- sigun up protocal -->
           <script src="/js/signup.js"></script>
           <script src="/js/head.js"></script>
-          <script src="/js/auth.js"></script>
+          <!-- <script src="/js/auth.js"></script> -->
 </body>
 
 </html>
