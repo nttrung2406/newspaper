@@ -26,7 +26,8 @@ const getFilteredPosts = async (req, res, next, status = null) => {
 
     const totalPosts = await Post.countDocuments(filter);
 
-    const lastPage = totalPosts > 0 ? Math.ceil(totalPosts / POSTS_PER_PAGE) : 1;
+    const lastPage =
+      totalPosts > 0 ? Math.ceil(totalPosts / POSTS_PER_PAGE) : 1;
 
     if (page > lastPage) {
       return res.status(404).redirect(`/writer/posts?page=${lastPage}`);
@@ -52,11 +53,13 @@ const getFilteredPosts = async (req, res, next, status = null) => {
       lastPage: lastPage,
     });
   } catch (err) {
-    const error = new Error(err.message || "An error occurred while fetching posts");
+    const error = new Error(
+      err.message || "An error occurred while fetching posts"
+    );
     error.statusCode = 500;
     next(error);
   }
-}
+};
 
 const writerController = {
   getWriterPage: async (req, res, next) => {
@@ -84,7 +87,7 @@ const writerController = {
     if (status === "all") {
       return res.redirect("/writer/posts");
     }
-    
+
     await getFilteredPosts(req, res, next, status);
   },
   getAddPost: async (req, res, next) => {
@@ -217,6 +220,7 @@ const writerController = {
     const newTagsString = req.body.tagsString;
     const newAbstract = req.body.abstract;
     const newPremiumCheck = req.body.isPremium;
+    const status = req.body.status;
     const postId = req.body.postId;
 
     const pageNumber = req.body.pageNumber;
@@ -255,6 +259,7 @@ const writerController = {
       post.category = newCategoryId;
       post.tags = newTags;
       post.abstract = newAbstract;
+      post.status = status;
       post.premium = newPremiumCheck === "true";
 
       await post.save();
