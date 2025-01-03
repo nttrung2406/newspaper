@@ -80,6 +80,49 @@
                                           <%- draft.content %>
                                       </div>                                    
                                 </div>
+                                                                      <!-- Approval and Rejection Forms -->
+                                                                      <div class="mt-4">
+                                                                        <!-- Approval Form -->
+                                                                        <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="row g-2 align-items-center mb-3">
+                                                                          <div class="col-md-3">
+                                                                            <label for="category-<%= draft._id %>" class="form-label" style="color: white;">Category:</label>
+                                                                            <select name="category" id="category-<%= draft._id %>" class="form-select" required>
+                                                                              <% categories.forEach(category => { %>
+                                                                                <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                                                              <% }) %>
+                                                                            </select>
+                                                                          </div>
+                                                                          
+                                                                          <div class="col-md-4">
+                                                                            <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
+                                                                            <select name="tags" id="tags-<%= draft._id %>" class="form-select" required>
+                                                                              <% tags.forEach(tag => { %>
+                                                                                <option value="<%= tag._id %>"><%= tag.tagName %></option>
+                                                                              <% }) %>
+                                                                            </select>
+                                                                            
+                                                                          </div>
+                                                                          
+                                                                          <div class="col-md-3">
+                                                                            <label for="scheduledPublishTime-<%= draft._id %>" class="form-label" style="color: white;">Publish Time:</label>
+                                                                            <input type="datetime-local" name="scheduledPublishTime" id="scheduledPublishTime-<%= draft._id %>" class="form-control" required style="background-color: white; color: black;">
+                                                                          </div>
+                                                                          
+                                                                          <div class="col-md-2 d-flex align-items-end">
+                                                                            <button type="submit" class="btn btn-success w-100">Approve</button>
+                                                                          </div>
+                                                                        </form>
+                                                                    
+                                                                        <!-- Rejection Form -->
+                                                                        <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
+                                                                          <div class="col-md-10">
+                                                                            <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required>
+                                                                          </div>
+                                                                          <div class="col-md-2">
+                                                                            <button type="submit" class="btn btn-danger w-100">Reject</button>
+                                                                          </div>
+                                                                        </form>
+                                                                      </div>
                                   </div>
                                 </div>
                               </div>
