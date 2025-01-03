@@ -63,69 +63,24 @@
                               </button>
                               
                               <!-- Modal -->
-                              <div class="modal custom-modal" id="modal-<%= draft._id %>" tabindex="-1" aria-labelledby="modalLabel-<%= draft._id %>" aria-hidden="true">
+                              <div class="modal custom-modal" id="modal-<%= draft._id %>" tabindex="-1" aria-labelledby="viewModalLabel-<%= draft._id %>" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="modalLabel-<%= draft._id %>">Post Details</h5>
+                                      <h5 class="modal-title" id="viewModalLabel-<%= draft._id %>">Post Details</h5>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                       <!-- Display post content -->
-                                      <div class="modal_show">
                                         <p><b>Category:</b> <%= draft.category ? draft.category.categoryName : "No Category" %></p>
                                         
-                                        <!-- Summernote editor for draft content -->s
-                                        <div id="content-<%= draft._id %>" class="summernote">
-                                          <%- draft.content %> <!-- Render content as raw HTML -->
-                                        </div>
-                                      </div>
-                                      
-                                                  
-                                      <!-- Approval and Rejection Forms -->
-                                      <div class="mt-4">
-                                        <!-- Approval Form -->
-                                        <form method="POST" action="/editor/articles/approve/<%= draft._id %>" class="row g-2 align-items-center mb-3">
-                                          <div class="col-md-3">
-                                            <label for="category-<%= draft._id %>" class="form-label" style="color: white;">Category:</label>
-                                            <select name="category" id="category-<%= draft._id %>" class="form-select" required>
-                                              <% categories.forEach(category => { %>
-                                                <option value="<%= category._id %>"><%= category.categoryName %></option>
-                                              <% }) %>
-                                            </select>
-                                          </div>
-                                          
-                                          <div class="col-md-4">
-                                            <label for="tags-<%= draft._id %>" class="form-label" style="color: white;">Tags:</label>
-                                            <select name="tags" id="tags-<%= draft._id %>" class="form-select" required>
-                                              <% tags.forEach(tag => { %>
-                                                <option value="<%= tag._id %>"><%= tag.tagName %></option>
-                                              <% }) %>
-                                            </select>
-                                            
-                                          </div>
-                                          
-                                          <div class="col-md-3">
-                                            <label for="scheduledPublishTime-<%= draft._id %>" class="form-label" style="color: white;">Publish Time:</label>
-                                            <input type="datetime-local" name="scheduledPublishTime" id="scheduledPublishTime-<%= draft._id %>" class="form-control" required style="background-color: white; color: black;">
-                                          </div>
-                                          
-                                          <div class="col-md-2 d-flex align-items-end">
-                                            <button type="submit" class="btn btn-success w-100">Approve</button>
-                                          </div>
-                                        </form>
-                                    
-                                        <!-- Rejection Form -->
-                                        <form method="POST" action="/editor/articles/reject/<%= draft._id %>" class="row g-2 align-items-center">
-                                          <div class="col-md-10">
-                                            <input type="text" name="rejectionReason" class="form-control rejection-input" placeholder="Reason for rejection" required>
-                                          </div>
-                                          <div class="col-md-2">
-                                            <button type="submit" class="btn btn-danger w-100">Reject</button>
-                                          </div>
-                                        </form>
-                                      </div>
-                                    </div>                                    
+                                        <div id="modalContent<%= draft._id %>" class="modal-content-container">
+                                          <figure>
+                                          </figure>
+                                          <%- draft.content %>
+                                      </div>                                    
+                                </div>
+                                  </div>
                                 </div>
                               </div>
                             </td>
@@ -144,7 +99,7 @@
       </div>
     </div>
     </body>
-    <script>
+    <!-- <script>
       $(document).ready(function() {
         // Attach Summernote when modal is shown
         $('.modal').on('shown.bs.modal', function(event) {
@@ -164,8 +119,35 @@
           $(`#${modalId} .summernote`).summernote('destroy');
         });
       });
+    </script> -->
+    <script>
+      $(document).ready(function() {
+        // Attach event listener to the buttons to populate the modal with content
+        $('button[data-bs-toggle="modal"]').on('click', function() {
+          var postId = $(this).data('id');  // Get the ID of the post
+          var modalContentDiv = $('#modalContent' + postId);  // Get the corresponding modal content container
+    
+          // Use AJAX to fetch the post details
+          $.ajax({
+            url: '/editor/articles/view/' + postId,
+            method: 'GET',
+            success: function(response) {
+              // Populate modal content
+              modalContentDiv.html(`
+                <h4>${response.title}</h4>
+                <p><strong>Writer:</strong> ${response.writer ? response.writer.username : 'Unknown Writer'}</p>
+                <p><strong>Category:</strong> ${response.category ? response.category.categoryName : 'No Category'}</p>
+                <p><strong>Created At:</strong> ${response.createdAt}</p>
+                <p><strong>Content:</strong> ${response.content}</p>                  
+              `);
+            },
+            error: function(error) {
+              console.error('Error loading post content:', error);
+            }
+          });
+        });
+      });
     </script>
-
     <script src="/js/summernote-setup.js"></script>
     <script>
       document
@@ -176,8 +158,7 @@
             $("#summernote").summernote("focus");
           }
         });
-    </script>
-    
+    </script>    
     
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>

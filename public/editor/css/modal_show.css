@@ -54,4 +54,69 @@ element.style {
     justify-content: center;
     align-items: center;
   }
-  
+
+  /* Ensure figures display correctly */
+/* Ensure figures display correctly */
+.modal-content-container figure {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 1rem auto !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  flex-direction: column !important; /* Ensure caption is below the image */
+}
+
+/* Ensure images inside figures are fully visible and centered */
+.modal-content-container figure img {
+  max-width: 100% !important;
+  max-height: 70vh !important; /* Limit height to 70% of the viewport */
+  object-fit: contain !important; /* Ensure the entire image is shown */
+  border-radius: 5px !important;
+  display: block !important;
+  margin: 0 auto !important; /* Center horizontally */
+}
+
+/* Center the caption below the image */
+.modal-content-container figure figcaption {
+  font-size: 0.9rem !important;
+  color: #666 !important;
+  margin-top: 0.5rem !important;
+  text-align: center !important;
+}
+
+/* General styles for the figure container */
+figure {
+  display: flex !important;
+  flex-direction: column !important; /* Ensure caption is below the image */
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 20px auto !important; /* Center the figure horizontally */
+  padding: 10px !important;
+  max-width: 100% !important;
+  background-color: rgb(252, 250, 246) !important; /* Matches background */
+  border: 1px solid #ddd !important; /* Optional: Adds a subtle border */
+  border-radius: 5px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Styles for the image inside the figure */
+figure img {
+  max-width: 100% !important;
+  height: auto !important; /* Maintain aspect ratio */
+  object-fit: contain !important;
+  border-radius: 5px !important;
+  display: block !important;
+}
+
+/* Styles for the caption below the image */
+figure figcaption {
+  margin-top: 10px !important;
+  font-size: 16px !important;
+  color: #333 !important; /* Darker text for better readability */
+  text-align: center !important;
+  font-family: Arial, sans-serif !important;
+  line-height: 1.5 !important;
+}
+
+

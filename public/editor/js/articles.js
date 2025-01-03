@@ -49,4 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll(".modal-content-container img");
+    images.forEach(img => {
+      img.addEventListener("error", () => {
+        img.src = "/path/to/placeholder-image.jpg"; // Fallback image
+      });
+    });
+  });
   
